@@ -39,6 +39,11 @@ async def activity(f: Fetcher, login: str, window_days: int) -> tuple[dict, list
     recent = [e for e in evs if e.get("created_at", "") >= since.isoformat()[:19]]
     last_push = max((r.get("pushed_at") or "" for r in own), default="") or None
     releases = [e for e in recent if e.get("type") == "ReleaseEvent"]
+    # Month -> activity: public events (last ~90 days) plus each repo's last push.
+    months: dict[str, int] = {}
+    for stamp in [e.get("created_at", "") for e in evs] + [r.get("pushed_at") or "" for r in own]:
+        if stamp:
+            months[stamp[:7]] = months.get(stamp[:7], 0) + 1
     return {
         "login": login,
         "found": (repos or {}).get("status") == 200,
@@ -48,5 +53,6 @@ async def activity(f: Fetcher, login: str, window_days: int) -> tuple[dict, list
         "pushes_in_window": sum(1 for e in recent if e.get("type") == "PushEvent"),
         "releases_in_window": len(releases),
         "top_repo": own[0]["full_name"] if own else None,
+        "months": months,
         "url": f"https://github.com/{login}",
     }, [str(r) for r in (raw1, raw2) if r]

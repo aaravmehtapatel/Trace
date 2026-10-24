@@ -36,6 +36,10 @@ async def openings(f: Fetcher, ats: dict[str, list[str]]) -> tuple[dict | None, 
                 continue
             jobs = _parse(kind, record["body"])
             latest = max((j["updated"] for j in jobs if j["updated"]), default=None)
+            months: dict[str, int] = {}
+            for j in jobs:
+                if j["updated"]:
+                    months[j["updated"][:7]] = months.get(j["updated"][:7], 0) + 1
             return {"board": kind, "token": token, "url": page.format(t=token), "open_roles": len(jobs),
-                    "latest_posting": latest, "titles": [j["title"] for j in jobs[:8]]}, [str(raw)]
+                    "latest_posting": latest, "months": months, "titles": [j["title"] for j in jobs[:8]]}, [str(raw)]
     return None, []

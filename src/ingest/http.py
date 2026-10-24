@@ -89,7 +89,7 @@ class Fetcher:
                     resp = await self.client.get(url, params=params, headers=headers)
                 except httpx.HTTPError as e:
                     return {"status": None, "url": url, "error": type(e).__name__, "body": None}, None
-                if resp.status_code in (403, 429) and attempt < 2:
+                if resp.status_code in (403, 429, 502, 503) and attempt < 2:  # rate limits, crt.sh overload
                     await asyncio.sleep(5 * (attempt + 1))
                     continue
                 break

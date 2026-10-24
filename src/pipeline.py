@@ -6,7 +6,7 @@ import sqlite3
 from typing import Callable
 
 from src.config import Config
-from src.ingest import domains, github_pub, jobs, portfolio, sec_edgar, web_probe
+from src.ingest import akta, domains, github_pub, history, jobs, portfolio, sec_edgar, web_probe
 from src.match.normalize import normalize
 from src.match.resolve import score_candidate, state_for
 
@@ -127,6 +127,67 @@ async def probe_footprints(conn, cfg: Config, progress: Progress):
     conn.commit()
 
 
+async def collect_history(conn, cfg: Config, progress: Progress):
+    """Dated history per verified site: archive changes, new subdomains, email, registration, traffic rank."""
+    targets = [dict(r) for r in conn.execute("SELECT * FROM entities WHERE main_domain IS NOT NULL")]
+    ranks = await asyncio.to_thread(history.tranco_ranks)
+    f = history.fetcher()
+    done = 0
+
+    async def one(c):
+        nonlocal done
+        d = c["main_domain"]
+        calls = (("web_history", history.web_changes), ("cert_history", history.new_subdomains),
+                 ("mail", history.mail), ("domain_reg", history.registration))
+        results = await asyncio.gather(*(call(f, d) for _, call in calls))  # four different hosts at once
+        for (kind, _), (payload, raw) in zip(calls, results):
+            if payload.get("ok"):
+                _observe(conn, c["id"], kind, payload, raw=raw)
+        rank = ranks.get(d) or ranks.get(d.removeprefix("www."))
+        _observe(conn, c["id"], "traffic", {"tranco_rank": rank, "list_date": history.date.today().isoformat()},
+                 source_url="https://tranco-list.eu/")
+        done += 1
+        progress("Collecting dated history", done, len(targets))
+
+    try:
+        await asyncio.gather(*(one(c) for c in targets))
+    finally:
+        await f.close()
+    conn.commit()
+
+
+async def collect_akta(conn, cfg: Config, progress: Progress):
+    """Licensed news and headcount from Akta, skipped when no key is set or the plan lacks an endpoint."""
+    if not akta.available():
+        progress("Akta skipped (no AKTA_API_KEY)", 1, 1)
+        return
+    # Companies that already have Akta headcount (e.g. pulled through the connector) are skipped.
+    targets = [dict(r) for r in conn.execute("""SELECT * FROM entities e WHERE main_domain IS NOT NULL AND NOT EXISTS
+                 (SELECT 1 FROM signal_observations o WHERE o.entity_id = e.id AND o.signal_type = 'headcount')""")]
+    f = akta.fetcher()
+    done, headcount_allowed = 0, True
+
+    async def one(c):
+        nonlocal done, headcount_allowed
+        n, raw = await akta.news(f, c["main_domain"])
+        if n["ok"]:
+            _observe(conn, c["id"], "news", n, event_date=(n["items"][0]["date"] if n["items"] else None), raw=raw)
+        if headcount_allowed:
+            h, raw = await akta.headcount(f, c["main_domain"])
+            if h["status"] in (401, 403):
+                headcount_allowed = False  # not on this plan; stop spending requests on it
+            elif h["ok"]:
+                _observe(conn, c["id"], "headcount", h, raw=raw)
+        done += 1
+        progress("Akta news and headcount", done, len(targets))
+
+    try:
+        await asyncio.gather(*(one(c) for c in targets))
+    finally:
+        await f.close()
+    conn.commit()
+
+
 async def form_d_detail(conn, f, entity_id: int, cand: dict, raw_search: str | None):
     """Store one observation per filing of a linked filer, newest three with their XML amounts."""
     info, raw_hist = await sec_edgar.filer(f, cand["cik"])
@@ -203,8 +264,18 @@ async def search_form_d(conn, cfg: Config, progress: Progress):
     conn.commit()
 
 
-async def sync(conn, cfg: Config, progress: Progress, skip_domains: bool = False):
-    if not skip_domains:
+STAGES = ("domains", "footprint", "history", "akta", "sec")
+
+
+async def sync(conn, cfg: Config, progress: Progress, skip_domains: bool = False, only: str | None = None):
+    run = {only} if only else set(STAGES) - ({"domains"} if skip_domains else set())
+    if "domains" in run:
         await resolve_domains(conn, cfg, progress)
-    await probe_footprints(conn, cfg, progress)
-    await search_form_d(conn, cfg, progress)
+    if "footprint" in run:
+        await probe_footprints(conn, cfg, progress)
+    if "history" in run:
+        await collect_history(conn, cfg, progress)
+    if "akta" in run:
+        await collect_akta(conn, cfg, progress)
+    if "sec" in run:
+        await search_form_d(conn, cfg, progress)

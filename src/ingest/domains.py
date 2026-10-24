@@ -8,10 +8,12 @@ og:site_name for an auto-link, or in the page body for review.
 import json
 import os
 import re
+import time
 from pathlib import Path
 
 import anthropic
 
+from src import tracing
 from src.match.normalize import normalize
 from src.match.resolve import state_for
 
@@ -61,13 +63,20 @@ def _client() -> anthropic.Anthropic:
 
 def _propose_live(companies: list[dict]) -> dict[int, list[str]]:
     client = _client()
+    session = tracing.new_session("domains")
     out: dict[int, list[str]] = {}
     for i in range(0, len(companies), BATCH):
         chunk = companies[i:i + BATCH]
         rows = "\n".join(json.dumps({"id": c["id"], "name": c["raw_name"], "city": c["city"],
                                      "what_it_does": (c["description"] or "")[:240]}) for c in chunk)
-        msg = client.messages.create(model=MODEL, max_tokens=4000,
-                                     messages=[{"role": "user", "content": PROMPT.format(rows=rows)}])
+        messages = [{"role": "user", "content": PROMPT.format(rows=rows)}]
+        started = time.perf_counter()
+        try:
+            msg = client.messages.create(model=MODEL, max_tokens=4000, messages=messages)
+        except Exception as e:
+            tracing.llm(session, MODEL, messages, started, error=e)
+            raise
+        tracing.llm(session, MODEL, messages, started, msg=msg)
         text = "".join(b.text for b in msg.content if b.type == "text")
         m = re.search(r"\{.*\}", text, re.S)
         if not m:

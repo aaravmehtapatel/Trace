@@ -64,3 +64,28 @@ def test_redirect_to_own_new_domain_is_a_move():
     assert moved_not_gone("PropHero", {"final_host": "prophero.com.au"})
     assert not moved_not_gone("Aerodome", {"final_host": "flocksafety.com"})
     assert not moved_not_gone("Fora", {"final_host": "fora.northeastern.edu"})
+
+
+def _months_back(n_recent, n_prior, recent_per, prior_per):
+    from datetime import date
+    from src.score import month_keys
+    keys = month_keys(12, date(2026, 10, 24))
+    return {k: (recent_per if i >= 12 - n_recent else prior_per) for i, k in enumerate(keys)}
+
+
+def test_trend_flags_a_fade_and_a_rise():
+    from datetime import date
+    from src.score import timeline
+    today = date(2026, 10, 24)
+    fading = timeline({"payload": {"months": _months_back(3, 9, 0, 2)}}, None, [], today)
+    assert fading["fading"] and not fading["rising"]
+    rising = timeline({"payload": {"months": _months_back(3, 9, 3, 0)}}, None, [], today)
+    assert rising["rising"] and not rising["fading"]
+    steady = timeline({"payload": {"months": _months_back(3, 9, 1, 1)}}, None, [], today)
+    assert not steady["fading"] and not steady["rising"]
+
+
+def test_no_history_never_fades():
+    from datetime import date
+    from src.score import timeline
+    assert not timeline(None, None, [], date(2026, 10, 24))["fading"]

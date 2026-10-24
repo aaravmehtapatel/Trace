@@ -12,9 +12,8 @@ from src import config as config_mod
 from src import db, pipeline, score as score_mod
 
 console = Console()
-BUCKET_ORDER = ["Raised Again", "Active Footprint", "Quiet Phase", "No Public Activity", "Unresolved"]
-BUCKET_STYLE = {"Raised Again": "green", "Active Footprint": "cyan", "Quiet Phase": "yellow",
-                "No Public Activity": "red", "Unresolved": "dim"}
+BUCKET_ORDER = ["Active", "Fading", "Quiet", "No Public Activity", "Unresolved"]
+BUCKET_STYLE = {"Active": "cyan", "Fading": "magenta", "Quiet": "yellow", "No Public Activity": "red", "Unresolved": "dim"}
 
 
 def label(bucket: str, last: str | None) -> str:
@@ -49,8 +48,9 @@ def init(cfg: config_mod.Config, portfolio: bool) -> None:
 
 @cli.command()
 @click.option("--skip-domains", is_flag=True, help="Don't look for websites of unresolved companies.")
+@click.option("--only", type=click.Choice(pipeline.STAGES), default=None, help="Run a single stage.")
 @click.pass_obj
-def sync(cfg: config_mod.Config, skip_domains: bool) -> None:
+def sync(cfg: config_mod.Config, skip_domains: bool, only: str | None) -> None:
     """Collect public signals for every company."""
     conn = db.init(cfg)
     with Progress(TextColumn("{task.description}"), BarColumn(), MofNCompleteColumn(), console=console) as bar:
@@ -61,7 +61,7 @@ def sync(cfg: config_mod.Config, skip_domains: bool) -> None:
                 tasks[stage] = bar.add_task(stage, total=total)
             bar.update(tasks[stage], completed=done)
 
-        asyncio.run(pipeline.sync(conn, cfg, progress, skip_domains=skip_domains))
+        asyncio.run(pipeline.sync(conn, cfg, progress, skip_domains=skip_domains, only=only))
     rows = conn.execute("SELECT state, COUNT(*) n FROM match_candidates GROUP BY state").fetchall()
     console.print("Match candidates: " + ", ".join(f"{r['state']} {r['n']}" for r in rows))
 

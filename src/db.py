@@ -25,7 +25,9 @@ CREATE INDEX IF NOT EXISTS idx_entities_norm ON entities(normalized_name);
 CREATE TABLE IF NOT EXISTS signal_observations (
     id          INTEGER PRIMARY KEY,
     entity_id   INTEGER NOT NULL REFERENCES entities(id) ON DELETE CASCADE,
-    signal_type TEXT NOT NULL CHECK (signal_type IN ('form_d', 'engineering', 'hiring', 'footprint', 'domain')),
+    signal_type TEXT NOT NULL CHECK (signal_type IN ('form_d', 'engineering', 'hiring', 'footprint', 'domain',
+                                                     'web_history', 'cert_history', 'mail', 'domain_reg', 'traffic',
+                                                     'news', 'headcount')),
     observed_at TEXT NOT NULL DEFAULT (datetime('now')),
     event_date  TEXT,                   -- when the thing happened (filing date, last push), not when we saw it
     source_url  TEXT,
@@ -61,13 +63,36 @@ CREATE TABLE IF NOT EXISTS portfolio_daily_scores (
     hiring_score       REAL,
     footprint_score    REAL,
     composite_score    REAL CHECK (composite_score BETWEEN 0.0 AND 1.0),
-    -- 'Unresolved' = no verified domain yet; we don't classify what we can't find
-    bucket             TEXT NOT NULL CHECK (bucket IN ('Raised Again', 'Active Footprint', 'Quiet Phase', 'No Public Activity', 'Unresolved')),
+    -- Trend statuses. 'Unresolved' = no verified domain yet; we don't classify what we can't find.
+    bucket             TEXT NOT NULL CHECK (bucket IN ('Active', 'Fading', 'Quiet', 'No Public Activity', 'Unresolved')),
     last_activity_date TEXT,            -- rendered as "No Public Activity Since <date>"
     evidence           TEXT NOT NULL CHECK (json_valid(evidence)),  -- signal_observations ids and thresholds used
     UNIQUE (entity_id, score_date)
 );
 """
+
+
+def _migrate_checks(conn: sqlite3.Connection) -> None:
+    """SQLite can't alter a CHECK constraint, so tables created under older signal or
+    status lists are rebuilt. Observations are copied; scores are derived and recomputed."""
+    def ddl(table):
+        row = conn.execute("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = ?", (table,)).fetchone()
+        return row[0] if row else ""
+
+    def new_ddl(table):
+        start = SCHEMA.index(f"CREATE TABLE IF NOT EXISTS {table}")
+        return SCHEMA[start:SCHEMA.index(");", start) + 2]
+
+    with conn:
+        if "'headcount'" not in ddl("signal_observations"):
+            conn.execute("ALTER TABLE signal_observations RENAME TO signal_observations_old")
+            conn.executescript(new_ddl("signal_observations"))
+            conn.execute("INSERT INTO signal_observations SELECT * FROM signal_observations_old")
+            conn.execute("DROP TABLE signal_observations_old")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_obs_entity ON signal_observations(entity_id, signal_type, observed_at)")
+        if "'Fading'" not in ddl("portfolio_daily_scores"):
+            conn.execute("DROP TABLE portfolio_daily_scores")
+            conn.executescript(new_ddl("portfolio_daily_scores"))
 
 
 def connect(path: Path) -> sqlite3.Connection:
@@ -87,6 +112,7 @@ def init(cfg: Config) -> sqlite3.Connection:
     cols = {r["name"] for r in conn.execute("PRAGMA table_info(entities)")}
     if "legal_name" not in cols:  # databases created before the column existed
         conn.execute("ALTER TABLE entities ADD COLUMN legal_name TEXT")
+    _migrate_checks(conn)
     with conn:
         for t in cfg.portfolio:
             conn.execute(

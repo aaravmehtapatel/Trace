@@ -18,7 +18,8 @@
     --raised: #2E7D4F;
     --active: #2F62A8;
     --quiet: #B07D1E;
-    --dark: #7D3B5B;
+    --fading: #A6326E;
+    --dark: #3D4752;
     --unresolved: #8E98A3;
     --focus: #2F62A8;
   }
@@ -47,6 +48,7 @@
   .k-raised { text-decoration-color: var(--raised) !important; }
   .k-active { text-decoration-color: var(--active) !important; }
   .k-quiet { text-decoration-color: var(--quiet) !important; }
+  .k-fading { text-decoration-color: var(--fading) !important; }
   .k-dark { text-decoration-color: var(--dark) !important; }
   .k-unresolved { text-decoration-color: var(--unresolved) !important; text-decoration-style: dotted !important; }
   .lede { color: var(--ink-2); max-width: 62ch; margin: 18px 0 0; }
@@ -64,6 +66,7 @@
   }
   .mark:hover, .mark:focus-visible { transform: scale(1.35); }
   .mark.hollow { background: transparent; box-shadow: inset 0 0 0 1.5px var(--c); }
+  .mark.fd { box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--raised); }
   .mark.review { background-image: linear-gradient(135deg, transparent 45%, var(--sheet) 45%, var(--sheet) 55%, transparent 55%); }
   @media (prefers-reduced-motion: no-preference) {
     .reveal .mark { animation: land .5s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i) * 4ms); }
@@ -74,6 +77,32 @@
     font-size: 13px; line-height: 1.35; padding: 8px 10px; border-radius: 4px; max-width: 280px; display: none;
   }
   .tip strong { display: block; font-weight: 600; }
+
+  /* Calls this week */
+  section.calls { padding: 40px 0 0; }
+  .calls h2 { font-size: 22px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.005em; }
+  .calls > .wrap > p { color: var(--ink-2); margin: 0 0 18px; max-width: 64ch; }
+  .call-list { list-style: none; margin: 0; padding: 0; background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; }
+  .call { display: grid; grid-template-columns: 200px 1fr 150px; gap: 20px; align-items: center; padding: 14px 18px;
+          border-bottom: 1px solid #E3E7EB; cursor: pointer; border-left: 4px solid var(--c); }
+  .call:last-child { border-bottom: 0; }
+  .call:hover { background: #EEF2F6; }
+  .call .who { font-weight: 600; }
+  .call .who span { display: block; font-weight: 400; color: var(--ink-3); font-size: 13px; }
+  .call .why { font-size: 14px; color: var(--ink-2); }
+  .call .ask { display: block; color: var(--ink); margin-top: 3px; }
+  .spark { display: block; }
+  .spark rect { fill: var(--ink-3); }
+  .spark rect.recent { fill: var(--c, var(--ink)); }
+  .badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+  .badge { font-size: 12px; line-height: 1; padding: 4px 7px; border-radius: 999px; border: 1px solid var(--rule); color: var(--ink-2); background: var(--sheet); white-space: nowrap; }
+  .badge.form_d { border-color: var(--raised); color: var(--raised); }
+  .badge.rising { border-color: var(--active); color: var(--active); }
+  .badge.redirect, .badge.no_mail, .badge.expiring, .badge.news_warning { border-color: var(--fading); color: var(--fading); }
+  .chart { margin: 4px 0 2px; }
+  .chart rect.web { fill: #6B8BBF; } .chart rect.certs { fill: #2F62A8; } .chart rect.form_d { fill: var(--raised); } .chart rect.news { fill: #B07D1E; }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-3); margin: 4px 0 0; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
 
   /* Register */
   section.register { padding: 48px 0 24px; }
@@ -157,6 +186,7 @@
     .band { grid-template-columns: 1fr; gap: 10px; }
     .mark { width: 14px; height: 14px; }
     th.hide-sm, td.hide-sm { display: none; }
+    .call { grid-template-columns: 1fr; gap: 6px; }
     input[type=search] { min-width: 0; flex: 1; }
     .count { margin-left: 0; width: 100%; }
     aside.record { padding: 20px 16px 40px; }
@@ -171,11 +201,19 @@
   <p class="fund" id="fund"></p>
   <p class="issue" id="issue"></p>
   <h1 id="headline"></h1>
-  <p class="lede">Built only from public records: SEC Form D filings, each company's own website, GitHub and public job boards. Founders don't have to send anything. Select any mark to see the evidence behind it.</p>
+  <p class="lede" id="lede"></p>
   <div class="field" id="field" role="list" aria-label="Portfolio companies by status"></div>
 </header>
 
 <div class="tip" id="tip" role="tooltip"></div>
+
+<section class="calls">
+  <div class="wrap">
+    <h2>Calls this week</h2>
+    <p>Who a partner should contact, why, and what to ask. Companies that went dark come first, then the ones fading, then the ones picking up.</p>
+    <ol class="call-list" id="calls"></ol>
+  </div>
+</section>
 
 <section class="register">
   <div class="wrap">
@@ -189,7 +227,7 @@
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Company</th><th>Status</th><th class="hide-sm">Why</th><th class="hide-sm">Sector</th><th>Last signal</th></tr></thead>
+        <thead><tr><th>Company</th><th>Status</th><th class="hide-sm">Why</th><th class="hide-sm">Last 18 months</th><th>Last signal</th></tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
@@ -216,10 +254,10 @@
 const DATA = /*__CENSUS_DATA__*/null;
 
 const BUCKETS = {
-  "Raised Again":       { key: "raised", color: "var(--raised)", headline: "raised again", def: "Filed a Form D with the SEC in the last 24 months." },
-  "Active Footprint":   { key: "active", color: "var(--active)", headline: "show activity this quarter", def: "A dated public signal in the last 90 days: a code push, a job posting, a site update." },
-  "Quiet Phase":        { key: "quiet", color: "var(--quiet)", headline: "are quiet", def: "The site is live, but nothing public is dated in the last 90 days." },
-  "No Public Activity": { key: "dark", color: "var(--dark)", headline: "show no public activity", def: "The site is down, parked for sale or now points to a different company." },
+  "Active":             { key: "active", color: "var(--active)", headline: "are active", def: "A dated public signal in the last 90 days, and no sign of decline." },
+  "Fading":             { key: "fading", color: "var(--fading)", headline: "are fading", def: "Dated public activity in the last 3 months fell below a third of the 9 months before." },
+  "Quiet":              { key: "quiet", color: "var(--quiet)", headline: "are quiet", def: "The site is live, but nothing public is dated in the last 90 days." },
+  "No Public Activity": { key: "dark", color: "var(--dark)", headline: "show no public activity", def: "The site is down, parked, expired or now points to a different company." },
   "Unresolved":         { key: "unresolved", color: "var(--unresolved)", headline: "we haven't placed yet", def: "No website verified yet, so no status is given.", hollow: true },
 };
 const ORDER = Object.keys(BUCKETS);
@@ -232,12 +270,24 @@ const label = (c) => c.bucket === "No Public Activity"
   ? (c.last_activity ? `No public activity since ${fmtDate(c.last_activity)}` : "No public activity")
   : c.bucket;
 
-// Raised again: newest filing first. Everything else: strongest signals first.
-const filed = (c) => (c.filings[0] && c.filings[0].date) || "";
+// Fading: steepest decline first. Everything else: strongest signals first.
+const drop = (c) => c.trend ? c.trend.rate_prior - c.trend.rate_recent : 0;
+const recentFormD = (c) => c.badges.some((b) => b.kind === "form_d" && b.recent);
 const companies = DATA.companies.slice().sort((a, b) =>
   ORDER.indexOf(a.bucket) - ORDER.indexOf(b.bucket) ||
-  (a.bucket === "Raised Again" ? filed(b).localeCompare(filed(a)) : 0) ||
+  (a.bucket === "Fading" ? drop(b) - drop(a) : 0) ||
   (b.composite - a.composite) || a.name.localeCompare(b.name));
+
+// 18-month bar chart of dated history signals; the last 3 months are drawn in the status color.
+function spark(c, w = 108, h = 22) {
+  if (!c.trend) return "";
+  const ms = c.trend.months, max = Math.max(3, ...ms.map((m) => m.total)), bw = w / ms.length;
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true">${ms.map((m, i) => {
+    const bh = m.total ? Math.max(2, (m.total / max) * (h - 1)) : 1;
+    return `<rect class="${i >= ms.length - 3 ? "recent" : ""}" x="${(i * bw + 0.5).toFixed(1)}" y="${(h - bh).toFixed(1)}" width="${(bw - 1.5).toFixed(1)}" height="${bh.toFixed(1)}" rx="1"/>`;
+  }).join("")}</svg>`;
+}
+const badges = (c) => c.badges.length ? `<div class="badges">${c.badges.map((b) => `<span class="badge ${b.kind}">${esc(b.label)}</span>`).join("")}</div>` : "";
 const byId = new Map(companies.map((c) => [c.id, c]));
 
 // Masthead
@@ -249,6 +299,7 @@ const parts = ORDER.filter((b) => DATA.counts[b]).map((b) =>
   `<span class="k k-${BUCKETS[b].key}"><b>${DATA.counts[b]}</b> ${BUCKETS[b].headline}</span>`);
 const last = parts.pop();
 $("#headline").innerHTML = `Of ${DATA.total} portfolio companies, ${parts.join(", ")}, and ${last}.`;
+$("#lede").textContent = `Built only from public records: each company's website and its history in the Web Archive, certificate logs, email and domain records, GitHub, job boards and SEC filings. Founders don't have to send anything. ${DATA.form_d_year} companies filed a Form D in the past year (ringed in green). Select any mark to see the evidence.`;
 
 // Field
 const field = $("#field");
@@ -264,7 +315,7 @@ for (const b of ORDER) {
   marks.className = "marks";
   for (const c of group) {
     const m = document.createElement("button");
-    m.className = "mark" + (meta.hollow ? " hollow" : "") + (c.pending.length && meta.hollow ? " review" : "");
+    m.className = "mark" + (meta.hollow ? " hollow" : "") + (c.pending.length && meta.hollow ? " review" : "") + (recentFormD(c) ? " fd" : "");
     m.style.setProperty("--c", meta.color);
     m.style.setProperty("--i", i++);
     m.dataset.id = c.id;
@@ -330,9 +381,9 @@ function render() {
     const meta = BUCKETS[c.bucket];
     return `<tr data-id="${c.id}" tabindex="0">
       <td><div class="name">${esc(c.name)}</div><div class="sub">${esc(c.domain || "No verified site")}${c.city ? ", " + esc(c.city) : ""}</div></td>
-      <td><span class="status${meta.hollow ? " hollow" : ""}" style="--c:${meta.color}"><i></i>${esc(label(c))}</span></td>
+      <td><span class="status${meta.hollow ? " hollow" : ""}" style="--c:${meta.color}"><i></i>${esc(label(c))}</span>${badges(c)}</td>
       <td class="hide-sm">${esc(pretty(c.rule))}</td>
-      <td class="hide-sm">${esc(c.sector || "")}</td>
+      <td class="hide-sm" style="--c:${meta.color}">${spark(c)}</td>
       <td class="date">${fmtDate(c.last_activity) || "None found"}</td></tr>`;
   }).join("") : `<tr><td colspan="5" class="empty">No companies match these filters. Clear the search or pick another status.</td></tr>`;
 }
@@ -341,6 +392,40 @@ $("#rows").addEventListener("keydown", (e) => {
   const tr = e.target.closest("tr[data-id]"); if (tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openRecord(+tr.dataset.id, tr); }
 });
 render();
+
+// Calls
+const KIND_COLOR = { gone: "var(--dark)", fading: "var(--fading)", rising: "var(--active)" };
+$("#calls").innerHTML = DATA.calls.map((k) => {
+  const c = byId.get(k.id);
+  return `<li class="call" data-id="${c.id}" tabindex="0" style="--c:${KIND_COLOR[k.kind]}">
+    <div class="who">${esc(c.name)}<span>${esc(c.domain || "")}${c.city ? ", " + esc(c.city) : ""}</span></div>
+    <div class="why">${esc(pretty(k.reason))}<span class="ask">${esc(k.ask)}</span></div>
+    <div style="--c:${KIND_COLOR[k.kind]}">${spark(c, 150, 26)}</div></li>`;
+}).join("") || `<li class="call">No calls this week: nothing has changed enough to act on.</li>`;
+$("#calls").addEventListener("click", (e) => { const li = e.target.closest(".call[data-id]"); if (li) openRecord(+li.dataset.id, li); });
+$("#calls").addEventListener("keydown", (e) => {
+  const li = e.target.closest(".call[data-id]"); if (li && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openRecord(+li.dataset.id, li); }
+});
+
+// Larger stacked chart for the record: archive changes, new subdomains, Form D filings per month.
+function chart(c) {
+  if (!c.trend) return `<p class="muted">No dated history found for this site.</p>`;
+  const ms = c.trend.months, W = 456, H = 84, max = Math.max(3, ...ms.map((m) => m.total)), bw = W / ms.length;
+  const bars = ms.map((m, i) => {
+    let y = H - 14, out = "";
+    for (const k of ["web", "certs", "news", "form_d"]) {
+      if (!m[k]) continue;
+      const bh = (m[k] / max) * (H - 18); y -= bh;
+      out += `<rect class="${k}" x="${(i * bw + 1).toFixed(1)}" y="${y.toFixed(1)}" width="${(bw - 3).toFixed(1)}" height="${bh.toFixed(1)}"/>`;
+    }
+    const lab = i % 3 === 0 ? `<text x="${(i * bw + 1).toFixed(1)}" y="${H - 2}" font-size="10" fill="#7B8693">${new Date(m.month + "-01T00:00:00").toLocaleDateString("en-US", { month: "short", year: "2-digit" })}</text>` : "";
+    return out + lab;
+  }).join("");
+  const split = ((ms.length - 3) * bw).toFixed(1);
+  return `<svg class="chart" width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Dated public activity by month">
+      <line x1="${split}" y1="0" x2="${split}" y2="${H - 14}" stroke="#CDD3D9" stroke-dasharray="3 3"/>${bars}</svg>
+    <div class="legend"><span><i style="background:#6B8BBF"></i>Homepage changes</span><span><i style="background:#2F62A8"></i>New subdomains</span><span><i style="background:#B07D1E"></i>News</span><span><i style="background:var(--raised)"></i>Form D</span><span>Last 3 months right of the line: ${c.trend.rate_recent}/month vs ${c.trend.rate_prior} before</span></div>`;
+}
 
 // Record
 let returnFocus = null;
@@ -361,6 +446,10 @@ function openRecord(id, from) {
       ${c.site.cert_not_after ? `<dt>TLS certificate</dt><dd>Valid until ${fmtDate(c.site.cert_not_after)}</dd>` : ""}
       ${c.github ? `<dt>GitHub</dt><dd><a href="${esc(c.github.url)}" target="_blank" rel="noopener">${esc(c.github.login)}</a>, ${c.github.events_in_window} public events in ${DATA.method.window_days} days</dd>` : ""}
       ${c.hiring ? `<dt>Open roles</dt><dd><a href="${esc(c.hiring.url)}" target="_blank" rel="noopener">${c.hiring.open_roles} on ${esc(c.hiring.board)}</a></dd>` : ""}
+      ${c.mail ? `<dt>Company email</dt><dd>${c.mail.has_mx ? `Receiving mail${c.mail.provider ? ` (${esc(c.mail.provider)})` : ""}` : "No mail records"}</dd>` : ""}
+      ${c.registration && c.registration.expires ? `<dt>Domain</dt><dd>Registered ${fmtDate(c.registration.registered)}, renewed through ${fmtDate(c.registration.expires)}</dd>` : ""}
+      ${c.subdomains ? `<dt>Subdomains</dt><dd>${c.subdomains} seen in certificate logs</dd>` : ""}
+      ${c.headcount && c.headcount.total ? `<dt>Headcount</dt><dd>${c.headcount.total} people${c.headcount.growth_6 != null ? `, ${c.headcount.growth_6 > 0 ? "+" : ""}${c.headcount.growth_6}% in 6 months` : ""}${c.headcount.growth_12 != null ? `, ${c.headcount.growth_12 > 0 ? "+" : ""}${c.headcount.growth_12}% in 12` : ""} (Akta)</dd>` : ""}
     </dl>` : `<p class="muted">No verified website, so the site, GitHub and hiring checks didn't run.</p>`;
   const pending = c.pending.length
     ? `<h3>Awaiting review</h3><ul class="pending">${c.pending.map((p) => `<li>${p.source === "domain" ? "Website" : "Form D filer"}: ${esc(p.candidate_name)} (${esc(p.candidate_key)}), match score ${p.score.toFixed(2)}</li>`).join("")}</ul>`
@@ -374,8 +463,10 @@ function openRecord(id, from) {
     <h2 id="r-name">${esc(c.name)}</h2>
     <p class="where">${[c.city, c.sector].filter(Boolean).map(esc).join(", ")}</p>
     ${c.description ? `<p class="desc">${esc(c.description)}</p>` : ""}
-    <div class="verdict" style="--c:${meta.color}"><b>${esc(label(c))}</b><span>${esc(pretty(c.rule))}</span></div>
+    <div class="verdict" style="--c:${meta.color}"><b>${esc(label(c))}</b><span>${esc(pretty(c.rule))}</span>${badges(c)}</div>
+    <h3>Activity, last 18 months</h3>${chart(c)}
     <h3>Dated signals</h3>${signals}
+    ${c.news && c.news.length ? `<h3>In the news (Akta)</h3><ol class="timeline">${c.news.map((n) => `<li><time>${fmtDate(n.date)}${n.publisher ? ", " + esc(n.publisher) : ""}</time><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a></li>`).join("")}</ol>` : ""}
     <h3>SEC filings</h3>${filings}
     <h3>Public footprint</h3>${site}
     ${pending}
@@ -397,11 +488,13 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#reco
 // Method
 const m = DATA.method;
 $("#rules").innerHTML = [
-  `<b>Raised again</b> if a Form D or amendment from a matched SEC filer is dated in the last ${m.raise_window_months} months.`,
   `<b>Unresolved</b> if no website has been verified. We don't guess a status for a company we can't find.`,
-  `<b>No public activity</b> if the site is down, parked or now points to a different company, dated by the last signal we have. A move to the company's own new domain doesn't count.`,
+  `<b>No public activity</b> if the site is down, parked, expired or now points to a different company, or there are no email records and nothing dated in a year. A move to the company's own new domain doesn't count.`,
+  `<b>Fading</b> if dated history in the last ${m.trend_months[0]} months fell below ${Math.round(m.fading_ratio * 100)}% of the ${m.trend_months[1]} months before, and no current signal (a recent job post, code push or Form D) contradicts it.`,
   `<b>Active</b> if any dated signal falls in the last ${m.active_days} days.`,
   `<b>Quiet</b> otherwise: the site is live, but nothing is dated recently.`,
+  `Headcount from Akta (licensed, not scraped) can also mark a company fading: down 15% or more in 6 months.`,
+  `The trend only uses records that keep their history: Web Archive changes, first-seen subdomains, news coverage, Form D filings. Job posts and code pushes prove activity today but can't show a decline, so they only count as current signals. Form D is a badge, not a status: most private companies never file one.`,
 ].map((r) => `<li>${r}</li>`).join("");
 $("#stats").innerHTML = `
   <p>${m.observations.toLocaleString()} public observations across ${DATA.total} companies, generated ${fmtDate(DATA.generated)}.</p>

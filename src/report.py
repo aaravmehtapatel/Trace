@@ -7,10 +7,11 @@ import json
 from datetime import date
 from pathlib import Path
 
+from src import score
 from src.config import Config
 
 TEMPLATE = Path(__file__).with_name("report_template.html")
-ORDER = ["Raised Again", "Active Footprint", "Quiet Phase", "No Public Activity", "Unresolved"]
+ORDER = ["Active", "Fading", "Quiet", "No Public Activity", "Unresolved"]
 
 
 def _latest(conn, entity_id: int, kind: str) -> dict | None:
@@ -47,6 +48,9 @@ def collect(conn, cfg: Config) -> dict:
             "scores": {"form_d": r["form_d_score"], "engineering": r["engineering_score"],
                        "hiring": r["hiring_score"], "footprint": r["footprint_score"]},
             "signals": ev["signals"],
+            "trend": ev.get("trend"), "badges": ev.get("badges", []),
+            "mail": ev.get("mail"), "registration": ev.get("registration"), "subdomains": ev.get("subdomains"),
+            "headcount": ev.get("headcount"), "news": ev.get("news", []),
             "filings": [{"form": f["form"], "date": f["file_date"], "filer": f["filer"], "sold": f.get("total_sold"),
                          "offering": f.get("total_offering"), "url": f["url"]} for f in filings],
             "site": {k: fp.get(k) for k in ("status", "final_host", "title", "cert_not_after", "sitemap_lastmod",
@@ -56,17 +60,54 @@ def collect(conn, cfg: Config) -> dict:
             "pending": [dict(p) for p in pending][:5],
         })
     counts = {b: sum(1 for c in companies if c["bucket"] == b) for b in ORDER}
+    form_d_year = sum(1 for c in companies if any(b["kind"] == "form_d" and b.get("recent") for b in c["badges"]))
     linked = conn.execute("SELECT COUNT(*) FROM match_candidates WHERE state IN ('AUTO_LINKED', 'CONFIRMED')").fetchone()[0]
     reviewed = conn.execute("SELECT COUNT(*) FROM match_candidates WHERE reviewed_at IS NOT NULL").fetchone()[0]
     observations = conn.execute("SELECT COUNT(*) FROM signal_observations").fetchone()[0]
     return {
         "fund": cfg.fund_name, "score_date": score_date, "generated": date.today().isoformat(),
-        "counts": counts, "total": len(companies), "companies": companies,
+        "counts": counts, "total": len(companies), "companies": companies, "calls": calls(companies),
+        "form_d_year": form_d_year,
         "method": {"weights": cfg.weights, "auto_link": cfg.auto_link, "reject": cfg.reject,
-                   "window_days": cfg.window_days, "active_days": 90, "raise_window_months": 24,
+                   "window_days": cfg.window_days, "active_days": score.ACTIVE_DAYS, "fading_ratio": score.FADING_RATIO,
+                   "trend_months": [score.TREND_RECENT, score.TREND_PRIOR],
                    "observations": observations, "linked_matches": linked, "human_reviewed": reviewed,
                    "pending_review": sum(len(c["pending"]) > 0 for c in companies)},
     }
+
+
+def _has(c: dict, kind: str) -> bool:
+    return any(b["kind"] == kind for b in c["badges"])
+
+
+def calls(companies: list[dict], limit: int = 10) -> list[dict]:
+    """Who a partner should contact this week, each with the reason and the question to ask.
+    Recently dark first (a mark or a write-off may be due), then fading, then rising."""
+    gone = [c for c in companies if c["bucket"] == "No Public Activity"]
+    fading = sorted((c for c in companies if c["bucket"] == "Fading"),
+                    key=lambda c: c["trend"]["rate_prior"] - c["trend"]["rate_recent"], reverse=True)
+    rising = sorted((c for c in companies if c["bucket"] == "Active" and
+                     (_has(c, "rising") or any(b["kind"] == "form_d" and b.get("recent") for b in c["badges"]))),
+                    key=lambda c: c["composite"], reverse=True)
+    out = []
+    for c in gone[:3]:
+        redirect = _has(c, "redirect")
+        out.append({"id": c["id"], "kind": "gone", "reason": c["rule"],
+                    "ask": "Was this an acquisition? Confirm what happened to the fund's shares and update the mark."
+                    if redirect else "Is the company still operating? If not, start the write-off."})
+    for c in fading[:4]:
+        warn = next((n for n in c["news"] if n.get("warning")), None)
+        out.append({"id": c["id"], "kind": "fading",
+                    "reason": c["rule"] + (f". In the news: {warn['title']}" if warn else ""),
+                    "ask": "What changed this quarter: the team, the product focus, or runway?"})
+    for c in rising[:limit - len(out)]:
+        filed = next((b for b in c["badges"] if b["kind"] == "form_d" and b.get("recent")), None)
+        out.append({"id": c["id"], "kind": "rising",
+                    "reason": f"{filed['label']} filed and activity is up" if filed and _has(c, "rising")
+                    else f"{filed['label']} filed" if filed else "Public activity is up sharply",
+                    "ask": "Is a round open, and does the fund have pro rata?" if filed
+                    else "Momentum is up. Are they raising, and what do they need from us?"})
+    return out[:limit]
 
 
 def _label(c: dict) -> str:
@@ -89,8 +130,8 @@ def markdown(data: dict) -> str:
     m = data["method"]
     lines += ["## Method", "",
               f"- Match thresholds: auto-link at {m['auto_link']}, reject below {m['reject']}, review in between.",
-              f"- Active means a dated signal within {m['active_days']} days; raised again means a Form D or D/A "
-              f"within {m['raise_window_months']} months.",
+              f"- Active means a dated signal within {m['active_days']} days; fading means the last "
+              f"{m['trend_months'][0]} months fell below {m['fading_ratio']:.0%} of the {m['trend_months'][1]} before.",
               f"- Ranking weights: {', '.join(f'{k} {v}' for k, v in m['weights'].items())}.",
               f"- {m['observations']} observations, {m['linked_matches']} linked matches, "
               f"{m['human_reviewed']} decided by a person, {m['pending_review']} companies with matches awaiting review."]

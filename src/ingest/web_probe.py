@@ -111,6 +111,13 @@ async def probe(f: Fetcher, domain: str, timeout: float) -> tuple[dict, list[str
         # nothing about the company, so a single fresh date is ignored.
         out["sitemap_autodated"] = len(valid) == 1 and valid[0] >= (today - timedelta(days=2)).isoformat()
         out["sitemap_lastmod"] = valid[-1] if valid and not out["sitemap_autodated"] else None
+        months: dict[str, int] = {}
+        if not out["sitemap_autodated"]:
+            for d in dates:
+                if d <= today.isoformat():
+                    months[d[:7]] = months.get(d[:7], 0) + 1
+        out["sitemap_months"] = months
+        out["sitemap_pages"] = len(dates)
         if out["careers_url"] and not out["ats"]:
             careers, raw = await f.get(out["careers_url"], as_text=True, ttl=20 * 3600)
             raws.append(raw)
