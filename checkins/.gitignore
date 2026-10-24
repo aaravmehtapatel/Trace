@@ -1,0 +1,6 @@
+node_modules/
+.env
+# Threads, drafts and the model-reply cache from local runs
+.checkins/
+# Generated reports
+fund/*/reports/

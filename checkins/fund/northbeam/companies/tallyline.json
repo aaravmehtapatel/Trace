@@ -1,0 +1,22 @@
+{
+  "slug": "tallyline",
+  "name": "Tallyline",
+  "fund": "Northbeam Ventures",
+  "period": "2026-Q3",
+  "domain": null,
+  "next_board_meeting": "2026-11-05",
+  "last_reported": {
+    "period": "2026-Q2",
+    "mrr": 63000,
+    "monthly_churn_pct": 2.4,
+    "net_burn_per_month": 144000,
+    "runway_months": 22,
+    "customers": 289
+  },
+  "plan": {
+    "mrr": 80000,
+    "net_burn_per_month": 150000,
+    "customers": 340
+  },
+  "akta_sample": "external/tallyline.akta-sample.json"
+}
