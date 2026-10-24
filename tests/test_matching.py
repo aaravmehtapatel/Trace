@@ -89,3 +89,22 @@ def test_no_history_never_fades():
     from datetime import date
     from src.score import timeline
     assert not timeline(None, None, [], date(2026, 10, 24))["fading"]
+
+
+def test_headcount_classes():
+    from src.calibrate import headcount_class
+    assert headcount_class({"growth_6": 53}) == "growing"
+    assert headcount_class({"growth_6": -23}) == "shrinking"
+    assert headcount_class({"growth_6": 2}) == "flat"
+    assert headcount_class({"growth_6": None, "growth_12": 30}) == "growing"
+    assert headcount_class({}) is None
+
+
+def test_lag_factor_scales_recent_months():
+    from datetime import date
+    from src.score import lag_factors, month_keys
+    keys = month_keys(12, date(2026, 6, 15))
+    # 10 companies all active every prior month, only 3 active in the recent months
+    rows = [{k: (1 if (k in keys[:9] or i < 3) else 0) for k in keys} for i in range(10)]
+    f = lag_factors({"web": rows}, date(2026, 6, 15))["web"]
+    assert all(abs(v - 0.3) < 1e-9 for v in f.values())

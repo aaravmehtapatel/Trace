@@ -10,3 +10,5 @@ data/*.db-wal
 __pycache__/
 .pytest_cache/
 .DS_Store
+exports/preview.html
+.claude/

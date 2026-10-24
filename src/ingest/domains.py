@@ -28,6 +28,31 @@ Return only JSON: {{"<id>": ["domain.com", ...], ...}}
 {rows}"""
 
 
+async def from_akta(companies: list[dict]) -> dict[int, list[str]]:
+    """Websites from Akta's free company search, by name. A candidate needs the same normalized
+    name; among several, the one whose category shares words with the fund's description wins.
+    The live site still has to confirm it, like any other proposal."""
+    from src.ingest import akta
+    f = akta.fetcher()
+    out: dict[int, list[str]] = {}
+    try:
+        for c in companies:
+            record, _ = await f.get(f"{akta.API}/company/search/", params={"query": c["raw_name"]}, ttl=7 * 24 * 3600)
+            want = normalize(c["raw_name"]).replace(" ", "")
+            desc = keywords(c.get("description"))
+            scored = []
+            for cand in (((record or {}).get("body") or {}).get("data") or []):
+                if normalize(cand.get("name") or "").replace(" ", "") != want or not cand.get("website"):
+                    continue
+                overlap = len(desc & keywords(cand.get("product_category")))
+                site = cand["website"].lower().split("//")[-1].removeprefix("www.").split("/")[0]
+                scored.append((overlap, site))
+            out[c["id"]] = [site for _, site in sorted(scored, reverse=True)[:2]]
+    finally:
+        await f.close()
+    return out
+
+
 def patterns(name: str) -> list[str]:
     """Common startup domain shapes, tried only after the proposals fail."""
     compact = normalize(name).replace(" ", "")

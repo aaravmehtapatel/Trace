@@ -56,6 +56,9 @@ async def resolve_domains(conn, cfg: Config, progress: Progress):
         return
     progress("Proposing domains", 0, len(todo))
     proposals = await asyncio.to_thread(domains.propose, todo)
+    if akta.available():
+        from_akta = await domains.from_akta(todo)
+        proposals = {c["id"]: list(dict.fromkeys(from_akta.get(c["id"], []) + proposals.get(c["id"], []))) for c in todo}
     f = web_probe.fetcher(cfg.probe_timeout, cfg.probe_concurrency)
     done = 0
 
@@ -161,10 +164,10 @@ async def collect_akta(conn, cfg: Config, progress: Progress):
     if not akta.available():
         progress("Akta skipped (no AKTA_API_KEY)", 1, 1)
         return
-    # Companies that already have Akta headcount (e.g. pulled through the connector) are skipped.
-    targets = [dict(r) for r in conn.execute("""SELECT * FROM entities e WHERE main_domain IS NOT NULL AND NOT EXISTS
-                 (SELECT 1 FROM signal_observations o WHERE o.entity_id = e.id AND o.signal_type = 'headcount')""")]
-    f = akta.fetcher()
+    targets = [dict(r) for r in conn.execute("SELECT * FROM entities WHERE main_domain IS NOT NULL")]
+    # Headcount already pulled (e.g. through the connector) isn't bought twice.
+    have_hc = {r[0] for r in conn.execute("SELECT DISTINCT entity_id FROM signal_observations WHERE signal_type = 'headcount'")}
+    f, f_hc = akta.fetcher(), akta.fetcher(per_minute=9)
     done, headcount_allowed = 0, True
 
     async def one(c):
@@ -172,12 +175,13 @@ async def collect_akta(conn, cfg: Config, progress: Progress):
         n, raw = await akta.news(f, c["main_domain"])
         if n["ok"]:
             _observe(conn, c["id"], "news", n, event_date=(n["items"][0]["date"] if n["items"] else None), raw=raw)
-        if headcount_allowed:
-            h, raw = await akta.headcount(f, c["main_domain"])
+        if headcount_allowed and c["id"] not in have_hc:
+            h, raw = await akta.headcount(f, c["main_domain"], f_hc)
             if h["status"] in (401, 403):
                 headcount_allowed = False  # not on this plan; stop spending requests on it
             elif h["ok"]:
                 _observe(conn, c["id"], "headcount", h, raw=raw)
+        conn.commit()  # long, paid run: keep what's been bought even if it's interrupted
         done += 1
         progress("Akta news and headcount", done, len(targets))
 
@@ -185,6 +189,7 @@ async def collect_akta(conn, cfg: Config, progress: Progress):
         await asyncio.gather(*(one(c) for c in targets))
     finally:
         await f.close()
+        await f_hc.close()
     conn.commit()
 
 

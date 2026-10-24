@@ -1,4 +1,4 @@
-"""Portfolio census CLI: init, sync, review-queue, score, export."""
+"""Trace CLI: init, sync, review-queue, score, export."""
 import asyncio
 import json
 from datetime import date
@@ -130,7 +130,7 @@ def export(cfg: config_mod.Config, out_dir: str) -> None:
     data = report.collect(conn, cfg)
     paths = report.write_all(data, config_mod.ROOT / out_dir)
     for p in paths:
-        console.print(f"wrote {p.relative_to(config_mod.ROOT)}")
+        console.print(f"wrote {p.relative_to(config_mod.ROOT) if p.is_relative_to(config_mod.ROOT) else p}")
 
 
 if __name__ == "__main__":
