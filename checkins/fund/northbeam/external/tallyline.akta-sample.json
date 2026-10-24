@@ -1,0 +1,9 @@
+{
+  "_note": "SYNTHETIC sample in the shape the akta connector returns. Tallyline is an invented company, so a live akta lookup would match a different, real business. For a real portfolio company, set its domain and AKTA_API_KEY and the live API is used instead.",
+  "source": "akta-sample",
+  "headcount": {
+    "monthly": { "2026-01": 12, "2026-02": 13, "2026-03": 14, "2026-04": 15, "2026-05": 16, "2026-06": 17, "2026-07": 17, "2026-08": 16, "2026-09": 15 },
+    "growth_6": 7.1
+  },
+  "news": []
+}

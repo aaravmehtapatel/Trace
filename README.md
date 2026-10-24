@@ -14,6 +14,8 @@ Statuses come from the activity trend. Form D is a badge, not a status, because 
 | No public activity | Site down, parked, expired or now another company's site; or no email records and nothing dated in a year |
 | Unresolved | No verified website, so no status is given |
 
+For the companies on that call list, [`checkins/`](checkins/) asks directly: the fund's agent sends questions, the startup's agent answers from its own data room with a citation for every claim, and the founder approves before anything is sent. It runs between workspaces on Roundtable. See [checkins/README.md](checkins/README.md).
+
 The trend only uses sources that keep their history, so last quarter can be compared fairly with the year before on the first run: Web Archive content changes, subdomains first seen in certificate-transparency logs, and Form D filings. Job postings, GitHub pushes and sitemap dates only show the present, so they count as proof of current activity, not as trend.
 
 ## Run it
