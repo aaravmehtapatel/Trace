@@ -232,8 +232,12 @@ const label = (c) => c.bucket === "No Public Activity"
   ? (c.last_activity ? `No public activity since ${fmtDate(c.last_activity)}` : "No public activity")
   : c.bucket;
 
+// Raised again: newest filing first. Everything else: strongest signals first.
+const filed = (c) => (c.filings[0] && c.filings[0].date) || "";
 const companies = DATA.companies.slice().sort((a, b) =>
-  ORDER.indexOf(a.bucket) - ORDER.indexOf(b.bucket) || (b.composite - a.composite) || a.name.localeCompare(b.name));
+  ORDER.indexOf(a.bucket) - ORDER.indexOf(b.bucket) ||
+  (a.bucket === "Raised Again" ? filed(b).localeCompare(filed(a)) : 0) ||
+  (b.composite - a.composite) || a.name.localeCompare(b.name));
 const byId = new Map(companies.map((c) => [c.id, c]));
 
 // Masthead
@@ -306,6 +310,16 @@ for (const b of ORDER) {
   $("#sector").insertAdjacentHTML("beforeend", `<option>${esc(s)}</option>`));
 $("#sector").addEventListener("change", (e) => { state.sector = e.target.value; render(); });
 $("#q").addEventListener("input", (e) => { state.q = e.target.value.trim().toLowerCase(); render(); });
+// "/" jumps to search; Enter opens the first match.
+$("#q").addEventListener("keydown", (e) => {
+  const first = $("#rows tr[data-id]");
+  if (e.key === "Enter" && first) { e.preventDefault(); openRecord(+first.dataset.id, $("#q")); }
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "/" && document.activeElement !== $("#q") && !$("#record").classList.contains("open")) {
+    e.preventDefault(); $("#q").focus(); $("#q").select();
+  }
+});
 
 function render() {
   const rows = companies.filter((c) =>
