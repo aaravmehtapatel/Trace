@@ -38,6 +38,13 @@
   /* Masthead */
   header { padding: 56px 0 28px; }
   .fund { font-weight: 600; font-size: 15px; margin: 0; }
+  .topbar { display: flex; align-items: baseline; gap: 18px; margin-bottom: 6px; }
+  .topbar b { font-weight: 700; font-size: 16px; }
+  .topbar nav { display: flex; gap: 14px; font-size: 15px; }
+  .topbar nav a { color: var(--ink-2); text-decoration: none; padding-bottom: 2px; }
+  .topbar nav a[aria-current] { color: var(--ink); font-weight: 600; border-bottom: 2px solid var(--ink); }
+  .ask-link { font-size: 13px; color: var(--accent); text-decoration: none; white-space: nowrap; }
+  .ask-link:hover { text-decoration: underline; }
   .issue { color: var(--ink-3); font-size: 15px; margin: 0; }
   h1 {
     font-weight: 300; font-size: clamp(28px, 3.6vw, 44px); line-height: 1.18; letter-spacing: -0.012em;
@@ -239,7 +246,7 @@
 </head>
 <body>
 <header class="wrap">
-  <p class="fund" id="fund"></p>
+  <div class="topbar"><b>Trace</b><nav aria-label="Trace"><a href="/" aria-current="page">Census</a><a class="to-checkins" href="/checkins">Check-ins</a></nav></div>
   <p class="issue" id="issue"></p>
   <h1 id="headline"></h1>
   <p class="lede" id="lede"></p>
@@ -359,7 +366,10 @@ const byId = new Map(companies.map((c) => [c.id, c]));
 
 // Masthead
 const month = new Date(DATA.score_date + "T00:00:00").toLocaleDateString("en-US", { month: "long", year: "numeric" });
-$("#fund").textContent = "Trace";
+// Check-ins run on the Trace server; when this file is opened directly, point there.
+const CHECKINS = location.protocol === "file:" ? "http://localhost:4321/checkins" : "/checkins";
+const checkinUrl = (c, why) => `${CHECKINS}?company=${encodeURIComponent(c.name)}${why ? `&why=${encodeURIComponent(why)}` : ""}`;
+document.querySelectorAll(".to-checkins").forEach((a) => (a.href = CHECKINS));
 $("#issue").textContent = `${DATA.fund} portfolio census, ${month}`;
 document.title = `Trace: ${DATA.fund} portfolio census`;
 const parts = ORDER.filter((b) => DATA.counts[b]).map((b) =>
@@ -489,7 +499,8 @@ $("#calls").innerHTML = DATA.calls.map((k) => {
   const c = byId.get(k.id);
   return `<li class="call" data-id="${c.id}" tabindex="0" style="--c:${KIND_COLOR[k.kind]}">
     <div class="who">${esc(c.name)}<span>${esc(c.domain || "")}${c.city ? ", " + esc(c.city) : ""}</span></div>
-    <div class="why">${esc(pretty(k.reason))}<span class="ask">${esc(k.ask)}</span></div>
+    <div class="why">${esc(pretty(k.reason))}<span class="ask">${esc(k.ask)}</span>
+      <a class="ask-link" href="${esc(checkinUrl(c, pretty(k.reason)))}">Request a check-in</a></div>
     <div style="--c:${KIND_COLOR[k.kind]}">${spark(c, 150, 26)}</div></li>`;
 }).join("") || `<li class="call">No calls this week: nothing has changed enough to act on.</li>`;
 $("#calls").addEventListener("click", (e) => { const li = e.target.closest(".call[data-id]"); if (li) openRecord(+li.dataset.id, li); });
@@ -599,7 +610,8 @@ function openRecord(id, from) {
     <h2 id="r-name">${esc(c.name)}</h2>
     <p class="where">${[c.city, c.sector].filter(Boolean).map(esc).join(", ")}</p>
     ${c.description ? `<p class="desc">${esc(c.description)}</p>` : ""}
-    <div class="verdict" style="--c:${meta.color}"><b>${esc(label(c))}</b><span>${esc(pretty(c.rule))}</span>${badges(c)}</div>
+    <div class="verdict" style="--c:${meta.color}"><b>${esc(label(c))}</b><span>${esc(pretty(c.rule))}</span>${badges(c)}
+      <p style="margin:10px 0 0"><a class="ask-link" href="${esc(checkinUrl(c, pretty(c.rule)))}">Request a check-in with the founder</a></p></div>
     ${c.headcount && c.headcount.monthly ? `<h3>Headcount (Akta, from LinkedIn)</h3>${hcChart(c.headcount)}${functions(c.headcount)}` : ""}
     <h3>Public activity, last 18 months</h3>${chart(c)}
     <h3>Dated signals</h3>${signals}

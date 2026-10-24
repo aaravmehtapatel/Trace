@@ -3,110 +3,120 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trace Check-ins</title>
+<title>Trace: Check-ins</title>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* Trace's tokens, shared with the census report */
   :root {
-    --bg: #f6f5f2; --panel: #ffffff; --ink: #1c1d1f; --muted: #6b6e75; --line: #e4e2dc;
-    --accent: #2f5bd3; --accent-ink: #ffffff;
-    --verified: #1f7a4d; --verified-bg: #e3f3ea; --documented: #2f5bd3; --documented-bg: #e6ecfb;
-    --unanswered: #6b6e75; --unanswered-bg: #eeeeec; --withheld: #9a5a00; --withheld-bg: #fbefd9;
-    --high: #b42318; --high-bg: #fde8e6;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #141518; --panel: #1d1f23; --ink: #ecedef; --muted: #9a9ea6; --line: #2e3137;
-      --accent: #7c9cff; --accent-ink: #0d1020;
-      --verified: #6fd3a0; --verified-bg: #16382a; --documented: #8fabff; --documented-bg: #1f2a4a;
-      --unanswered: #a9adb4; --unanswered-bg: #2a2c31; --withheld: #f0b55c; --withheld-bg: #3d2d12;
-      --high: #ff8a80; --high-bg: #3d1c1a;
-    }
+    --paper: #EDF0F2; --sheet: #F8F9FA; --ink: #18212B; --ink-2: #4A5562; --ink-3: #7B8693; --rule: #CDD3D9; --rule-2: #E3E7EB;
+    --accent: #2F62A8; --accent-ink: #FFFFFF;
+    --verified: #2E7D4F; --verified-bg: #E4F1E9; --documented: #2F62A8; --documented-bg: #E5ECF6;
+    --unanswered: #7B8693; --unanswered-bg: #E9ECEF; --withheld: #8A6215; --withheld-bg: #F5ECD9;
+    --high: #A6326E; --high-bg: #F6E6EE;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
-  header { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-bottom: 1px solid var(--line); background: var(--panel); position: sticky; top: 0; z-index: 2; }
-  .brand { font-weight: 650; letter-spacing: -0.01em; }
-  .brand span { color: var(--muted); font-weight: 400; }
-  .pill { font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--unanswered-bg); color: var(--muted); }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 "Public Sans", system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 32px; border-bottom: 1px solid var(--rule); background: var(--paper); position: sticky; top: 0; z-index: 2; }
+  .brand { display: flex; align-items: baseline; gap: 18px; }
+  .brand b { font-weight: 700; font-size: 16px; }
+  .brand nav { display: flex; gap: 14px; font-size: 15px; }
+  .brand nav a { color: var(--ink-2); text-decoration: none; padding-bottom: 2px; }
+  .brand nav a[aria-current] { color: var(--ink); font-weight: 600; border-bottom: 2px solid var(--ink); }
+  .pill { font-size: 13px; padding: 4px 10px; border-radius: 999px; background: var(--unanswered-bg); color: var(--ink-2); }
   .pill.live { background: var(--documented-bg); color: var(--documented); }
   .pill.wait { background: var(--withheld-bg); color: var(--withheld); }
   .pill.ok { background: var(--verified-bg); color: var(--verified); }
   .pill.bad { background: var(--high-bg); color: var(--high); }
-  main { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px 24px 40px; max-width: 1500px; margin: 0 auto; }
-  @media (max-width: 900px) { main { grid-template-columns: 1fr; padding: 16px; } }
-  section.pane { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; display: flex; flex-direction: column; min-height: 70vh; overflow: hidden; }
-  .pane-head { padding: 16px 20px; border-bottom: 1px solid var(--line); }
-  .who { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-  .pane-head h2 { margin: 2px 0 0; font-size: 19px; letter-spacing: -0.01em; }
+  .intro { max-width: 1180px; margin: 0 auto; padding: 28px 32px 0; }
+  .intro h1 { font-weight: 300; font-size: clamp(24px, 3vw, 34px); line-height: 1.2; letter-spacing: -0.01em; margin: 0; max-width: 40ch; }
+  .intro p { color: var(--ink-2); max-width: 64ch; margin: 10px 0 0; }
+  main { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px 32px 48px; max-width: 1180px; margin: 0 auto; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; padding: 16px; } header { padding: 12px 16px; } .intro { padding: 20px 16px 0; } }
+  section.pane { background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; display: flex; flex-direction: column; min-height: 70vh; overflow: hidden; }
+  .pane-head { padding: 16px 20px; border-bottom: 1px solid var(--rule-2); }
+  .who { font-size: 13px; color: var(--ink-3); }
+  .pane-head h2 { margin: 2px 0 0; font-size: 19px; font-weight: 600; letter-spacing: -0.005em; }
   .pane-body { padding: 16px 20px; flex: 1; overflow: auto; }
-  .card { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+  .card { border: 1px solid var(--rule-2); background: #FFFFFF; border-radius: 6px; padding: 14px 16px; margin-bottom: 12px; }
   .row { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-  .meta { color: var(--muted); font-size: 13px; }
-  button { font: inherit; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); padding: 7px 14px; cursor: pointer; }
-  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+  .meta { color: var(--ink-3); font-size: 13px; }
+  button { font: inherit; border-radius: 6px; border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); padding: 7px 14px; cursor: pointer; }
+  button.primary { background: var(--ink); color: var(--sheet); border-color: var(--ink); font-weight: 600; }
   button:disabled { opacity: 0.5; cursor: default; }
   .feed { list-style: none; margin: 0; padding: 0; font-size: 13.5px; }
-  .feed li { padding: 6px 0; border-bottom: 1px dashed var(--line); display: flex; gap: 10px; }
-  .feed .side { flex: 0 0 64px; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; padding-top: 1px; }
+  .feed li { padding: 6px 0; border-bottom: 1px solid var(--rule-2); display: flex; gap: 10px; }
+  .feed .side { flex: 0 0 60px; font-weight: 600; font-size: 13px; }
   .feed .side.vc { color: var(--accent); } .feed .side.startup { color: var(--verified); }
-  .empty { color: var(--muted); text-align: center; padding: 48px 16px; }
-  .spinner { width: 18px; height: 18px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; display: inline-block; animation: spin 0.9s linear infinite; vertical-align: -4px; margin-right: 8px; }
+  .empty { color: var(--ink-3); text-align: center; padding: 48px 16px; }
+  .spinner { width: 16px; height: 16px; border: 2px solid var(--rule); border-top-color: var(--accent); border-radius: 50%; display: inline-block; animation: spin 0.9s linear infinite; vertical-align: -3px; margin-right: 8px; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
   .q { font-weight: 600; margin: 0 0 6px; }
-  .qid { color: var(--muted); font-weight: 500; margin-right: 6px; }
+  .qid { color: var(--ink-3); font-weight: 500; margin-right: 6px; }
   .tier { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
   .tier.verified { background: var(--verified-bg); color: var(--verified); }
   .tier.documented { background: var(--documented-bg); color: var(--documented); }
   .tier.unanswered { background: var(--unanswered-bg); color: var(--unanswered); }
   .tier.withheld { background: var(--withheld-bg); color: var(--withheld); }
   .answer { white-space: pre-wrap; margin: 8px 0; }
-  .answer.struck { text-decoration: line-through; color: var(--muted); }
-  textarea { width: 100%; min-height: 110px; font: inherit; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--accent); background: var(--panel); color: var(--ink); }
-  details { font-size: 13px; color: var(--muted); }
+  .answer.struck { text-decoration: line-through; color: var(--ink-3); }
+  textarea { width: 100%; min-height: 110px; font: inherit; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--accent); background: #FFFFFF; color: var(--ink); }
+  details { font-size: 13px; color: var(--ink-3); }
   details li { margin: 4px 0; }
   code { font-size: 12px; background: var(--unanswered-bg); padding: 1px 5px; border-radius: 4px; }
-  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-  .seg button { border: 0; border-radius: 0; padding: 6px 12px; font-size: 13.5px; }
-  .seg button + button { border-left: 1px solid var(--line); }
+  .seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+  .seg button { border: 0; border-radius: 0; padding: 6px 12px; font-size: 13.5px; background: #FFFFFF; }
+  .seg button + button { border-left: 1px solid var(--rule); }
   .seg button.on[data-a=approve] { background: var(--verified-bg); color: var(--verified); font-weight: 600; }
   .seg button.on[data-a=edit] { background: var(--documented-bg); color: var(--documented); font-weight: 600; }
   .seg button.on[data-a=withhold] { background: var(--withheld-bg); color: var(--withheld); font-weight: 600; }
-  .sendbar { position: sticky; bottom: 0; background: var(--panel); border-top: 1px solid var(--line); padding: 12px 20px; }
+  .sendbar { position: sticky; bottom: 0; background: var(--sheet); border-top: 1px solid var(--rule-2); padding: 12px 20px; }
   .report { font-size: 14.5px; }
-  .report h1 { font-size: 20px; margin: 0 0 6px; } .report h2 { font-size: 16px; margin: 22px 0 8px; } .report h3 { font-size: 15px; }
+  .report h1 { font-size: 20px; font-weight: 600; margin: 0 0 6px; } .report h2 { font-size: 16px; font-weight: 600; margin: 22px 0 8px; } .report h3 { font-size: 15px; }
   .report table { border-collapse: collapse; width: 100%; font-size: 13px; display: block; overflow-x: auto; }
-  .report th, .report td { border: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+  .report th, .report td { border: 1px solid var(--rule-2); padding: 6px 8px; text-align: left; vertical-align: top; }
   .report ul { padding-left: 20px; } .report li { margin: 4px 0; }
-  .report hr { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
-  .error { background: var(--high-bg); color: var(--high); padding: 12px 14px; border-radius: 8px; }
+  .report hr { border: 0; border-top: 1px solid var(--rule-2); margin: 20px 0; }
+  .error { background: var(--high-bg); color: var(--high); padding: 12px 14px; border-radius: 6px; }
+  .note { background: var(--withheld-bg); border-color: transparent; color: var(--ink); }
 </style>
+
 </head>
 <body>
 <header>
-  <div class="brand">Trace <span>· portfolio check-ins</span></div>
-  <div id="status" class="pill">Idle</div>
+  <div class="brand"><b>Trace</b><nav aria-label="Trace"><a href="/">Census</a><a href="/checkins" aria-current="page">Check-ins</a></nav></div>
+  <div id="status" class="pill" role="status">Idle</div>
 </header>
+<div class="intro">
+  <h1>Ask the founder directly, and only when the census gives a reason.</h1>
+  <p>The fund's agent asks; the startup's agent answers from the company's own data room, citing a file for every claim; the founder approves, edits or withholds each answer before anything is sent. Tallyline is a synthetic demo company.</p>
+</div>
 <main>
   <section class="pane">
-    <div class="pane-head"><div class="who">Fund view · Northbeam Ventures</div><h2>Portfolio check-in</h2></div>
+    <div class="pane-head"><div class="who">Fund view: Northbeam Ventures</div><h2>Portfolio check-in</h2></div>
     <div class="pane-body">
       <div class="card">
         <div class="row">
           <div>
             <div class="q" style="margin:0">Tallyline</div>
-            <div class="meta">Seed lead, $1.5M · Board seat: Elena Marsh · Next board meeting 2026-11-05</div>
+            <div class="meta">Seed lead, $1.5M. Board seat: Elena Marsh. Next board meeting Nov 5, 2026.</div>
           </div>
           <button id="start" class="primary">Request Q3 check-in</button>
         </div>
       </div>
       <div id="vc-error"></div>
-      <div id="feed-wrap" class="card" hidden><div class="who" style="margin-bottom:6px">Activity</div><ul id="feed" class="feed"></ul></div>
+      <div id="from-census" class="card note" hidden></div>
+      <div id="feed-wrap" class="card" hidden><div class="who" style="margin-bottom:6px">What the agents are doing</div><ul id="feed" class="feed"></ul></div>
       <div id="report" class="card report" hidden></div>
     </div>
   </section>
 
   <section class="pane">
-    <div class="pane-head"><div class="who">Founder view · Tallyline</div><h2>Investor requests</h2></div>
+    <div class="pane-head"><div class="who">Founder view: Tallyline</div><h2>Investor requests</h2></div>
     <div class="pane-body" id="founder"></div>
     <div class="sendbar" id="sendbar" hidden>
       <div class="row">
@@ -163,7 +173,7 @@ function renderFounder() {
     pendingKey = null;
     const sent = state.sent.map((s) => {
       const n = (t) => s.response.answers.filter((a) => a.tier === t).length;
-      return `<div class="card"><div class="q">Sent round ${s.request.round} to ${esc(s.request.fund)}</div><div class="meta">${s.request.questions.length} answers · ${n("verified")} verified · ${n("documented")} documented · ${n("unanswered")} unanswered · ${n("withheld")} withheld</div></div>`;
+      return `<div class="card"><div class="q">Sent round ${s.request.round} to ${esc(s.request.fund)}</div><div class="meta">${s.request.questions.length} answers: ${n("verified")} verified, ${n("documented")} documented, ${n("unanswered")} unanswered, ${n("withheld")} withheld</div></div>`;
     }).join("");
     const waiting = state.phase === "founder_drafting"
       ? `<div class="empty"><span class="spinner"></span>Northbeam sent questions. Your agent is drafting answers from the data room…</div>`
@@ -213,7 +223,7 @@ function renderFounder() {
 function updateTally() {
   const v = Object.values(decisions);
   const n = (a) => v.filter((d) => d.action === a).length;
-  $("#tally").textContent = `${n("approve")} approved · ${n("edit")} edited · ${n("withhold")} withheld`;
+  $("#tally").textContent = `${n("approve")} approved, ${n("edit")} edited, ${n("withhold")} withheld`;
 }
 
 async function tick() {
@@ -235,6 +245,14 @@ $("#send").onclick = async () => {
   $("#send").disabled = false;
   tick();
 };
+// Arriving from a call in the census: say why, and that real companies need their founder to connect a data room.
+const from = new URLSearchParams(location.search);
+if (from.get("company")) {
+  const name = esc(from.get("company")), why = from.get("why") ? esc(from.get("why")) : "";
+  $("#from-census").hidden = false;
+  $("#from-census").innerHTML = `<div class="q" style="margin:0">Check-in requested for ${name}</div>
+    <div class="meta" style="color:var(--ink-2)">${why ? `Why the census flagged it: ${why}. ` : ""}${name} hasn't connected a data room yet, so its founder gets an invite first. The demo below runs the same flow with Tallyline.</div>`;
+}
 tick();
 setInterval(tick, 1000);
 </script>

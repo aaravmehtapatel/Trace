@@ -20,6 +20,16 @@ Free public checks run on every company. Licensed headcount and news from Akta (
 
 For the companies on that call list, [`checkins/`](checkins/) asks directly: the fund's agent sends questions, the startup's agent answers from its own data room with a citation for every claim, and the founder approves before anything is sent. It runs between workspaces on Roundtable. See [checkins/README.md](checkins/README.md).
 
+**Run the whole product on one link.** The check-ins server also serves the latest census report, so Trace has one home:
+
+```bash
+cd checkins && npm install && npm run web
+# http://localhost:4321          the census (Everywhere Ventures)
+# http://localhost:4321/checkins check-ins (Tallyline, a synthetic demo company)
+```
+
+Every call in the census, and every company record, has a "Request a check-in" link that opens check-ins with the reason the census flagged it. A live check-in needs `CENSUS_ANTHROPIC_API_KEY` in the census `.env`, or a reply cache from an earlier run in `checkins/.checkins/cache`.
+
 The trend only uses sources that keep their history, so last quarter can be compared fairly with the year before on the first run: Web Archive content changes, subdomains first seen in certificate-transparency logs, and Form D filings. Job postings, GitHub pushes and sitemap dates only show the present, so they count as proof of current activity, not as trend.
 
 ## Run it

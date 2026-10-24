@@ -1,7 +1,7 @@
 // A local web page for the demo: the fund's pane requests a check-in and reads the report; the
 // founder's pane approves, edits or withholds each drafted answer. Both agents run in this
 // process over a local thread; the page polls /api/state.
-import { existsSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { join, resolve } from "node:path";
 import { type Decision, finalize } from "./approval.ts";
@@ -19,6 +19,15 @@ const FUND_DIR = join(ROOT, "fund", "northbeam");
 const DATAROOM = join(ROOT, "dataroom", COMPANY);
 const THREAD = join(ROOT, ".checkins", "threads", `${COMPANY}-web.jsonl`);
 const PAGE = join(ROOT, "web", "index.html");
+const EXPORTS = join(ROOT, "..", "exports");
+
+// The census report is the product's home page, so Trace runs on one origin: "/" is the
+// latest census export, "/checkins" is this page.
+function censusPage(): string | null {
+  if (!existsSync(EXPORTS)) return null;
+  const latest = readdirSync(EXPORTS).filter((f) => /^census-\d{4}-\d{2}-\d{2}\.html$/.test(f)).sort().pop();
+  return latest ? readFileSync(join(EXPORTS, latest), "utf8") : null;
+}
 const PORT = Number(process.env.PORT ?? 4321);
 const FOUNDER = process.env.FOUNDER_NAME ?? "Dana Okafor";
 
@@ -89,7 +98,13 @@ function send(res: ServerResponse, status: number, data: unknown, type = "applic
 createServer(async (req, res) => {
   try {
     const url = new URL(req.url ?? "/", "http://localhost");
-    if (req.method === "GET" && url.pathname === "/") return send(res, 200, readFileSync(PAGE, "utf8"), "text/html; charset=utf-8");
+    if (req.method === "GET" && url.pathname === "/") {
+      const census = censusPage();
+      if (!census) { res.writeHead(302, { Location: "/checkins" }); return res.end(); }
+      return send(res, 200, census, "text/html; charset=utf-8");
+    }
+    if (req.method === "GET" && (url.pathname === "/checkins" || url.pathname === "/checkins/"))
+      return send(res, 200, readFileSync(PAGE, "utf8"), "text/html; charset=utf-8");
     if (req.method === "GET" && url.pathname === "/api/state") return send(res, 200, state);
     if (req.method === "POST" && url.pathname === "/api/start") {
       if (!["idle", "done", "error"].includes(state.phase)) return send(res, 409, { error: "A check-in is already running." });
@@ -108,4 +123,4 @@ createServer(async (req, res) => {
   } catch (e) {
     send(res, 500, { error: String(e) });
   }
-}).listen(PORT, "127.0.0.1", () => console.log(`Check-ins demo on http://localhost:${PORT}`));
+}).listen(PORT, "127.0.0.1", () => console.log(`Trace on http://localhost:${PORT} (census) and http://localhost:${PORT}/checkins`));
