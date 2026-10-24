@@ -9,7 +9,7 @@ import { externalFindings, externalSignals } from "./akta.ts";
 import { type Company, runChecks } from "./checks.ts";
 import { callJson } from "./llm.ts";
 import type { CheckinRequest, Question } from "./protocol.ts";
-import { narrative, renderReport, type Round } from "./report.ts";
+import { fallbackStory, narrative, renderReport, type Round } from "./report.ts";
 import { PacketReader, type Thread, sendPacket } from "./transport.ts";
 import { newSession } from "./tracing.ts";
 
@@ -79,7 +79,10 @@ export async function runCheckin(thread: Thread, fundDir: string, slug: string, 
   const checks = runChecks(c, rounds);
   checks.findings.push(...externalFindings(ext));
   log(`[vc] ${checks.findings.filter((f) => f.severity === "high").length} high and ${checks.findings.filter((f) => f.severity === "medium").length} medium flags. Writing the report...`);
-  const story = await narrative(c, notes, rounds, checks, ext, session);
+  const story = await narrative(c, notes, rounds, checks, ext, session).catch((e) => {
+    log(`[vc] the model's summary failed (${String(e).slice(0, 120)}); using the computed findings instead.`);
+    return fallbackStory(checks);
+  });
   const dir = join(fundDir, "reports");
   mkdirSync(dir, { recursive: true });
   const reportPath = join(dir, `${slug}-${c.period}.md`);

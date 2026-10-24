@@ -14,8 +14,20 @@ const TIER: Record<Tier, string> = { verified: "Verified", documented: "Document
 const Narrative = z.object({
   status: z.enum(["on_track", "watch", "concern"]),
   bottom_line: z.string(),
-  board_questions: z.array(z.string()).min(2).max(6),
+  board_questions: z.array(z.string()).min(1),
 });
+
+export type Story = { status: Status; bottom_line: string; board_questions: string[] };
+
+// Used when the model call fails, so a check-in always ends with a report.
+export function fallbackStory(checks: CheckResult): Story {
+  const top = checks.findings.filter((f) => f.severity !== "low");
+  return {
+    status: floorStatus(checks.findings),
+    bottom_line: top.length ? `${top.slice(0, 3).map((f) => f.title).join(". ")}.` : "No red flags in this check-in.",
+    board_questions: top.slice(0, 5).map((f) => `${f.title}: what is the plan?`),
+  };
+}
 
 export function floorStatus(findings: Finding[]): Status {
   return findings.some((f) => f.severity === "high") ? "concern" : findings.some((f) => f.severity === "medium") ? "watch" : "on_track";
@@ -28,12 +40,12 @@ export async function narrative(c: Company, notes: string, rounds: Round[], chec
   })).join("\n\n");
   const out = await callJson({
     agent: "vc-agent", session, step: "report", schema: Narrative,
-    system: `You are a venture partner's analyst writing the top of a one-page portfolio report. Be direct and specific; name numbers. Don't repeat the findings list; say what it adds up to and what the partner should do before the board meeting. Treat "unanswered" and "withheld" answers as information. Reply with only JSON: {"status":"on_track|watch|concern","bottom_line":"3 to 5 sentences","board_questions":["..."]}.`,
+    system: `You are a venture partner's analyst writing the top of a one-page portfolio report. Be direct and specific; name numbers. Don't repeat the findings list; say what it adds up to and what the partner should do before the board meeting. Treat "unanswered" and "withheld" answers as information. Reply with only JSON: {"status":"on_track|watch|concern","bottom_line":"3 to 5 sentences","board_questions":["at most 6"]}.`,
     user: `Company: ${c.name}. Period: ${c.period}. Next board meeting: ${c.next_board_meeting}.\n\nFund notes:\n${notes}\n\nFindings (computed, trust these):\n${checks.findings.map((f) => `- [${f.severity}] ${f.title}: ${f.detail}`).join("\n")}\n\nMetrics:\n${checks.metrics.map((m) => `- ${m.name}: ${m.now} (last ${m.last || "n/a"}${m.plan ? `, plan ${m.plan}` : ""})`).join("\n")}\n\nOutside signals (${ext.source}): ${JSON.stringify({ headcount: ext.headcount, news: ext.news })}\n\nThe company's answers:\n${qa}`,
   });
   const floor = floorStatus(checks.findings);
   const order: Status[] = ["on_track", "watch", "concern"];
-  return { ...out, status: order[Math.max(order.indexOf(out.status), order.indexOf(floor))] };
+  return { ...out, board_questions: out.board_questions.slice(0, 6), status: order[Math.max(order.indexOf(out.status), order.indexOf(floor))] };
 }
 
 export type Round = { req: CheckinRequest; resp: CheckinResponse };

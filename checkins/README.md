@@ -37,11 +37,14 @@ cd checkins
 npm install
 cp .env.example .env        # skip if the census .env already has CENSUS_ANTHROPIC_API_KEY
 npm test                    # no keys needed: a scripted model runs the whole flow
-npm run demo                # both agents on this machine; you approve each answer
+npm run web                 # the demo UI at http://localhost:4321: fund pane + founder pane
+npm run demo                # the same flow in the terminal; you approve each answer
 npm run demo -- --approve-all --withhold s7     # unattended, founder withholds "top risks"
 ```
 
 The report is written to `fund/northbeam/reports/tallyline-2026-Q3.md`.
+
+In the web UI, the left pane is Northbeam: request the check-in, watch both agents work, and read the report. The right pane is Tallyline's founder: each drafted answer shows its tier and sources, with Approve, Edit and Withhold buttons. Model replies are cached in `.checkins/cache`, so a rerun with the same choices is instant. That's useful on stage; delete the folder to force fresh calls.
 
 ### Across two Roundtable workspaces
 

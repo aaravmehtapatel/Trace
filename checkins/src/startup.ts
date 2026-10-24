@@ -2,7 +2,7 @@
 // approval, send. The data room is a local folder or the company's Roundtable bank.
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { approve, type ApprovalMode } from "./approval.ts";
+import { type ApprovalMode, type Approver, terminalApprover } from "./approval.ts";
 import { type Doc, loadDataroom } from "./dataroom.ts";
 import { RoundtableHttp } from "./roundtable.ts";
 import { draftResponse } from "./startup-agent.ts";
@@ -10,8 +10,9 @@ import { newSession } from "./tracing.ts";
 import { PacketReader, type Thread, sendPacket } from "./transport.ts";
 
 export async function runStartup(thread: Thread, docs: () => Promise<Doc[]>, mode: ApprovalMode,
-  opts: { rounds?: number; signal?: AbortSignal; log?: (s: string) => void } = {}): Promise<void> {
+  opts: { rounds?: number; signal?: AbortSignal; log?: (s: string) => void; approver?: Approver } = {}): Promise<void> {
   const log = opts.log ?? console.log;
+  const approve = opts.approver ?? terminalApprover(mode);
   const reader = new PacketReader(thread);
   const session = newSession("startup");
   for (let i = 0; i < (opts.rounds ?? Infinity); i++) {
@@ -20,7 +21,7 @@ export async function runStartup(thread: Thread, docs: () => Promise<Doc[]>, mod
     log(`[startup] ${req.fund} asked ${req.questions.length} questions (round ${req.round}). Drafting from the data room...`);
     const room = await docs();
     const draft = await draftResponse(req, room, session);
-    const resp = await approve(req, draft, room, mode);
+    const resp = await approve(req, draft, room);
     const shared = resp.answers.filter((a) => a.tier !== "unanswered" && a.tier !== "withheld").length;
     await sendPacket(thread, resp, `${req.company}'s agent replied to ${req.fund}, approved by ${resp.approved_by}: ${shared} of ${resp.answers.length} answered with citations.`);
     log(`[startup] sent round ${req.round}, approved by ${resp.approved_by}.`);

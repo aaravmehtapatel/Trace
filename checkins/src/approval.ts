@@ -9,6 +9,9 @@ import type { CheckinRequest, CheckinResponse } from "./protocol.ts";
 import { attachmentsFor } from "./startup-agent.ts";
 
 export type ApprovalMode = { interactive: boolean; withhold: Set<string>; approver: string; outbox: string };
+export type Decision = { action: "approve" | "edit" | "withhold"; text?: string };
+// Anything that turns a draft into an approved reply: the terminal prompt below, or the web page.
+export type Approver = (req: CheckinRequest, draft: CheckinResponse, docs: Doc[]) => Promise<CheckinResponse>;
 
 export function draftMarkdown(req: CheckinRequest, draft: CheckinResponse): string {
   const lines = [`# Draft reply to ${req.fund}: ${req.period} check-in, round ${req.round}`, "",
@@ -22,41 +25,46 @@ export function draftMarkdown(req: CheckinRequest, draft: CheckinResponse): stri
   return lines.join("\n");
 }
 
-export async function approve(req: CheckinRequest, draft: CheckinResponse, docs: Doc[], mode: ApprovalMode): Promise<CheckinResponse> {
-  mkdirSync(mode.outbox, { recursive: true });
-  const file = join(mode.outbox, `${req.id}-round${req.round}.draft.md`);
-  writeFileSync(file, draftMarkdown(req, draft));
-  console.log(`\nDraft written to ${file}`);
-
-  const answers = draft.answers.map((a) => ({ ...a, sources: [...a.sources] }));
-  const rl = mode.interactive ? createInterface({ input: process.stdin, output: process.stdout }) : undefined;
-  let approveRest = false;
-  try {
-    for (const a of answers) {
-      const q = req.questions.find((x) => x.id === a.question_id)!;
-      if (mode.withhold.has(a.question_id)) {
-        withhold(a);
-        console.log(`  ${a.question_id}: withheld (--withhold)`);
-        continue;
-      }
-      if (!rl || approveRest) continue;
-      console.log(`\n${q.id}. ${q.text}\n  [${a.tier}] ${a.answer}`);
-      for (const s of a.sources) console.log(`    - ${s.path}: "${s.quote}"`);
-      const choice = (await rl.question("  Enter = approve, e = edit, w = withhold, A = approve all the rest: ")).trim();
-      if (choice === "A") approveRest = true;
-      else if (choice === "w") withhold(a);
-      else if (choice === "e") {
-        const text = (await rl.question("  New answer: ")).trim();
-        if (text) Object.assign(a, { answer: text, founder_edited: true });
-      }
-    }
-  } finally {
-    rl?.close();
-  }
+export function finalize(draft: CheckinResponse, docs: Doc[], decisions: Record<string, Decision>, approver: string): CheckinResponse {
+  const answers = draft.answers.map((a) => {
+    const d = decisions[a.question_id];
+    if (d?.action === "withhold") return { ...a, answer: "Withheld by the founder.", tier: "withheld" as const, sources: [], founder_edited: true };
+    if (d?.action === "edit" && d.text?.trim()) return { ...a, answer: d.text.trim(), founder_edited: true };
+    return a;
+  });
   const byPath = new Map(docs.map((d) => [d.path, d]));
-  return { ...draft, answers, attachments: attachmentsFor(answers, byPath), approved_by: mode.approver, approved_at: new Date().toISOString() };
+  return { ...draft, answers, attachments: attachmentsFor(answers, byPath), approved_by: approver, approved_at: new Date().toISOString() };
 }
 
-function withhold(a: CheckinResponse["answers"][number]) {
-  Object.assign(a, { answer: "Withheld by the founder.", tier: "withheld", sources: [], founder_edited: true });
+export function terminalApprover(mode: ApprovalMode): Approver {
+  return async (req, draft, docs) => {
+    mkdirSync(mode.outbox, { recursive: true });
+    const file = join(mode.outbox, `${req.id}-round${req.round}.draft.md`);
+    writeFileSync(file, draftMarkdown(req, draft));
+    console.log(`\nDraft written to ${file}`);
+
+    const decisions: Record<string, Decision> = {};
+    const rl = mode.interactive ? createInterface({ input: process.stdin, output: process.stdout }) : undefined;
+    let approveRest = false;
+    try {
+      for (const a of draft.answers) {
+        const q = req.questions.find((x) => x.id === a.question_id)!;
+        if (mode.withhold.has(a.question_id)) {
+          decisions[a.question_id] = { action: "withhold" };
+          console.log(`  ${a.question_id}: withheld (--withhold)`);
+          continue;
+        }
+        if (!rl || approveRest) continue;
+        console.log(`\n${q.id}. ${q.text}\n  [${a.tier}] ${a.answer}`);
+        for (const s of a.sources) console.log(`    - ${s.path}: "${s.quote}"`);
+        const choice = (await rl.question("  Enter = approve, e = edit, w = withhold, A = approve all the rest: ")).trim();
+        if (choice === "A") approveRest = true;
+        else if (choice === "w") decisions[a.question_id] = { action: "withhold" };
+        else if (choice === "e") decisions[a.question_id] = { action: "edit", text: await rl.question("  New answer: ") };
+      }
+    } finally {
+      rl?.close();
+    }
+    return finalize(draft, docs, decisions, mode.approver);
+  };
 }

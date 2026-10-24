@@ -6,6 +6,7 @@
   "engines": { "node": ">=20.12" },
   "scripts": {
     "demo": "tsx src/cli.ts demo",
+    "web": "tsx src/server.ts",
     "vc": "tsx src/cli.ts vc",
     "startup": "tsx src/cli.ts startup",
     "typecheck": "tsc --noEmit",
