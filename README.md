@@ -20,13 +20,16 @@ Free public checks run on every company. Licensed headcount and news from Akta (
 
 For the companies on that call list, [`checkins/`](checkins/) asks directly: the fund's agent sends questions, the startup's agent answers from its own data room with a citation for every claim, and the founder approves before anything is sent. It runs between workspaces on Roundtable. See [checkins/README.md](checkins/README.md).
 
-**Run the whole product on one link.** The check-ins server also serves the latest census report, so Trace has one home:
+**Run the whole product on one link.** The check-ins server also serves the front page and the latest census report, so Trace has one home:
 
 ```bash
 cd checkins && npm install && npm run web
-# http://localhost:4321          the census (Everywhere Ventures)
+# http://localhost:4321          the front page (site/); "Try it out" opens the census
+# http://localhost:4321/census   the census (Everywhere Ventures)
 # http://localhost:4321/checkins check-ins (Tallyline, a synthetic demo company)
 ```
+
+After a new `export`, run `node site/build-data.mjs` from the repo root so the front page shows the same census.
 
 Every call in the census, and every company record, has a "Request a check-in" link that opens check-ins with the reason the census flagged it. A live check-in needs `CENSUS_ANTHROPIC_API_KEY` in the census `.env`, or a reply cache from an earlier run in `checkins/.checkins/cache`.
 

@@ -40,6 +40,7 @@
   .fund { font-weight: 600; font-size: 15px; margin: 0; }
   .topbar { display: flex; align-items: baseline; gap: 18px; margin-bottom: 6px; }
   .topbar b { font-weight: 700; font-size: 16px; }
+  .topbar b a { color: inherit; text-decoration: none; }
   .topbar nav { display: flex; gap: 14px; font-size: 15px; }
   .topbar nav a { color: var(--ink-2); text-decoration: none; padding-bottom: 2px; }
   .topbar nav a[aria-current] { color: var(--ink); font-weight: 600; border-bottom: 2px solid var(--ink); }
@@ -246,7 +247,7 @@
 </head>
 <body>
 <header class="wrap">
-  <div class="topbar"><b>Trace</b><nav aria-label="Trace"><a href="/" aria-current="page">Census</a><a class="to-checkins" href="/checkins">Check-ins</a></nav></div>
+  <div class="topbar"><b><a class="to-home" href="/">Trace</a></b><nav aria-label="Trace"><a class="to-census" href="/census" aria-current="page">Census</a><a class="to-checkins" href="/checkins">Check-ins</a></nav></div>
   <p class="issue" id="issue"></p>
   <h1 id="headline"></h1>
   <p class="lede" id="lede"></p>
@@ -370,6 +371,11 @@ const month = new Date(DATA.score_date + "T00:00:00").toLocaleDateString("en-US"
 const CHECKINS = location.protocol === "file:" ? "http://localhost:4321/checkins" : "/checkins";
 const checkinUrl = (c, why) => `${CHECKINS}?company=${encodeURIComponent(c.name)}${why ? `&why=${encodeURIComponent(why)}` : ""}`;
 document.querySelectorAll(".to-checkins").forEach((a) => (a.href = CHECKINS));
+// Opened as a file, the front page and the census are on the Trace server too.
+if (location.protocol === "file:") {
+  document.querySelectorAll(".to-home").forEach((a) => (a.href = "http://localhost:4321/"));
+  document.querySelectorAll(".to-census").forEach((a) => (a.href = "http://localhost:4321/census"));
+}
 $("#issue").textContent = `${DATA.fund} portfolio census, ${month}`;
 document.title = `Trace: ${DATA.fund} portfolio census`;
 const parts = ORDER.filter((b) => DATA.counts[b]).map((b) =>

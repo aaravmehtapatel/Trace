@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trace · Portfolio census for venture funds</title>
+<meta name="description" content="Trace is a monthly census of a venture portfolio, built only from public records. It says which companies are still moving, which are fading, and links every answer to the record behind it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ground: #F3F3F1;
+  --step: #E7E7E4;
+  --ink: #1B1917;
+  --ink-2: #57524C;
+  --night: #141311;
+  --on-night: #F6F4EF;
+  --on-night-2: rgba(246, 244, 239, .72);
+  --active: #2F62A8;
+  --fading: #A6326E;
+  --quiet: #B07D1E;
+  --gone: #3D4752;
+  --unresolved: #8E98A3;
+  --rising: #2E7D4F;
+  --face: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --margin: clamp(16px, 3.4vw, 48px);
+  --gap: clamp(96px, 14vw, 200px);
+  --t-hero: clamp(44px, 7.4vw, 112px);
+  --t-h2: clamp(32px, 4.2vw, 60px);
+  --t-lead: clamp(19px, 1.6vw, 22px);
+  --t-body: 17px;
+  --t-small: 14px;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 72px; }
+body { margin: 0; background: var(--ground); color: var(--ink); font: 400 var(--t-body)/1.55 var(--face); font-feature-settings: "tnum" 1; -webkit-font-smoothing: antialiased; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+h1, h2, h3 { margin: 0; font-weight: 500; letter-spacing: -0.03em; line-height: 1.02; text-wrap: balance; }
+h2 { font-size: var(--t-h2); }
+h3 { font-size: 22px; letter-spacing: -0.01em; line-height: 1.2; }
+p { margin: 0; }
+:focus-visible { outline: 3px solid var(--active); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--ink); color: var(--ground); }
+.wrap { padding-inline: var(--margin); max-width: 1520px; margin-inline: auto; }
+.lead { font-size: var(--t-lead); line-height: 1.5; max-width: 34em; }
+.note { color: var(--ink-2); font-size: var(--t-small); }
+
+/* Buttons: one fill, fully round, decided once */
+.btn { display: inline-flex; align-items: center; gap: .5em; min-height: 48px; padding: 0 24px; border-radius: 999px; background: var(--ink); color: var(--ground); font: 500 17px/1 var(--face); text-decoration: none; border: 0; cursor: pointer; transition: transform .2s var(--ease), background-color .2s; }
+.btn:hover { background: #000; transform: translateY(-1px); }
+.btn:active { transform: translateY(1px) scale(.98); }
+.btn.light { background: var(--on-night); color: var(--ink); }
+.btn.light:hover { background: #fff; }
+.link { display: inline-flex; align-items: center; gap: .4em; min-height: 48px; font-weight: 500; text-decoration: none; }
+.link span { transition: transform .2s var(--ease); }
+.link:hover span { transform: translateX(4px); }
+.link:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* Navigation: wordmark, four links, one action */
+.nav { position: fixed; inset: 0 0 auto; z-index: 10; color: var(--on-night); transition: background-color .3s, color .3s; }
+.nav .wrap { display: flex; align-items: center; gap: 36px; height: 68px; }
+.nav.solid { background: var(--ground); color: var(--ink); }
+.wordmark { font-weight: 600; font-size: 22px; letter-spacing: -0.04em; text-decoration: none; }
+.nav ul { display: flex; gap: 28px; margin: 0; padding: 0; list-style: none; font-size: 14px; }
+.nav ul a { text-decoration: none; opacity: .82; transition: opacity .2s; }
+.nav ul a:hover { opacity: 1; }
+.nav .btn { margin-left: auto; min-height: 40px; padding: 0 18px; font-size: 14px; background: var(--on-night); color: var(--ink); }
+.nav.solid .btn { background: var(--ink); color: var(--ground); }
+@media (max-width: 860px) { .nav ul { display: none; } }
+
+/* Hero: the census room, full bleed */
+.hero { position: relative; min-height: max(640px, 100svh); display: flex; align-items: flex-end; color: var(--on-night); background: var(--night); overflow: hidden; }
+.hero picture, .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.hero img { filter: grayscale(1) contrast(1.05); transform-origin: 60% 40%; }
+/* taste-skill-ignore: neutral scrim over the hero photograph */ .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,19,17,.9) 0%, rgba(20,19,17,.72) 46%, rgba(20,19,17,.35) 100%), linear-gradient(0deg, rgba(20,19,17,.7), rgba(20,19,17,0) 50%); }
+.hero .wrap { position: relative; z-index: 1; width: 100%; padding-bottom: clamp(56px, 9vh, 112px); padding-top: 140px; }
+.hero h1 { font-size: var(--t-hero); max-width: 9.5em; letter-spacing: -0.04em; line-height: .98; }
+.hero .lead { margin-top: 36px; color: var(--on-night-2); max-width: 31em; }
+.hero .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 40px; }
+.hero .caption { position: absolute; right: var(--margin); bottom: 24px; z-index: 1; font-size: var(--t-small); color: var(--on-night-2); }
+@media (max-width: 700px) { .hero .caption { display: none; } .hero img { object-position: 30% 30%; } }
+
+section { padding-top: var(--gap); }
+
+/* Census: one square per company */
+.census { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px clamp(40px, 6vw, 96px); align-items: start; }
+.census .lead { margin-top: 28px; }
+.tally { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 32px; margin: 40px 0 0; padding: 0; list-style: none; }
+.tally li { display: grid; grid-template-columns: 14px auto; column-gap: 12px; align-items: baseline; }
+.tally b { grid-column: 2; font-size: 34px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; }
+.tally span { grid-column: 2; color: var(--ink-2); font-size: 14px; }
+.tally i { grid-row: 1; width: 14px; height: 14px; border-radius: 3px; background: var(--c); align-self: center; }
+.grid265 { display: grid; grid-template-columns: repeat(auto-fill, minmax(26px, 1fr)); gap: 5px; margin: 0; padding: 0; list-style: none; }
+.grid265 li { aspect-ratio: 1; border-radius: 4px; background: var(--c); transition: transform .15s var(--ease); }
+.grid265 button { all: unset; display: block; width: 100%; height: 100%; cursor: pointer; border-radius: 4px; }
+.grid265 li:hover { transform: scale(1.25); }
+.grid265 button:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.grid-note { margin-top: 20px; min-height: 3em; }
+.grid-note b { font-weight: 600; }
+@media (max-width: 900px) { .census { grid-template-columns: minmax(0, 1fr); } .grid265 { grid-template-columns: repeat(auto-fill, minmax(18px, 1fr)); gap: 4px; } }
+
+/* Evidence: a crop of the real report */
+.evidence { text-align: center; }
+.evidence h2 { max-width: 14em; margin-inline: auto; }
+.evidence .lead { margin: 28px auto 0; }
+.sheet { margin: 64px auto 0; max-width: 1180px; background: var(--step); border-radius: 20px; padding: clamp(12px, 3vw, 40px); text-align: left; }
+.sheet-in { background: #FCFBFA; border-radius: 12px; overflow-x: auto; }
+.sheet table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 14px; }
+.sheet caption { text-align: left; padding: 18px 20px 14px; font-weight: 600; font-size: 14px; }
+.sheet caption span { font-weight: 400; color: var(--ink-2); }
+.sheet th { white-space: nowrap; text-align: left; font-weight: 500; color: var(--ink-2); font-size: 14px; padding: 10px 20px; border-top: 1px solid #E3DFD7; border-bottom: 1px solid #E3DFD7; }
+.sheet td { padding: 14px 20px; border-bottom: 1px solid #EEEBE5; vertical-align: top; }
+.sheet tr:last-child td { border-bottom: 0; }
+.sheet td.co b { display: block; font-weight: 500; }
+.sheet td.co span { color: var(--ink-2); font-size: 14px; }
+.sheet td.when { white-space: nowrap; }
+.sheet td a { color: var(--active); text-underline-offset: 3px; }
+.pill { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; font-weight: 500; }
+.pill::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+
+/* Full-bleed picture with a heading */
+.room { position: relative; margin-top: var(--gap); color: var(--on-night); background: var(--night); }
+.room img { width: 100%; height: clamp(520px, 80vh, 860px); object-fit: cover; object-position: 50% 45%; filter: grayscale(1); }
+/* taste-skill-ignore: neutral scrim over the photograph */ .room::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(20,19,17,.88) 0%, rgba(20,19,17,.25) 55%, rgba(20,19,17,0) 100%); }
+.room .wrap { position: absolute; inset: auto 0 0; z-index: 1; padding-bottom: clamp(40px, 7vw, 96px); display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); gap: 32px 64px; align-items: end; }
+.room h2 { max-width: 12em; }
+.room p { color: var(--on-night-2); font-size: var(--t-lead); }
+.room .caption { color: var(--on-night-2); font-size: var(--t-small); margin-top: 16px; }
+@media (max-width: 800px) { .room .wrap { grid-template-columns: minmax(0, 1fr); position: static; padding-top: 32px; } .room img { height: 420px; } .room::after { display: none; } }
+
+/* Call list */
+.calls { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 48px clamp(40px, 6vw, 96px); }
+.calls-head { position: sticky; top: 108px; align-self: start; }
+.calls-head .lead { margin-top: 28px; }
+.calls-head .note { margin-top: 20px; }
+.call-group + .call-group { margin-top: 56px; }
+.call-list { list-style: none; margin: 0; padding: 0; }
+.call { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 8px 40px; padding: 0; }
+.call-list { display: grid; gap: 40px; }
+.call .who { font-size: clamp(24px, 2.4vw, 34px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; }
+.call .who a { text-decoration: none; }
+.call .who a:hover { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 2px; }
+.call .why { color: var(--ink-2); font-size: 14px; margin-top: 6px; }
+.call .ask { font-size: 17px; line-height: 1.45; }
+@media (max-width: 960px) { .calls { grid-template-columns: minmax(0, 1fr); } .calls-head { position: static; } .call { grid-template-columns: minmax(0, 1fr); } }
+
+/* Statuses: the proportion of the whole portfolio, then the rule for each */
+.status-head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px 64px; align-items: end; }
+.bar { display: flex; height: 88px; margin-top: 56px; border-radius: 14px; overflow: hidden; gap: 4px; }
+.bar div { flex: var(--n) 1 0; background: var(--c); color: #fff; padding: 14px 16px; font-weight: 500; font-size: 14px; min-width: 0; white-space: nowrap; overflow: hidden; transform-origin: left; }
+.rules { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 32px; }
+.rules li { border-top: 4px solid var(--c); padding-top: 20px; }
+.rules b { display: block; margin-top: 14px; font-size: 60px; font-weight: 500; letter-spacing: -0.04em; line-height: 1; }
+.rules h3 { margin-top: 0; }
+.rules p { margin-top: 10px; font-size: 17px; }
+@media (max-width: 1100px) { .rules { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .status-head { grid-template-columns: minmax(0, 1fr); } .bar { height: 56px; } .bar div { padding: 0; font-size: 0; } .rules { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
+
+/* Sources: picture left, the two kinds of record right */
+.sources { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px clamp(40px, 6vw, 96px); align-items: start; }
+.sources figure { margin: 0; position: sticky; top: 100px; }
+.sources figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; filter: grayscale(1); border-radius: 4px; }
+.sources figcaption { margin-top: 12px; }
+.sources .lead { margin-top: 28px; }
+.kinds { margin-top: 56px; display: grid; gap: 48px; }
+.kind h3 { font-size: 22px; }
+.kind > p { margin-top: 8px; color: var(--ink-2); }
+.kind dl { margin: 20px 0 0; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); background: var(--step); border-radius: 14px; padding: 8px 24px; }
+.kind dt, .kind dd { margin: 0; padding: 14px 0; }
+.kind dt { font-weight: 500; padding-right: 20px; }
+.kind dd + dt { margin-top: 4px; }
+@media (max-width: 900px) { .sources { grid-template-columns: minmax(0, 1fr); } .sources figure { position: static; } .sources figure img { aspect-ratio: 4 / 3; } }
+@media (max-width: 560px) { .kind dl { grid-template-columns: minmax(0, 1fr); } .kind dt { padding-bottom: 0; } .kind dd { padding-top: 4px; } }
+
+/* Lookup: the live thing, set as a census card */
+.lookup { background: var(--night); color: var(--on-night); margin-top: var(--gap); padding-block: clamp(80px, 9vw, 136px); }
+.lookup-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px clamp(40px, 6vw, 96px); align-items: start; }
+.lookup .lead { color: var(--on-night-2); margin-top: 28px; }
+.field { margin-top: 40px; position: relative; }
+.field label { display: block; font-weight: 500; margin-bottom: 10px; }
+.field input { width: 100%; height: 60px; border-radius: 999px; border: 0; padding: 0 26px; background: #2A2825; color: var(--on-night); font: 400 22px var(--face); }
+.field input::placeholder { color: rgba(246,244,239,.5); }
+.field input:focus-visible { outline: 3px solid var(--on-night); outline-offset: 2px; }
+.matches { list-style: none; margin: 10px 0 0; padding: 6px; background: #2A2825; border-radius: 18px; max-height: 300px; overflow-y: auto; }
+.matches:empty { display: none; }
+.matches button { all: unset; box-sizing: border-box; display: flex; justify-content: space-between; gap: 16px; width: 100%; padding: 12px 18px; border-radius: 12px; cursor: pointer; }
+.matches button:hover, .matches button:focus-visible, .matches button[aria-selected="true"] { background: #3A3733; }
+.matches span { color: var(--on-night-2); font-size: 14px; }
+.try { margin-top: 20px; color: var(--on-night-2); font-size: 14px; }
+.try button { all: unset; cursor: pointer; color: var(--on-night); text-decoration: underline; text-underline-offset: 3px; margin-right: 4px; }
+.try button:focus-visible { outline: 2px solid var(--on-night); outline-offset: 2px; }
+.card { background: #F3EBD9; color: #2B2620; border-radius: 6px 6px 6px 6px; padding: clamp(20px, 3vw, 36px); clip-path: polygon(28px 0, 100% 0, 100% 100%, 0 100%, 0 28px); transition: opacity .25s, transform .35s var(--ease); }
+.card.swap { opacity: 0; transform: translateY(10px); }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.card h3 { font-size: clamp(28px, 2.4vw, 34px); letter-spacing: -0.03em; }
+.card .meta { color: #6A6156; font-size: 14px; margin-top: 6px; }
+.card .meta a { color: inherit; }
+.card .pill { font-size: 17px; margin-top: 8px; }
+.card .rule { margin-top: 22px; font-size: 17px; }
+.holes { margin-top: 28px; }
+.holes-row { display: grid; grid-template-columns: repeat(18, minmax(0, 1fr)); gap: 6px; align-items: end; max-width: 460px; }
+.holes-row div { display: grid; gap: 5px; align-content: end; }
+.holes-row i { display: block; height: 11px; width: 62%; margin-inline: auto; border-radius: 2px; background: #2B2620; }
+.holes-row i.blank { background: #E5DAC4; }
+.holes-axis { max-width: 460px; display: flex; justify-content: space-between; color: #6A6156; font-size: 14px; margin-top: 10px; }
+.card h4 { margin: 28px 0 8px; font-size: 14px; font-weight: 600; }
+.card ul { list-style: none; margin: 0; padding: 0; }
+.card li { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px; padding: 9px 0; font-size: 14px; box-shadow: 0 -2px 0 #E5DAC4; } /* taste-skill-ignore: row lines inside the data-ui census card */
+.card li a { color: inherit; text-underline-offset: 3px; }
+.card li time { color: #6A6156; }
+.card .badges { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+.card .badges span { background: #E5DAC4; border-radius: 999px; padding: 4px 12px; font-size: 14px; }
+@media (max-width: 900px) { .lookup-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 480px) { .card li { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+
+/* Grading and limits */
+.grading { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px clamp(40px, 6vw, 96px); align-items: start; }
+.grading blockquote { margin: 40px 0 0; font-size: clamp(24px, 2.4vw, 34px); line-height: 1.25; letter-spacing: -0.02em; max-width: 22em; }
+.grading .lead { margin-top: 28px; }
+.limits { margin: 48px 0 0; padding: 0 0 0 1.2em; display: grid; gap: 14px; max-width: 40em; }
+.limits li::marker { color: var(--ink-2); }
+.grading figure { margin: 0; }
+.grading figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 78%; filter: grayscale(1); border-radius: 4px; }
+.grading figcaption { margin-top: 12px; }
+@media (max-width: 900px) { .grading { grid-template-columns: minmax(0, 1fr); } .grading figure img { aspect-ratio: 4 / 3; } }
+
+/* Run it */
+.run { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px clamp(40px, 6vw, 96px); align-items: start; }
+.run .lead { margin-top: 28px; }
+.run .actions { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; margin-top: 36px; }
+.run figure { margin: 0; }
+.run img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; filter: grayscale(1); border-radius: 4px; }
+.run figcaption { margin-top: 12px; }
+pre { margin: 24px 0 0; background: var(--night); color: var(--on-night); border-radius: 14px; padding: 24px 28px; overflow-x: auto; font: 400 14px/1.75 ui-monospace, "Cascadia Mono", Consolas, monospace; }
+pre .c { color: rgba(246,244,239,.55); }
+@media (max-width: 900px) { .run { grid-template-columns: minmax(0, 1fr); } }
+
+/* Footer: the name returns at full width */
+footer { margin-top: var(--gap); background: var(--step); padding-top: 72px; padding-bottom: 40px; overflow: hidden; }
+.foot { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 3fr) minmax(0, 3fr); gap: 32px 48px; }
+.foot p { max-width: 30em; }
+.foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.foot a { text-underline-offset: 3px; }
+.big { font-size: clamp(120px, 30vw, 460px); font-weight: 600; letter-spacing: -0.06em; line-height: .78; margin: 72px 0 0 -0.04em; }
+.credits { margin-top: 48px; font-size: var(--t-small); max-width: 90em; }
+@media (max-width: 800px) { .foot { grid-template-columns: minmax(0, 1fr); } }
+
+/* Motion: entrances once per section; content stays visible without script */
+.js [data-rise] { opacity: 0; transform: translateY(24px); transition: opacity .7s var(--ease), transform .7s var(--ease); transition-delay: calc(var(--i, 0) * 80ms); }
+.js [data-rise].in { opacity: 1; transform: none; }
+.js .grid265 li { opacity: 0; transform: scale(.4); transition: opacity .3s, transform .3s var(--ease); }
+.js .grid265.in li { opacity: 1; transform: none; transition-delay: calc(var(--i) * 4ms); }
+.js .grid265.in li:hover { transform: scale(1.25); transition-delay: 0s; }
+.js .bar div { transform: scaleX(0); transition: transform 1s var(--ease); }
+.js .bar.in div { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js [data-rise], .js .grid265 li, .js .bar div { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .hero img { transform: none !important; }
+}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="wordmark" href="#top">Trace</a>
+    <ul>
+      <li><a href="#calls">Call list</a></li>
+      <li><a href="#statuses">Statuses</a></li>
+      <li><a href="#sources">Sources</a></li>
+      <li><a href="#grading">Method</a></li>
+    </ul>
+    <a class="btn" href="/census">Try it out</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" style="padding-top:0">
+    <img src="assets/census-pantograph-and-1930s-keypunches.jpg" width="1920" height="1537" alt="Two census clerks punching population cards at a long table, shelves of card boxes behind them" fetchpriority="high">
+    <div class="wrap">
+      <h1 data-rise>Stop chasing founder updates.</h1>
+      <p class="lead" data-rise style="--i:1">Trace is a monthly census of a venture portfolio, built only from public records. It says which companies are still moving, which are fading, and links every answer to the record behind it.</p>
+      <div class="actions" data-rise style="--i:2">
+        <a class="btn light" href="/census">Try it out</a>
+        <a class="link" href="#calls">See this week's call list <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <p class="caption">Census clerks punching population cards, about 1940.</p>
+  </section>
+
+  <section class="wrap census" aria-labelledby="census-h">
+    <div>
+      <h2 id="census-h" data-rise><span data-total>265</span> companies, one record each.</h2>
+      <p class="lead" data-rise style="--i:1">The <span data-date>October 2026</span> census of <span data-fund>Everywhere Ventures</span>, a fund too large to email every founder. Every square is a company. Founders didn't have to send anything.</p>
+      <ul class="tally" data-rise style="--i:2" id="tally"></ul>
+    </div>
+    <div>
+      <ul class="grid265" id="grid265" aria-label="Every company in the census, coloured by status"></ul>
+      <p class="grid-note note" id="grid-note" aria-live="polite">Point at a square to see the company. Select one to open its record.</p>
+    </div>
+  </section>
+
+  <section class="wrap evidence" aria-labelledby="evidence-h">
+    <h2 id="evidence-h" data-rise>Every status links to its record.</h2>
+    <p class="lead" data-rise style="--i:1">A sitemap date, a Web Archive change, a new certificate, a Form D, a headcount drop. Trace keeps every raw response and never overwrites it, so each status can be opened and checked.</p>
+    <div class="sheet" data-rise style="--i:2">
+      <div class="sheet-in" data-ui>
+        <table>
+          <caption>Portfolio census <span id="sheet-date">· 2026-10-24</span></caption>
+          <thead><tr><th scope="col">Company</th><th scope="col">Status</th><th scope="col">Why</th><th scope="col">Latest record</th></tr></thead>
+          <tbody id="sheet-rows"><tr><td colspan="4">The census table needs JavaScript. The full report is in <code>exports/</code>.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="room" aria-labelledby="room-h" style="padding-top:0">
+    <img src="assets/keypunch-operator-1950-census-ibm-016.jpg" width="1920" height="1579" alt="A keypunch operator reads a 1950 census sheet clipped above her machine and punches it onto cards" loading="lazy">
+    <div class="wrap">
+      <div>
+        <h2 id="room-h" data-rise>Built for funds with hundreds of companies.</h2>
+        <p class="caption">Keypunching the 1950 census.</p>
+      </div>
+      <p data-rise style="--i:1">Portfolio and platform teams run it once a month. The output a partner acts on is short: who to call this week, why, and what to ask.</p>
+    </div>
+  </section>
+
+  <section class="wrap calls" id="calls" aria-labelledby="calls-h">
+    <div class="calls-head">
+      <h2 id="calls-h" data-rise>Who to call this week.</h2>
+      <p class="lead" data-rise style="--i:1">Companies that went dark come first, since a mark or a write-off may be due. Then the fading, steepest drop first. Then the ones rising fast enough to be raising.</p>
+      <p class="note" data-rise style="--i:2">From the <span data-date>October 2026</span> census. Each name opens its record.</p>
+    </div>
+    <div id="call-groups"><p>The call list needs JavaScript. It is also printed at the top of the exported report.</p></div>
+  </section>
+
+  <section class="wrap" id="statuses" aria-labelledby="statuses-h">
+    <div class="status-head">
+      <h2 id="statuses-h" data-rise>Five statuses, each with a rule.</h2>
+      <p class="lead" data-rise style="--i:1">Statuses come from the activity trend, not a score. A Form D filing is a badge, never a status: most private companies never file one.</p>
+    </div>
+    <div class="bar" id="bar" aria-hidden="true"></div>
+    <ul class="rules" id="rules">
+      <li style="--c:var(--active)" data-rise><h3>Active</h3><b data-count="Active">153</b><p>A dated public signal in the last 90 days, and no sign of decline.</p></li>
+      <li style="--c:var(--fading); --i:1" data-rise><h3>Fading</h3><b data-count="Fading">17</b><p>Headcount down 15% or more in six months. Without headcount, a drop in dated activity unlikely by chance.</p></li>
+      <li style="--c:var(--quiet); --i:2" data-rise><h3>Quiet</h3><b data-count="Quiet">52</b><p>The site is live, but nothing dated in 90 days.</p></li>
+      <li style="--c:var(--gone); --i:3" data-rise><h3>No public activity</h3><b data-count="No Public Activity">8</b><p>Site down, parked, expired or now another company's. Or no email records and nothing dated in a year.</p></li>
+      <li style="--c:var(--unresolved); --i:4" data-rise><h3>Unresolved</h3><b data-count="Unresolved">35</b><p>No verified website, so no status is given. A guess would be worse than a gap.</p></li>
+    </ul>
+  </section>
+
+  <section class="wrap sources" id="sources" aria-labelledby="sources-h">
+    <figure data-rise>
+      <img src="assets/tabulating-machines-census-lccn2016823353.jpg" width="1920" height="2477" alt="Two clerks feed a stack of punched census cards into an electric tabulating machine" loading="lazy">
+      <figcaption class="note">Census tabulating machines, between 1909 and 1940.</figcaption>
+    </figure>
+    <div>
+      <h2 id="sources-h" data-rise>Public records, read the same way every month.</h2>
+      <p class="lead" data-rise style="--i:1">Free checks run on every company. Licensed headcount and news from Akta are bought only where free data is weakest. GitHub uses the gh CLI's token when present; nothing else needs a login.</p>
+      <div class="kinds">
+        <div class="kind" data-rise>
+          <h3>Records that keep their history</h3>
+          <p>These decide the trend, so last quarter is compared fairly with the year before, even on the first run.</p>
+          <dl>
+            <dt>Web Archive</dt><dd>Homepage content changes, month by month</dd>
+            <dt>Certificate logs</dt><dd>Subdomains first seen in crt.sh</dd>
+            <dt>SEC EDGAR</dt><dd>Form D filings and the amounts raised</dd>
+            <dt>Akta headcount</dt><dd>Monthly headcount by function, licensed</dd>
+          </dl>
+        </div>
+        <div class="kind" data-rise>
+          <h3>Records that only show the present</h3>
+          <p>These prove a company is active now. They never count toward the trend.</p>
+          <dl>
+            <dt>Job boards</dt><dd>Open roles on Greenhouse, Lever and Ashby</dd>
+            <dt>GitHub</dt><dd>Pushes and releases for the org the company's own site links to</dd>
+            <dt>The website</dt><dd>HTTP status, redirects, parked pages, TLS expiry, sitemap dates, the legal name</dd>
+            <dt>Domain and mail</dt><dd>Email (MX) records, registration (RDAP) and Tranco traffic rank</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lookup" id="lookup" aria-labelledby="lookup-h">
+    <div class="wrap lookup-grid">
+      <div>
+        <h2 id="lookup-h" data-rise>Look up any company.</h2>
+        <p class="lead" data-rise style="--i:1">Every company in the <span data-fund>Everywhere Ventures</span> portfolio, as of <span data-date>October 2026</span>: its status, the rule that decided it, and the records behind it.</p>
+        <div class="field" data-rise style="--i:2">
+          <label for="q">Company name or website</label>
+          <input id="q" type="search" autocomplete="off" placeholder="Try Biotia or particlehealth.com" role="combobox" aria-expanded="false" aria-controls="matches" aria-autocomplete="list">
+          <ul class="matches" id="matches" role="listbox" aria-label="Matching companies"></ul>
+        </div>
+        <p class="try" id="try" data-rise style="--i:3"></p>
+        <noscript><p class="try">The lookup needs JavaScript. Every company is listed in the full census at /census.</p></noscript>
+        <a class="btn light" href="/census" style="margin-top:32px" data-rise>Try it out</a>
+      </div>
+      <article class="card" id="card" aria-live="polite" data-ui></article>
+    </div>
+  </section>
+
+  <section class="wrap grading" id="grading" aria-labelledby="grading-h" style="padding-top:clamp(88px, 10vw, 152px)">
+    <div>
+      <h2 id="grading-h" data-rise>It grades its own free signals.</h2>
+      <p class="lead" data-rise style="--i:1">Every company is also scored from free data alone and compared with what its licensed headcount did. That is how Trace knows where free data is weakest, and where to spend.</p>
+      <blockquote data-rise style="--i:2">In a 10-company sample, free data alone got five wrong. It called Spade quiet while its headcount doubled.</blockquote>
+      <ul class="limits" data-rise style="--i:3">
+        <li>Many startups never file a Form D, so a filing is a badge, never a status.</li>
+        <li>The Web Archive crawls popular sites more often. Each source is capped per month so one cannot dominate.</li>
+        <li>Fading is a trend, not a prediction. It has not been backtested against outcomes yet.</li>
+        <li>Common names collide. An exact name without a matching city or state goes to review instead of linking automatically.</li>
+      </ul>
+    </div>
+    <figure data-rise style="--i:1">
+      <img src="assets/clerks-working-a-census-tabulator-lccn2012645285.jpg" width="1201" height="1536" alt="Two clerks in suits check cards at a census tabulator" loading="lazy">
+      <figcaption class="note">Clerks working a census tabulator, 1920.</figcaption>
+    </figure>
+  </section>
+
+  <section class="wrap run" id="run" aria-labelledby="run-h">
+    <div>
+      <h2 id="run-h" data-rise>Run it on your own portfolio.</h2>
+      <p class="lead" data-rise style="--i:1">Point it at your fund's public portfolio table. It pulls the companies, checks every source, asks you to confirm the matches it wasn't sure about, and writes the census as HTML, JSON and Markdown.</p>
+      <div class="actions" data-rise style="--i:2">
+        <a class="btn" href="https://github.com/aaravmehtapatel/Trace">Get the code on GitHub</a>
+        <a class="link" href="/census">Try it out <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <div data-rise style="--i:1">
+<pre><code>pip install -r requirements.txt
+cp .env.example .env             <span class="c"># set SEC_USER_AGENT; the Claude key is optional</span>
+python3 -m src.cli init          <span class="c"># the fund's portfolio table, into SQLite</span>
+python3 -m src.cli sync          <span class="c"># domains, website, GitHub, job boards, SEC</span>
+python3 -m src.cli review-queue  <span class="c"># confirm or reject uncertain matches</span>
+python3 -m src.cli score         <span class="c"># statuses, printed as a table</span>
+python3 -m src.cli export        <span class="c"># exports/census-&lt;date&gt;.{html,json,md}</span></code></pre>
+      <figure class="run-fig" style="margin-top:48px">
+        <img src="assets/a-woman-with-a-hollerith-pantograph-punch.jpg" width="1920" height="1513" alt="A clerk punches a population card on a Hollerith pantograph, the census schedule rolled on a drum beside her" loading="lazy">
+        <figcaption class="note">A Hollerith pantograph punch, set for the 1940 census.</figcaption>
+      </figure>
+      <p class="note" style="margin-top:16px">Every raw response is kept in <code>data/raw/&lt;source&gt;/&lt;date&gt;/</code>, and every observation points to the dump it came from.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <p>Trace is a portfolio census for high-volume venture funds. A monthly early-warning check on every company, built only from public records.</p>
+      <ul>
+        <li><a href="#calls">Call list</a></li>
+        <li><a href="#statuses">Statuses</a></li>
+        <li><a href="#sources">Sources</a></li>
+        <li><a href="#grading">Method</a></li>
+      </ul>
+      <ul>
+        <li><a href="/census">Try it out</a></li>
+        <li><a href="https://github.com/aaravmehtapatel/Trace">GitHub</a></li>
+      </ul>
+    </div>
+    <p class="big" aria-hidden="true">Trace</p>
+    <p class="credits">Pictures, all public domain via Wikimedia Commons: <a href="https://commons.wikimedia.org/wiki/File:Census_pantograph_and_1930s_keypunches.jpg">“Census pantograph and 1930s keypunches”</a> and <a href="https://commons.wikimedia.org/wiki/File:Keypunch_operator_1950_census_IBM_016.jpg">“Keypunch operator 1950 census IBM 016”</a> by U.S. Census Bureau employees; <a href="https://commons.wikimedia.org/wiki/File:Tabulating_machines,_Census_LCCN2016823353.jpg">“Tabulating machines, Census”</a> by National Photo Company Collection; <a href="https://commons.wikimedia.org/wiki/File:Clerks_working_a_census_tabulator_LCCN2012645285.jpg">“Clerks working a census tabulator”</a>, Library of Congress; <a href="https://commons.wikimedia.org/wiki/File:Card_puncher_-_NARA_-_513295.jpg">“A woman with a Hollerith pantograph punch”</a>, National Archives.</p>
+  </div>
+</footer>
+
+<script src="census-data.js"></script>
+<script>
+(function () {
+  var D = window.CENSUS;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var COLOR = { 'Active': 'var(--active)', 'Fading': 'var(--fading)', 'Quiet': 'var(--quiet)', 'No Public Activity': 'var(--gone)', 'Unresolved': 'var(--unresolved)' };
+  var ORDER = ['Active', 'Fading', 'Quiet', 'No Public Activity', 'Unresolved'];
+  var LABEL = { 'No Public Activity': 'No public activity' };
+  var label = function (b) { return LABEL[b] || b; };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); };
+  var safeUrl = function (u) { return /^https?:\/\//.test(u || '') ? u : null; };
+  var pill = function (b) { return '<span class="pill" style="--c:' + COLOR[b] + '">' + esc(label(b)) + '</span>'; };
+  var nav = document.getElementById('nav');
+
+  function solidNav() { nav.classList.toggle('solid', window.scrollY > window.innerHeight - 80); }
+  addEventListener('scroll', solidNav, { passive: true }); solidNav();
+
+  // Entrances: once, as each part enters
+  // A plain position check rather than IntersectionObserver: a fast scroll or a jump to an anchor
+  // can carry an element past the viewport between observer callbacks and leave it hidden.
+  // It runs straight from the scroll event, not from requestAnimationFrame, which hidden and
+  // background tabs never call.
+  var pending = [];
+  function reveal() {
+    var line = window.innerHeight * 0.92;
+    pending = pending.filter(function (el) {
+      if (el.getBoundingClientRect().top < line) { el.classList.add('in'); return false; }
+      return true;
+    });
+  }
+  addEventListener('scroll', reveal, { passive: true });
+  addEventListener('resize', reveal);
+  // A scroll that fires no event (a programmatic jump, a restored position) is caught here.
+  var sweep = setInterval(function () { reveal(); if (!pending.length) clearInterval(sweep); }, 400);
+  function watch(el) { if (reduce) { el.classList.add('in'); return; } pending.push(el); reveal(); }
+  document.querySelectorAll('[data-rise]').forEach(watch);
+
+  // Hero picture drifts with the scroll
+  var heroImg = document.querySelector('.hero img');
+  if (!reduce && heroImg) {
+    var tick = false;
+    addEventListener('scroll', function () {
+      if (tick) return; tick = true;
+      requestAnimationFrame(function () {
+        var y = Math.min(window.scrollY, window.innerHeight);
+        heroImg.style.transform = 'translateY(' + (y * 0.25) + 'px) scale(' + (1.04 + y / window.innerHeight * 0.06) + ')';
+        tick = false;
+      });
+    }, { passive: true });
+    heroImg.style.transform = 'scale(1.04)';
+  }
+
+  if (!D) return;
+  var byId = {}; D.companies.forEach(function (c) { byId[c.id] = c; });
+  var month = new Date(D.date + 'T12:00:00').toLocaleString('en-GB', { month: 'long', year: 'numeric' });
+  document.querySelectorAll('[data-date]').forEach(function (el) { el.textContent = month; });
+  document.querySelectorAll('[data-fund]').forEach(function (el) { el.textContent = D.fund; });
+  document.querySelectorAll('[data-total]').forEach(function (el) { el.textContent = D.total; });
+  document.querySelectorAll('[data-count]').forEach(function (el) { el.textContent = D.counts[el.dataset.count] || 0; });
+  document.getElementById('sheet-date').textContent = '· ' + D.fund + ', ' + D.date;
+
+  // Tally and the 265 squares
+  document.getElementById('tally').innerHTML = ORDER.map(function (b) {
+    return '<li style="--c:' + COLOR[b] + '"><i></i><b>' + (D.counts[b] || 0) + '</b><span>' + esc(label(b)) + '</span></li>';
+  }).join('');
+  var sorted = D.companies.slice().sort(function (a, b) { return ORDER.indexOf(a.bucket) - ORDER.indexOf(b.bucket) || a.name.localeCompare(b.name); });
+  var grid = document.getElementById('grid265');
+  grid.innerHTML = sorted.map(function (c, i) {
+    return '<li style="--c:' + COLOR[c.bucket] + ';--i:' + i + '"><button type="button" data-id="' + c.id + '" aria-label="' + esc(c.name + ', ' + label(c.bucket)) + '"></button></li>';
+  }).join('');
+  watch(grid);
+  var gridNote = document.getElementById('grid-note');
+  function noteFor(id) { var c = byId[id]; if (c) gridNote.innerHTML = '<b>' + esc(c.name) + '</b> · ' + esc(label(c.bucket)) + ' · ' + esc(c.rule); }
+  grid.addEventListener('mouseover', function (e) { var b = e.target.closest('button'); if (b) noteFor(b.dataset.id); });
+  grid.addEventListener('focusin', function (e) { var b = e.target.closest('button'); if (b) noteFor(b.dataset.id); });
+  grid.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) openRecord(+b.dataset.id); });
+
+  // The census sheet: a few real rows across statuses
+  var pickNames = ['Biotia', 'Axo Longevity', 'FusePay', 'Particle Health', 'Aster', 'Aerodome', 'Axis'];
+  var rows = pickNames.map(function (n) { return D.companies.find(function (c) { return c.name === n; }); }).filter(Boolean);
+  ORDER.forEach(function (b) { if (!rows.some(function (c) { return c.bucket === b; })) { var c = D.companies.find(function (x) { return x.bucket === b; }); if (c) rows.push(c); } });
+  document.getElementById('sheet-rows').innerHTML = rows.map(function (c) {
+    var s = (c.signals || [])[0];
+    var u = s && safeUrl(s.url);
+    return '<tr><td class="co"><b>' + esc(c.name) + '</b><span>' + esc(c.domain || 'no verified website') + '</span></td><td>' + pill(c.bucket) + '</td><td>' + esc(c.rule) + '</td><td class="when">' +
+      (s ? (u ? '<a href="' + esc(u) + '" rel="noopener">' + esc(s.date) + '</a>' : esc(s.date)) : '–') + '</td></tr>';
+  }).join('');
+  var bar = document.getElementById('bar');
+  bar.innerHTML = ORDER.map(function (b) { return '<div style="--c:' + COLOR[b] + ';--n:' + (D.counts[b] || 0) + '">' + (D.counts[b] || 0) + '</div>'; }).join('');
+  watch(bar);
+
+  // Call list
+  var GROUP = { gone: ['Went dark', 'var(--gone)'], fading: ['Fading', 'var(--fading)'], rising: ['Rising', 'var(--rising)'] };
+  document.getElementById('call-groups').innerHTML = ['gone', 'fading', 'rising'].map(function (k) {
+    var items = D.calls.filter(function (c) { return c.kind === k; });
+    if (!items.length) return '';
+    return '<div class="call-group" data-rise><ol class="call-list">' + items.map(function (c) {
+      var co = byId[c.id] || {};
+      return '<li class="call"><div><p class="who"><a href="#lookup" data-open="' + c.id + '">' + esc(co.name) + '</a></p><p class="why"><span class="pill" style="--c:' + GROUP[k][1] + '">' + GROUP[k][0] + '</span> · ' + esc(c.reason) + '</p></div><p class="ask">' + esc(c.ask) + '</p></li>';
+    }).join('') + '</ol></div>';
+  }).join('');
+  document.querySelectorAll('#call-groups [data-rise]').forEach(watch);
+  document.getElementById('call-groups').addEventListener('click', function (e) {
+    var a = e.target.closest('[data-open]'); if (a) { e.preventDefault(); openRecord(+a.dataset.open); }
+  });
+
+  // Lookup: the census card
+  var q = document.getElementById('q'), list = document.getElementById('matches'), card = document.getElementById('card');
+  var first = D.first_month ? new Date(D.first_month + '-15T12:00:00') : null;
+  function monthName(offset) {
+    if (!first) return '';
+    var d = new Date(first); d.setMonth(d.getMonth() + offset);
+    return d.toLocaleString('en-GB', { month: 'short', year: 'numeric' });
+  }
+  function render(c) {
+    var m = c.months || [];
+    var holes = m.length ? '<div class="holes" aria-label="Dated public records per month, ' + esc(monthName(0)) + ' to ' + esc(monthName(m.length - 1)) + '"><div class="holes-row">' +
+      m.map(function (n) { var k = Math.min(n, 6), h = ''; for (var i = 0; i < 6; i++) h += '<i class="' + (i < 6 - k ? 'blank' : '') + '"></i>'; return '<div title="' + n + ' records">' + h + '</div>'; }).join('') +
+      '</div><div class="holes-axis"><span>' + esc(monthName(0)) + '</span><span>Dated records each month</span><span>' + esc(monthName(m.length - 1)) + '</span></div></div>' : '';
+    var site = c.domain ? '<a href="https://' + esc(c.domain) + '" rel="noopener">' + esc(c.domain) + '</a>' : 'No verified website';
+    var sig = (c.signals || []).length ? '<h4>The records behind it</h4><ul>' + c.signals.map(function (s) {
+      var u = safeUrl(s.url);
+      return '<li><time datetime="' + esc(s.date) + '">' + esc(s.date) + '</time><span>' + (u ? '<a href="' + esc(u) + '" rel="noopener">' + esc(s.what) + '</a>' : esc(s.what)) + '</span></li>';
+    }).join('') + '</ul>' : '';
+    var badges = (c.badges || []).length ? '<div class="badges">' + c.badges.map(function (b) { return '<span>' + esc(b) + '</span>'; }).join('') + '</div>' : '';
+    card.innerHTML = '<div class="card-top"><div><h3>' + esc(c.name) + '</h3><p class="meta">' + site + [c.city, c.sector].filter(Boolean).map(function (x) { return ' · ' + esc(x); }).join('') + '</p></div>' + pill(c.bucket) + '</div>' +
+      '<p class="rule">' + esc(c.rule) + '</p>' + badges + holes + sig;
+  }
+  function show(c) {
+    if (reduce) return render(c);
+    card.classList.add('swap');
+    setTimeout(function () { render(c); card.classList.remove('swap'); }, 180);
+  }
+  function openRecord(id) {
+    var c = byId[id]; if (!c) return;
+    show(c); q.value = c.name; closeList();
+    document.getElementById('lookup').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+  }
+  var hits = [], active = -1;
+  function closeList() { list.innerHTML = ''; hits = []; active = -1; q.setAttribute('aria-expanded', 'false'); q.removeAttribute('aria-activedescendant'); }
+  function norm(s) { return String(s || '').toLowerCase().normalize('NFKD').replace(/[^a-z0-9.]/g, ''); }
+  q.addEventListener('input', function () {
+    var t = norm(q.value);
+    if (!t) return closeList();
+    hits = D.companies.filter(function (c) { return norm(c.name).indexOf(t) > -1 || norm(c.domain).indexOf(t) > -1; })
+      .sort(function (a, b) { return (norm(a.name).indexOf(t) === 0 ? 0 : 1) - (norm(b.name).indexOf(t) === 0 ? 0 : 1) || a.name.localeCompare(b.name); }).slice(0, 8);
+    active = -1;
+    list.innerHTML = hits.length ? hits.map(function (c, i) {
+      return '<li role="presentation"><button type="button" role="option" id="opt' + i + '" data-id="' + c.id + '" aria-selected="false">' + esc(c.name) + '<span>' + esc(label(c.bucket)) + '</span></button></li>';
+    }).join('') : '<li class="try" style="padding:12px 18px;margin:0">No company by that name in this census.</li>';
+    q.setAttribute('aria-expanded', hits.length ? 'true' : 'false');
+  });
+  q.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!hits.length) return; e.preventDefault();
+      active = (active + (e.key === 'ArrowDown' ? 1 : -1) + hits.length) % hits.length;
+      list.querySelectorAll('button').forEach(function (b, i) { b.setAttribute('aria-selected', i === active ? 'true' : 'false'); });
+      q.setAttribute('aria-activedescendant', 'opt' + active);
+    } else if (e.key === 'Enter') {
+      if (hits.length) { e.preventDefault(); show(hits[Math.max(active, 0)]); q.value = hits[Math.max(active, 0)].name; closeList(); }
+    } else if (e.key === 'Escape') closeList();
+  });
+  list.addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { var c = byId[b.dataset.id]; show(c); q.value = c.name; closeList(); q.focus(); } });
+  document.addEventListener('click', function (e) { if (!e.target.closest('.field')) closeList(); });
+
+  var tries = ['Biotia', 'FusePay', 'Aerodome', 'Aster'].map(function (n) { return D.companies.find(function (c) { return c.name === n; }); }).filter(Boolean);
+  document.getElementById('try').innerHTML = tries.length ? 'Or open ' + tries.map(function (c, i) {
+    return '<button type="button" data-id="' + c.id + '">' + esc(c.name) + '</button>' + (i < tries.length - 2 ? ', ' : i === tries.length - 2 ? ' or ' : '.');
+  }).join('') : '';
+  document.getElementById('try').addEventListener('click', function (e) { var b = e.target.closest('button'); if (b) { var c = byId[b.dataset.id]; show(c); q.value = c.name; } });
+  render(tries[0] || D.companies[0]);
+})();
+</script>
+</body>
+</html>

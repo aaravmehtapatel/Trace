@@ -23,6 +23,7 @@
   header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 32px; border-bottom: 1px solid var(--rule); background: var(--paper); position: sticky; top: 0; z-index: 2; }
   .brand { display: flex; align-items: baseline; gap: 18px; }
   .brand b { font-weight: 700; font-size: 16px; }
+  .brand b a { color: inherit; text-decoration: none; }
   .brand nav { display: flex; gap: 14px; font-size: 15px; }
   .brand nav a { color: var(--ink-2); text-decoration: none; padding-bottom: 2px; }
   .brand nav a[aria-current] { color: var(--ink); font-weight: 600; border-bottom: 2px solid var(--ink); }
@@ -88,7 +89,7 @@
 </head>
 <body>
 <header>
-  <div class="brand"><b>Trace</b><nav aria-label="Trace"><a href="/">Census</a><a href="/checkins" aria-current="page">Check-ins</a></nav></div>
+  <div class="brand"><b><a href="/">Trace</a></b><nav aria-label="Trace"><a href="/census">Census</a><a href="/checkins" aria-current="page">Check-ins</a></nav></div>
   <div id="status" class="pill" role="status">Idle</div>
 </header>
 <div class="intro">
