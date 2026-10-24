@@ -63,7 +63,8 @@ export function runChecks(c: Company, rounds: { req: CheckinRequest; resp: Check
     metrics.push({ name: "Monthly revenue churn", last: pct(c.last_reported.monthly_churn_pct), now: pct(avg),
       basis: `computed from ${cite}${silent ? "; not reported by the company" : ""}` });
     if (avg > 2 * c.last_reported.monthly_churn_pct) findings.push({ severity: "high",
-      title: `${silent ? "Churn stopped being reported, and billing" : "Billing"} shows it at ${(avg / c.last_reported.monthly_churn_pct).toFixed(0)}x last quarter`,
+      title: silent ? `Churn stopped being reported, and billing shows it at ${(avg / c.last_reported.monthly_churn_pct).toFixed(0)}x last quarter`
+        : `Billing shows churn at ${(avg / c.last_reported.monthly_churn_pct).toFixed(0)}x last quarter`,
       detail: `Billing implies revenue churn of ${q.map((x) => `${pct(x.pct)} (${x.month})`).join(", ")}, an average of ${pct(avg)} a month, against the ${pct(c.last_reported.monthly_churn_pct)} reported for ${c.last_reported.period}.${silent ? ` The company ${churnQ!.a.tier === "withheld" ? "withheld" : "didn't answer"} the churn question (${churnQ!.q.id}).` : ""}`,
       evidence: [cite, ...(churnQ ? [`answer ${churnQ.q.id}: ${churnQ.a.tier}`] : [])] });
 
