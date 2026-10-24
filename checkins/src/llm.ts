@@ -46,8 +46,13 @@ function provider(): Model {
         tokensIn: r.usage?.prompt_tokens, tokensOut: r.usage?.completion_tokens };
     };
   }
-  if (process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN) {
-    const client = new Anthropic();
+  const censusKey = process.env.CENSUS_ANTHROPIC_API_KEY;
+  if (process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || censusKey) {
+    // The census's key (root .env) talks to the public API directly, as in src/ingest/domains.py,
+    // so a shell's own ANTHROPIC_* settings for other tools don't interfere.
+    const client = !process.env.ANTHROPIC_API_KEY && censusKey
+      ? new Anthropic({ apiKey: censusKey, authToken: null, baseURL: "https://api.anthropic.com" })
+      : new Anthropic();
     return async (system, user) => {
       const r = await client.messages.create({ model: CLAUDE, max_tokens: 16000, system, messages: [{ role: "user", content: user }] });
       if (r.stop_reason === "refusal") throw new Error(`model declined (${r.stop_details?.category ?? "no category"})`);
@@ -55,7 +60,7 @@ function provider(): Model {
       return { text, model: r.model, tokensIn: r.usage.input_tokens, tokensOut: r.usage.output_tokens };
     };
   }
-  throw new Error("No model key. Set NICRRON_API_KEY (preferred at the event) or ANTHROPIC_API_KEY in checkins/.env.");
+  throw new Error("No model key. Set CENSUS_ANTHROPIC_API_KEY in the census's .env, or ANTHROPIC_API_KEY or NICRRON_API_KEY in checkins/.env.");
 }
 
 function extractJson(text: string): unknown {

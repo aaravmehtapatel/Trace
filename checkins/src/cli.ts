@@ -10,7 +10,9 @@ import { LocalThread, RoundtableThread, type Thread } from "./transport.ts";
 import { runCheckin } from "./vc-agent.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
-if (existsSync(join(ROOT, ".env"))) process.loadEnvFile(join(ROOT, ".env"));
+// checkins/.env first, then the census's .env one level up (for CENSUS_ANTHROPIC_API_KEY).
+// A variable already set is never overwritten, so the first file wins.
+for (const file of [join(ROOT, ".env"), join(ROOT, "..", ".env")]) if (existsSync(file)) process.loadEnvFile(file);
 
 const args = process.argv.slice(2);
 const flags = new Map<string, string>();
@@ -65,10 +67,13 @@ async function main() {
     const stop = new AbortController();
     const startup = runStartup(new LocalThread(LOCAL_THREAD, "startup"), async () => loadDataroom(DATAROOM), approvalMode(), { signal: stop.signal })
       .catch((e) => { if (!stop.signal.aborted) throw e; });
-    const { reportPath } = await runCheckin(new LocalThread(LOCAL_THREAD, "vc"), FUND_DIR, COMPANY);
-    stop.abort();
-    await startup;
-    console.log(`\nReport: ${reportPath}`);
+    try {
+      const { reportPath } = await runCheckin(new LocalThread(LOCAL_THREAD, "vc"), FUND_DIR, COMPANY);
+      console.log(`\nReport: ${reportPath}`);
+    } finally {
+      stop.abort();
+      await startup;
+    }
     return;
   }
   if (side === "vc" && cmd === "run") {
@@ -97,7 +102,8 @@ async function main() {
   npm run startup -- run [--transport roundtable] [--thread ID] [--from-bank] [--approve-all] [--withhold s7,f2]`);
 }
 
+// exitCode, not exit(): exiting while a fetch is open trips a libuv assertion on Windows.
 main().catch((e) => {
   console.error(e instanceof Error ? e.message : e);
-  process.exit(1);
+  process.exitCode = 1;
 });

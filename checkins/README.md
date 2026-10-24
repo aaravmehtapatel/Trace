@@ -35,7 +35,7 @@ Node 20.12 or later.
 ```bash
 cd checkins
 npm install
-cp .env.example .env        # add NICRRON_API_KEY (or ANTHROPIC_API_KEY)
+cp .env.example .env        # skip if the census .env already has CENSUS_ANTHROPIC_API_KEY
 npm test                    # no keys needed: a scripted model runs the whole flow
 npm run demo                # both agents on this machine; you approve each answer
 npm run demo -- --approve-all --withhold s7     # unattended, founder withholds "top risks"
