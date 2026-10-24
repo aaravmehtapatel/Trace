@@ -52,6 +52,7 @@
   .k-dark { text-decoration-color: var(--dark) !important; }
   .k-unresolved { text-decoration-color: var(--unresolved) !important; text-decoration-style: dotted !important; }
   .lede { color: var(--ink-2); max-width: 62ch; margin: 18px 0 0; }
+  .lede.figures { color: var(--ink); margin-top: 10px; }
 
   /* The field: one mark per company */
   .field { margin: 40px 0 8px; border-top: 1px solid var(--rule); }
@@ -226,6 +227,7 @@
   <p class="issue" id="issue"></p>
   <h1 id="headline"></h1>
   <p class="lede" id="lede"></p>
+  <p class="lede figures" id="figures"></p>
   <div class="field" id="field" role="list" aria-label="Portfolio companies by status"></div>
 </header>
 
@@ -291,8 +293,8 @@
 const DATA = /*__CENSUS_DATA__*/null;
 
 const BUCKETS = {
-  "Active":             { key: "active", color: "var(--active)", headline: "are active", def: "A dated public signal in the last 90 days, and no sign of decline." },
-  "Fading":             { key: "fading", color: "var(--fading)", headline: "are fading", def: "Headcount down 15% or more in 6 months (Akta), or a significant drop in dated public activity with nothing current to contradict it." },
+  "Active":             { key: "active", color: "var(--active)", headline: "are active", def: "Growing headcount, or a dated public signal in the last 90 days." },
+  "Fading":             { key: "fading", color: "var(--fading)", headline: "are fading", def: "Headcount down 15% or more in 6 months, or a clear drop in dated activity." },
   "Quiet":              { key: "quiet", color: "var(--quiet)", headline: "are quiet", def: "The site is live, but nothing public is dated in the last 90 days." },
   "No Public Activity": { key: "dark", color: "var(--dark)", headline: "show no public activity", def: "The site is down, parked, expired or now points to a different company." },
   "Unresolved":         { key: "unresolved", color: "var(--unresolved)", headline: "we haven't placed yet", def: "No website verified yet, so no status is given.", hollow: true },
@@ -336,7 +338,11 @@ const parts = ORDER.filter((b) => DATA.counts[b]).map((b) =>
   `<span class="k k-${BUCKETS[b].key}"><b>${DATA.counts[b]}</b> ${BUCKETS[b].headline}</span>`);
 const last = parts.pop();
 $("#headline").innerHTML = `Of ${DATA.total} portfolio companies, ${parts.join(", ")}, and ${last}.`;
-$("#lede").textContent = `Built only from public records: each company's website and its history in the Web Archive, certificate logs, email and domain records, GitHub, job boards and SEC filings. Founders don't have to send anything. ${DATA.form_d_year} companies filed a Form D in the past year (ringed in green).${DATA.people && DATA.people.year_ago ? ` Across the ${DATA.people.companies} companies with licensed headcount (Akta), the portfolio employs ${DATA.people.now.toLocaleString()} people, ${DATA.people.growth_pct >= 0 ? "up" : "down"} ${Math.abs(DATA.people.growth_pct)}% in a year.` : ""} Select any mark to see the evidence.`;
+$("#lede").textContent = "Every status comes from public records (each company's website and its history, email and domain records, GitHub, job boards and SEC filings) plus licensed headcount and news from Akta. Founders don't have to send anything. Select any mark to see the evidence.";
+$("#figures").textContent = [
+  DATA.people && DATA.people.year_ago ? `The ${DATA.people.companies} companies with headcount employ ${DATA.people.now.toLocaleString()} people, ${DATA.people.growth_pct >= 0 ? "up" : "down"} ${Math.abs(DATA.people.growth_pct)}% in a year.` : "",
+  `In the past year, ${DATA.form_d_year} raised money, by SEC filing or funding news (ringed in green).`,
+].filter(Boolean).join(" ");
 
 // Field
 const field = $("#field");
@@ -458,10 +464,14 @@ function chart(c) {
     const lab = i % 3 === 0 ? `<text x="${(i * bw + 1).toFixed(1)}" y="${H - 2}" font-size="10" fill="#7B8693">${new Date(m.month + "-01T00:00:00").toLocaleDateString("en-US", { month: "short", year: "2-digit" })}</text>` : "";
     return out + lab;
   }).join("");
-  const split = ((ms.length - 3) * bw).toFixed(1);
+  const endIdx = ms.findIndex((m) => m.month === c.trend.window_end);
+  const split = (((endIdx >= 0 ? endIdx - 2 : ms.length - 3)) * bw).toFixed(1);
+  const fmtM = (m) => new Date(m + "-01T00:00:00").toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  const startM = endIdx >= 2 ? ms[endIdx - 2].month : null;
   return `<svg class="chart" width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Dated public activity by month">
       <line x1="${split}" y1="0" x2="${split}" y2="${H - 14}" stroke="#CDD3D9" stroke-dasharray="3 3"/>${bars}</svg>
-    <div class="legend"><span><i style="background:#6B8BBF"></i>Homepage changes</span><span><i style="background:#2F62A8"></i>New subdomains</span><span><i style="background:#B07D1E"></i>News</span><span><i style="background:var(--raised)"></i>Form D</span><span>Last 3 months right of the line: ${c.trend.rate_recent}/month vs ${c.trend.rate_prior} before</span></div>`;
+    <div class="legend"><span><i style="background:#6B8BBF"></i>Homepage changes</span><span><i style="background:#2F62A8"></i>New subdomains</span><span><i style="background:#B07D1E"></i>News</span><span><i style="background:var(--raised)"></i>Form D</span></div>
+    <p class="muted" style="font-size:12px;margin-top:4px">${startM ? `Trend compares ${fmtM(startM)} to ${fmtM(c.trend.window_end)} (dashed line onward) with the 9 months before: ${c.trend.rate_recent} vs ${c.trend.rate_prior} a month. Later months aren't fully indexed by the Web Archive yet.` : ""}</p>`;
 }
 
 function hcChart(h) {
@@ -546,7 +556,7 @@ function openRecord(id, from) {
     ${c.headcount && c.headcount.monthly ? `<h3>Headcount (Akta, from LinkedIn)</h3>${hcChart(c.headcount)}${functions(c.headcount)}` : ""}
     <h3>Public activity, last 18 months</h3>${chart(c)}
     <h3>Dated signals</h3>${signals}
-    ${c.news && c.news.length ? `<h3>In the news (Akta)</h3><ol class="timeline">${c.news.map((n) => `<li><time>${fmtDate(n.date)}${n.publisher ? ", " + esc(n.publisher) : ""}</time><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a></li>`).join("")}</ol>` : ""}
+    ${c.news && c.news.length ? `<h3>In the news (Akta)</h3><ol class="timeline">${c.news.filter((n, i, all) => all.findIndex((o) => o.date === n.date && o.title.slice(0, 24).toLowerCase() === n.title.slice(0, 24).toLowerCase()) === i).map((n) => `<li><time>${fmtDate(n.date)}${n.publisher ? ", " + esc(n.publisher) : ""}</time><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a></li>`).join("")}</ol>` : ""}
     <h3>SEC filings</h3>${filings}
     <h3>Public footprint</h3>${site}
     ${pending}
@@ -568,18 +578,16 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#reco
 // Method
 const m = DATA.method;
 $("#rules").innerHTML = [
-  `<b>Unresolved</b> if no website has been verified. We don't guess a status for a company we can't find.`,
-  `<b>No public activity</b> if the site is down, parked, expired or now points to a different company, or there are no email records and nothing dated in a year. A move to the company's own new domain doesn't count.`,
-  `<b>Fading</b> if dated history in the last ${m.trend_months[0]} months fell below ${Math.round(m.fading_ratio * 100)}% of the ${m.trend_months[1]} months before, and no current signal (a recent job post, code push or Form D) contradicts it.`,
-  `<b>Active</b> if any dated signal falls in the last ${m.active_days} days.`,
+  `<b>Unresolved</b> if no website is verified, or the one on file can't be confirmed as the company's. We don't guess a status for a company we can't find.`,
+  `<b>No public activity</b> if the news reports an acquisition, or the site is down, parked, expired or now points to a different company. A move to the company's own new domain doesn't count, and a rename that Akta confirms keeps the company active.`,
+  `<b>Fading</b> if headcount fell 15% or more in 6 months. Without headcount, a drop in dated public activity that's unlikely by chance (archive lag corrected) with nothing current to contradict it.`,
+  `<b>Active</b> if headcount grew 10% or more in 6 months, or any dated signal falls in the last ${m.active_days} days.`,
   `<b>Quiet</b> otherwise: the site is live, but nothing is dated recently.`,
-  `Headcount from Akta (licensed, not scraped) can also mark a company fading: down 15% or more in 6 months.`,
-  `The trend only uses records that keep their history: Web Archive changes, first-seen subdomains, news coverage, Form D filings. Job posts and code pushes prove activity today but can't show a decline, so they only count as current signals. Form D is a badge, not a status: most private companies never file one.`,
 ].map((r) => `<li>${r}</li>`).join("");
 $("#stats").innerHTML = `
-  <p>${m.observations.toLocaleString()} public observations across ${DATA.total} companies, generated ${fmtDate(DATA.generated)}.</p>
-  <p>${m.linked_matches} matches linked automatically at a score of ${m.auto_link} or higher; below ${m.reject} they're dropped. ${m.pending_review} companies have a possible match waiting for a person to confirm.</p>
-  <p>A website only counts once the live page names the company and describes what the fund says it does.</p>`;
+  <p>${m.observations.toLocaleString()} observations across ${DATA.total} companies, generated ${fmtDate(DATA.generated)}. Licensed headcount covers ${DATA.people ? DATA.people.companies : 0} companies (Akta, sourced from LinkedIn, not scraped).</p>
+  <p>Matches link automatically at a score of ${m.auto_link} or higher and are dropped below ${m.reject}. ${m.pending_review} companies have a possible match waiting for a person to confirm.</p>
+  <p>A website only counts once the live page names the company and describes what the fund says it does. Form D is a badge, not a status: most private companies never file one.</p>`;
 </script>
 </body>
 </html>

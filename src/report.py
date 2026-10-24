@@ -61,6 +61,7 @@ def collect(conn, cfg: Config) -> dict:
         })
     counts = {b: sum(1 for c in companies if c["bucket"] == b) for b in ORDER}
     form_d_year = sum(1 for c in companies if any(b["kind"] == "form_d" and b.get("recent") for b in c["badges"]))
+    raised_news = sum(1 for c in companies if any(b["label"].startswith("Raised, per news") and b.get("recent") for b in c["badges"]))
     # Portfolio headcount now and a year ago, over companies Akta has a full year for.
     year_ago = score.month_keys(13, date.fromisoformat(score_date))[0]
     with_hc = [c for c in companies if (c.get("headcount") or {}).get("monthly")
@@ -77,7 +78,7 @@ def collect(conn, cfg: Config) -> dict:
     return {
         "fund": cfg.fund_name, "score_date": score_date, "generated": date.today().isoformat(),
         "counts": counts, "total": len(companies), "companies": companies, "calls": calls(companies),
-        "form_d_year": form_d_year, "people": people, "accuracy": calibrate.calibrate(conn, cfg),
+        "form_d_year": form_d_year, "raised_news": raised_news, "people": people, "accuracy": calibrate.calibrate(conn, cfg),
         "method": {"weights": cfg.weights, "auto_link": cfg.auto_link, "reject": cfg.reject,
                    "window_days": cfg.window_days, "active_days": score.ACTIVE_DAYS, "fading_ratio": score.FADING_RATIO,
                    "trend_months": [score.TREND_RECENT, score.TREND_PRIOR],
@@ -94,8 +95,11 @@ def calls(companies: list[dict], limit: int = 10) -> list[dict]:
     """Who a partner should contact this week, each with the reason and the question to ask.
     Recently dark first (a mark or a write-off may be due), then fading, then rising."""
     # Redirects to another company (likely exits) before sites that simply went dark.
+    # Exits first (acquisitions in the news, then redirects to another company), then sites
+    # that simply went dark.
     gone = sorted((c for c in companies if c["bucket"] == "No Public Activity"),
-                  key=lambda c: (not _has(c, "redirect"), c["name"]))
+                  key=lambda c: (not c["rule"].startswith("Acquired"), not _has(c, "redirect"),
+                                 not (c.get("headcount") or {}).get("total"), c["name"]))
     # Headcount-backed fades first, steepest drop first; website-only fades are weaker evidence.
     hc_fading = sorted((c for c in companies if c["bucket"] == "Fading" and (c.get("headcount") or {}).get("growth_6") is not None),
                        key=lambda c: c["headcount"]["growth_6"])
@@ -108,7 +112,9 @@ def calls(companies: list[dict], limit: int = 10) -> list[dict]:
     for c in gone[:3]:
         redirect = _has(c, "redirect")
         out.append({"id": c["id"], "kind": "gone", "reason": c["rule"],
-                    "ask": "Was this an acquisition? Confirm what happened to the fund's shares and update the mark."
+                    "ask": "Confirm the terms and what the fund received, then update the mark."
+                    if c["rule"].startswith("Acquired") else
+                    "Was this an acquisition? Confirm what happened to the fund's shares and update the mark."
                     if redirect else "Is the company still operating? If not, start the write-off."})
     for c in fading[:4]:
         warn = next((n for n in c["news"] if n.get("warning")), None)

@@ -19,6 +19,7 @@ The weighted composite only ranks companies within a status.
 """
 import json
 import math
+import re
 from datetime import date, timedelta
 
 from src.config import Config
@@ -210,7 +211,18 @@ def score_entity(conn, cfg: Config, e: dict, today: date, lag: dict | None = Non
     if implausible:
         hcp = {}
     headcount_falling = hcp.get("growth_6") is not None and hcp["growth_6"] <= HEADCOUNT_DROP
-    warnings = [i for i in ((news or {}).get("payload") or {}).get("items", []) if i.get("warning")]
+    items = ((news or {}).get("payload") or {}).get("items", [])
+    name_rx = re.escape(e["raw_name"])
+    # Only headlines about this company count: "Vimeo On Demand Shuts Down" in an article that
+    # mentions Curios says nothing about Curios.
+    acquired = next((i for i in items if re.search(rf"acquir\w*\s+(?:ai-powered\s+|the\s+)?[\w\s-]{{0,40}}?\b{name_rx}\b", i["title"], re.I)
+                     or re.search(rf"\b{name_rx}\b.{{0,40}}\b(acquired by|joins|merges with)\b", i["title"], re.I)), None)
+    raise_news = next((i for i in items if re.search(
+        rf"\b{name_rx}\b[^.:;]{{0,30}}\b(raises|raised|secures|closes|lands)\b[^.:;]{{0,40}}(\$|€|£|seed|series|round|funding)",
+        i["title"], re.I)), None)
+    warnings = [i for i in items if re.search(
+        rf"\b{name_rx}\b[^.:;]{{0,30}}\b(lays? off|laid off|layoffs|shuts? down|shutting down|winds? down|bankrupt|insolven|ceases)",
+        i["title"], re.I)]
     w = cfg.weights
 
     # Ranking scores, 0-1 (spec weights). They order companies within a status.
@@ -253,7 +265,13 @@ def score_entity(conn, cfg: Config, e: dict, today: date, lag: dict | None = Non
         if new:
             dated.append((new[-1] + "-15", "New subdomain certified", certs["id"],
                           f"https://crt.sh/?q=%25.{e['main_domain']}"))
-    for item in (((news or {}).get("payload") or {}).get("items") or [])[:3]:
+    named, seen_story = [], set()
+    for i in items:  # one entry per story: wire copies of a funding round repeat the headline
+        story = i.get("date")  # one dated signal per day of coverage
+        if re.search(rf"\b{name_rx}\b", i["title"], re.I) and story not in seen_story:
+            seen_story.add(story)
+            named.append(i)
+    for item in named[:3]:
         if item.get("date"):
             dated.append((item["date"], f"In the news: {item['title'][:90]}", news["id"], item.get("url")))
     dated = sorted((d for d in dated if d[0]), reverse=True)
@@ -275,12 +293,25 @@ def score_entity(conn, cfg: Config, e: dict, today: date, lag: dict | None = Non
     final_host = (fp or {}).get("payload", {}).get("final_host") or ""
     institutional = bool((fp or {}).get("payload", {}).get("redirected_off_domain")) and \
         any(final_host.endswith(t) for t in (".edu", ".gov", ".ac.uk", ".edu.au"))
+    redirected = bool((fp or {}).get("payload", {}).get("redirected_off_domain")) and not moved
+    li = (hcp.get("linkedin") or "").replace("-", "").lower()
+    target = site_stem(final_host).replace("-", "")
+    renamed = redirected and bool(hcp) and len(target) >= 4 and (target in li or li[:6] in target)
+    # A "dark" call from missing email needs a website we know is the company's: Akta matched
+    # it (headcount exists) or a person confirmed it. Otherwise we can't tell dark from wrong site.
+    site_confirmed = bool(hcp) or bool(conn.execute(
+        """SELECT 1 FROM match_candidates WHERE entity_id = ? AND source = 'domain' AND candidate_key = ?
+           AND state = 'CONFIRMED'""", (e["id"], e["main_domain"] or "")).fetchone())
     if not e["main_domain"]:
         bucket, rule = "Unresolved", "No verified website yet"
     elif institutional:
         # fora.ai -> fora.northeastern.edu: the site on file isn't the company's.
         bucket, rule = "Unresolved", f"The website on file now points to {final_host}, so it's probably not this company's"
-    elif not live or expired or (no_mail and (last_days is None or last_days > 365)):
+    elif acquired:
+        bucket, rule = "No Public Activity", f"Acquired, per the news: {acquired['title']} ({acquired['date']})"
+    elif no_mail and live and not site_confirmed and (last_days is None or last_days > 365):
+        bucket, rule = "Unresolved", "Can't confirm the website on file is the company's: no email records and nothing dated in a year"
+    elif (not live and not renamed) or expired or (no_mail and (last_days is None or last_days > 365)):
         if expired:
             why = f"domain registration expired {expires}"
         elif fp and fp["payload"].get("parked"):
@@ -292,6 +323,10 @@ def score_entity(conn, cfg: Config, e: dict, today: date, lag: dict | None = Non
         else:
             why = "no email records and no dated signal in a year"
         bucket, rule = "No Public Activity", why[0].upper() + why[1:]
+    elif renamed and not headcount_falling:
+        g = hcp.get("growth_12")
+        bucket, rule = "Active", (f"Renamed: the site now redirects to {final_host}, and the company has {hcp.get('total')} people"
+                                  + (f" ({g:+}% in 12 months, Akta)" if g is not None else " (Akta)"))
     elif headcount_falling and not raised_now:
         bucket = "Fading"
         rule = f"Headcount down {abs(hcp['growth_6'])}% in 6 months, to {hcp.get('total')} (Akta)"
@@ -315,6 +350,10 @@ def score_entity(conn, cfg: Config, e: dict, today: date, lag: dict | None = Non
         f0 = fds[0]
         badges.append({"kind": "form_d", "label": f"Form {f0['payload']['form']} {f0['event_date'][:7]}",
                        "recent": fd_days is not None and fd_days <= 365})
+    if raise_news:
+        # Most private companies never file a Form D; a funding headline naming them is the other record.
+        badges.append({"kind": "form_d", "label": f"Raised, per news {raise_news['date'][:7]}",
+                       "recent": (_days_since(raise_news["date"], today) or 9999) <= 365, "url": raise_news.get("url")})
     if tl["rising"] or (hcp.get("growth_12") is not None and hcp["growth_12"] >= HEADCOUNT_GROWTH):
         badges.append({"kind": "rising", "label": "Activity rising"})
     if hcp.get("total"):
@@ -328,7 +367,11 @@ def score_entity(conn, cfg: Config, e: dict, today: date, lag: dict | None = Non
         badges.append({"kind": "news_warning", "label": "News: " + (warnings[0].get("tag") or "warning sign")})
     if hire and hire["payload"].get("open_roles"):
         badges.append({"kind": "hiring", "label": f"Hiring: {hire['payload']['open_roles']} open"})
-    if fp and fp["payload"].get("redirected_off_domain") and not moved:
+    if acquired:
+        badges.append({"kind": "redirect", "label": "Acquired (news)"})
+    elif renamed:
+        badges.append({"kind": "rising", "label": f"Renamed: now {final_host}"})
+    elif fp and fp["payload"].get("redirected_off_domain") and not moved:
         badges.append({"kind": "redirect", "label": f"Now {fp['payload'].get('final_host')}"})
     if traffic and traffic["payload"].get("tranco_rank"):
         badges.append({"kind": "traffic", "label": f"Top {traffic['payload']['tranco_rank']:,} site"})

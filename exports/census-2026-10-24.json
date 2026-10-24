@@ -3,11 +3,11 @@
  "score_date": "2026-10-24",
  "generated": "2026-10-24",
  "counts": {
-  "Active": 158,
+  "Active": 153,
   "Fading": 17,
-  "Quiet": 45,
-  "No Public Activity": 14,
-  "Unresolved": 31
+  "Quiet": 52,
+  "No Public Activity": 8,
+  "Unresolved": 35
  },
  "total": 265,
  "companies": [
@@ -703,10 +703,6 @@
     {
      "kind": "headcount",
      "label": "262 people, +45% in 12 mo"
-    },
-    {
-     "kind": "news_warning",
-     "label": "News: C-Suite Appointments & Departures"
     }
    ],
    "mail": {
@@ -1141,7 +1137,7 @@
    "domain": "aerodome.com",
    "legal_name": null,
    "bucket": "No Public Activity",
-   "last_activity": "2026-10-02",
+   "last_activity": "2026-05-15",
    "rule": "Website now redirects to flocksafety.com, often an acquisition or rebrand",
    "composite": 0.04,
    "scores": {
@@ -1151,24 +1147,6 @@
     "footprint": 0.2
    },
    "signals": [
-    {
-     "date": "2026-10-02",
-     "what": "In the news: Flock drones with cameras deployed as first responders in some US cities amid privacy conc",
-     "observation_id": 11336,
-     "url": "https://www.tomshardware.com/tech-industry/drones/flock-drones-with-cameras-deployed-as-first-responders-in-some-us-cities-amid-privacy-concerns-uavs-connect-to-wider-emergency-services-system-and-streams-video-to-dispatchers-officers"
-    },
-    {
-     "date": "2026-08-19",
-     "what": "In the news: Flock Safety\u2019s Drone Bet: From License Plate Backlash to Sky-High Ambitions",
-     "observation_id": 11336,
-     "url": "https://www.webpronews.com/flock-safetys-drone-bet-from-license-plate-backlash-to-sky-high-ambitions/"
-    },
-    {
-     "date": "2026-08-14",
-     "what": "In the news: Powerful Public Safety Technology Needs Powerful Guardrails: What Flock\u2019s Camera Controver",
-     "observation_id": 11336,
-     "url": "https://dronelife.com/2026/08/14/public-safety-technology-drones-flock-guardrails/"
-    },
     {
      "date": "2026-05-15",
      "what": "Homepage changed (Web Archive)",
@@ -2021,27 +1999,9 @@
    "signals": [
     {
      "date": "2026-09-15",
-     "what": "In the news: AscendArc picks Arianespace for first launch with Koreasat 9 satellite",
-     "observation_id": 11340,
-     "url": "https://www.telecompaper.com/news/ascendarc-picks-arianespace-for-first-launch-with-koreasat-9-satellite--1582704"
-    },
-    {
-     "date": "2026-09-15",
      "what": "Homepage changed (Web Archive)",
      "observation_id": 10559,
      "url": "https://web.archive.org/web/*/ascendarc.com"
-    },
-    {
-     "date": "2026-09-11",
-     "what": "In the news: Arianespace Secures Seven Ariane 6 Agreements Covering Around Ten Launches as Amazon Leo, ",
-     "observation_id": 11340,
-     "url": "https://news.europawire.eu/arianespace-secures-seven-ariane-6-agreements-covering-around-ten-launches-as-amazon-leo-eutelsat-and-international-customers-expand-order-book/eu-press-release/2026/09/11/11/44/30/180572/"
-    },
-    {
-     "date": "2026-09-11",
-     "what": "In the news: Arianespace Secures Ariane 6 Mission for KT SAT High-Throughput Satellite Delivering Hundr",
-     "observation_id": 11340,
-     "url": "https://news.europawire.eu/arianespace-secures-ariane-6-mission-for-kt-sat-high-throughput-satellite-delivering-hundreds-of-gbps-across-asia-pacific/eu-press-release/2026/09/11/12/49/03/180576/"
     },
     {
      "date": "2026-06-22",
@@ -2636,9 +2596,9 @@
    "description": "Aster is an all-in-one patient management platform designed for women\u2019s health clinics, streamlining care delivery with features like remote patient monitoring and holistic support for providers and patients.",
    "domain": "astercare.com",
    "legal_name": null,
-   "bucket": "Active",
-   "last_activity": "2026-08-12",
-   "rule": "In the news: XRP Derivatives Activity Supports Market Liquidity: Guest Post by Crypto News Land 2026-08-12",
+   "bucket": "Quiet",
+   "last_activity": "2025-07-15",
+   "rule": "Site live; last dated signal 2025-07-15",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -2647,12 +2607,6 @@
     "footprint": 0.5
    },
    "signals": [
-    {
-     "date": "2026-08-12",
-     "what": "In the news: XRP Derivatives Activity Supports Market Liquidity: Guest Post by Crypto News Land",
-     "observation_id": 11341,
-     "url": "https://coinmarketcap.com/community/articles/6a7ccae63300d86f9cc690d4/"
-    },
     {
      "date": "2025-07-15",
      "what": "Homepage changed (Web Archive)",
@@ -4053,9 +4007,9 @@
    "description": "Axis Pay is a financial platform that enables small businesses to manage payroll, contractor payments, and employee reimbursements through a mobile wallet. It offers features such as instant salary payments, salary advances, and cashback rewards, all while ensuring secure transactions and same-day onboarding.",
    "domain": "axispay.app",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Unresolved",
    "last_activity": "2023-08-15",
-   "rule": "No email records and no dated signal in a year",
+   "rule": "Can't confirm the website on file is the company's: no email records and nothing dated in a year",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -4298,15 +4252,15 @@
     },
     {
      "date": "2026-09-16",
-     "what": "In the news: Axo Longevity closes \u00a33.7m seed round led by MS&AD Ventures and Izou Partners",
-     "observation_id": 11346,
-     "url": "https://www.startupmag.co.uk/funding/axo-longevity-2026-seed-funding/"
-    },
-    {
-     "date": "2026-09-16",
      "what": "In the news: Axo Longevity Raises $5M Seed",
      "observation_id": 11346,
      "url": "https://www.thesaasnews.com/news/axo-longevity-raises-5m-seed/"
+    },
+    {
+     "date": "2026-09-15",
+     "what": "In the news: Axo Longevity Raises Oversubscribed $5M Seed Round to Build Europe\u2019s Leading Preventive He",
+     "observation_id": 11346,
+     "url": "https://finance.yahoo.com/healthcare/articles/axo-longevity-raises-oversubscribed-5m-091600150.html"
     },
     {
      "date": "2026-06-15",
@@ -4474,6 +4428,12 @@
     "rising": false
    },
    "badges": [
+    {
+     "kind": "form_d",
+     "label": "Raised, per news 2026-09",
+     "recent": true,
+     "url": "https://www.businesswire.com/news/home/20260910642125/en/Axo-Longevity-Raises-Oversubscribed-%245M-Seed-Round-to-Build-Europes-Leading-Preventive-Health-Membership"
+    },
     {
      "kind": "rising",
      "label": "Activity rising"
@@ -5679,16 +5639,16 @@
      "url": "https://pulse2.com/biotia-raises-9-million/"
     },
     {
-     "date": "2026-10-05",
-     "what": "In the news: The Weekly Notable Startup Funding Report: 10/5/26",
+     "date": "2026-10-02",
+     "what": "In the news: Biotia Raises $9M to Close the Diagnostic Gap for Recurrent and Culture-Negative UTIs",
      "observation_id": 11350,
-     "url": "https://www.alleywatch.com/2026/10/the-weekly-notable-startup-funding-report-10-5-26/"
+     "url": "https://www.alleywatch.com/2026/10/biotia-infectious-disease-diagnostics-uti-testing-clinical-metagenomics-niamh-ohara/"
     },
     {
-     "date": "2026-10-05",
-     "what": "In the news: #NYCtech Week in Review: 9/27/26 \u2013 10/3/26",
+     "date": "2026-10-01",
+     "what": "In the news: Biotia Raises $9M in Funding",
      "observation_id": 11350,
-     "url": "https://www.alleywatch.com/2026/10/nyctech-week-in-review-9-27-26-10-3-26/"
+     "url": "https://www.finsmes.com/2026/10/biotia-raises-9m-in-funding.html"
     }
    ],
    "trend": {
@@ -5850,6 +5810,12 @@
     "rising": false
    },
    "badges": [
+    {
+     "kind": "form_d",
+     "label": "Raised, per news 2026-10",
+     "recent": true,
+     "url": "https://pulse2.com/biotia-raises-9-million/"
+    },
     {
      "kind": "headcount",
      "label": "28 people, +12% in 12 mo"
@@ -7108,6 +7074,12 @@
     "rising": false
    },
    "badges": [
+    {
+     "kind": "form_d",
+     "label": "Raised, per news 2026-08",
+     "recent": true,
+     "url": "https://www.thesaasnews.com/news/boom-raises-15m-series-a/"
+    },
     {
      "kind": "rising",
      "label": "Activity rising"
@@ -10594,12 +10566,6 @@
      "url": "https://www.financialcontent.com/article/bizwire-2026-8-12-chargerhelp-to-unveil-2026-ev-charging-reliability-report-at-forth-roadmap"
     },
     {
-     "date": "2026-08-12",
-     "what": "In the news: ChargerHelp to Unveil 2026 EV Charging Reliability Report at Forth Roadmap",
-     "observation_id": 11361,
-     "url": "https://www.businesswire.com/news/home/20260812639948/en/ChargerHelp-to-Unveil-2026-EV-Charging-Reliability-Report-at-Forth-Roadmap"
-    },
-    {
      "date": "2026-07-15",
      "what": "Homepage changed (Web Archive)",
      "observation_id": 10655,
@@ -11675,15 +11641,15 @@
     },
     {
      "date": "2026-10-22",
-     "what": "In the news: Clean Cult Launches Castile Soap with a Mission to Bring the Cult Favorite Staple Mainstre",
-     "observation_id": 11365,
-     "url": "https://www.prnewswire.com/news-releases/clean-cult-launches-castile-soap-with-a-mission-to-bring-the-cult-favorite-staple-mainstream-302916093.html"
-    },
-    {
-     "date": "2026-10-22",
      "what": "In the news: Clean Cult Introduces Versatile Castile Soap for Everyday Use and Sustainability",
      "observation_id": 11365,
      "url": "https://third-news.com/article/0efa1aaa-ce20-11f1-963e-9ca3ba08e13f"
+    },
+    {
+     "date": "2026-08-24",
+     "what": "In the news: Clean Cult scales refillable aluminium packaging with new product expansion",
+     "observation_id": 11365,
+     "url": "https://www.alcircle.com/news/clean-cult-scales-refillable-aluminium-packaging-with-new-product-expansion-117683"
     }
    ],
    "trend": {
@@ -12019,12 +11985,6 @@
     },
     {
      "date": "2026-10-15",
-     "what": "In the news: Femtech Market Size, Share, Growth Drivers, and Forecast 2026-2035 | AI, Telehealth, and P",
-     "observation_id": 11366,
-     "url": "https://www.globenewswire.com/news-release/2026/10/15/3381379/28124/en/femtech-market-size-share-growth-drivers-and-forecast-2026-2035-ai-telehealth-and-personalized-care-drive-14-9-cagr-and-a-usd-255-5-billion-opportunity.html"
-    },
-    {
-     "date": "2026-10-15",
      "what": "Homepage changed (Web Archive)",
      "observation_id": 10673,
      "url": "https://web.archive.org/web/*/cofertility.com"
@@ -12034,18 +11994,6 @@
      "what": "Form D filed",
      "observation_id": 11719,
      "url": "https://www.sec.gov/Archives/edgar/data/2057534/000205753426000003/primary_doc.xml"
-    },
-    {
-     "date": "2026-09-27",
-     "what": "In the news: Women Can Freeze Their Eggs for Free Through This Startup. Here\u2019s Why Critics Are Concerne",
-     "observation_id": 11366,
-     "url": "https://www.inc.com/melissa-angell/women-can-freeze-their-eggs-for-free-through-this-startup-heres-why-critics-are-concerned/91401822"
-    },
-    {
-     "date": "2026-09-09",
-     "what": "In the news: A New Startup Lets You Freeze Your Eggs For Free. But Is Anything Ever Free?",
-     "observation_id": 11366,
-     "url": "https://www.wired.com/story/egg-freezing-startup-cofertility-weirder-than-you-could-imagine/"
     },
     {
      "date": "2025-04-21",
@@ -14262,10 +14210,6 @@
      "label": "15 people, +7% in 12 mo"
     },
     {
-     "kind": "news_warning",
-     "label": "News: Product Launches & Enhancements"
-    },
-    {
      "kind": "traffic",
      "label": "Top 596,192 site"
     }
@@ -14431,18 +14375,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10328,
      "url": "https://cybera.io/"
-    },
-    {
-     "date": "2026-09-03",
-     "what": "In the news: IDScan.net Breach Exposes 153 Million Licenses With Infrared Scans That Pass Bank Checks",
-     "observation_id": 11372,
-     "url": "https://www.techtimes.com/articles/326418/20260903/idscannet-breach-exposes-153-million-licenses-infrared-scans-that-pass-bank-checks.htm"
-    },
-    {
-     "date": "2026-08-26",
-     "what": "In the news: The AlleyWatch Startup Daily Funding Report: 8/26/2026",
-     "observation_id": 11372,
-     "url": "https://www.alleywatch.com/2026/08/the-alleywatch-startup-daily-funding-report-8-26-2026/"
     }
    ],
    "trend": {
@@ -16450,8 +16382,8 @@
    "domain": "ecotonerenewables.com",
    "legal_name": null,
    "bucket": "Active",
-   "last_activity": "2026-09-29",
-   "rule": "In the news: Robot dogs will soon patrol the Pittsburgh airport to spot spills and monitor air quality 2026-09-29",
+   "last_activity": "2026-08-28",
+   "rule": "Website updated (sitemap) 2026-08-28",
    "composite": 0.303,
    "scores": {
     "form_d": 0.518,
@@ -16460,12 +16392,6 @@
     "footprint": 0.61
    },
    "signals": [
-    {
-     "date": "2026-09-29",
-     "what": "In the news: Robot dogs will soon patrol the Pittsburgh airport to spot spills and monitor air quality",
-     "observation_id": 11378,
-     "url": "https://technical.ly/entrepreneurship/pittsburgh-airport-skild-ai-robot-dogs-pilot/"
-    },
     {
      "date": "2026-08-28",
      "what": "Website updated (sitemap)",
@@ -17315,24 +17241,6 @@
      "url": "https://electric.ai/"
     },
     {
-     "date": "2026-09-24",
-     "what": "In the news: Electric Partners with isolved to Automate IT Management for Small and Growing Businesses",
-     "observation_id": 11380,
-     "url": "https://techrseries.com/artificial-intelligence/electric-partners-with-isolved-to-automate-it-management-for-small-and-growing-businesses/"
-    },
-    {
-     "date": "2026-09-23",
-     "what": "In the news: Electric and isolved Team Up to Automate IT Management for Small Businesses",
-     "observation_id": 11380,
-     "url": "https://third-news.com/article/f47ab1ec-b75b-11f1-87c7-9ca3ba08e13f"
-    },
-    {
-     "date": "2026-09-23",
-     "what": "In the news: Electric Partners with isolved to Automate IT Management for Small and Growing Businesses",
-     "observation_id": 11380,
-     "url": "https://www.prnewswire.com/news-releases/electric-partners-with-isolved-to-automate-it-management-for-small-and-growing-businesses-302887682.html"
-    },
-    {
      "date": "2022-08-22",
      "what": "Form D/A filed",
      "observation_id": 11731,
@@ -17700,7 +17608,7 @@
    "domain": "electricplant.co",
    "legal_name": null,
    "bucket": "Active",
-   "last_activity": "2026-10-23",
+   "last_activity": "2026-10-20",
    "rule": "Headcount up 14% in 6 months, to 8 (Akta)",
    "composite": 0.202,
    "scores": {
@@ -17711,22 +17619,10 @@
    },
    "signals": [
     {
-     "date": "2026-10-23",
-     "what": "In the news: Plants can speak using electricity, so this startup built an AI model to decipher their la",
-     "observation_id": 11381,
-     "url": "https://www.businessghana.com/site/news/technology/358303/Plants-can-speak-using-electricity-so-this-startup-built-an-AI-model-to-decipher-their-language"
-    },
-    {
      "date": "2026-10-20",
-     "what": "In the news: This AI Startup Decodes Plant Language Through Electricity",
+     "what": "In the news: Electric Plant Company Launches with $11.2 Million Seed Round and Bombadil",
      "observation_id": 11381,
-     "url": "https://www.techbuzz.ai/articles/this-ai-startup-decodes-plant-language-through-electricity"
-    },
-    {
-     "date": "2026-10-20",
-     "what": "In the news: Plants can speak using electricity, so this startup built an AI model to decipher their la",
-     "observation_id": 11381,
-     "url": "https://axios.link/4k4W6FF"
+     "url": "https://www.startupresearcher.com/news/electric-plant-company-launches-with-usd11-2-million-seed-round-and-bombadil"
     },
     {
      "date": "2026-09-25",
@@ -18069,18 +17965,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10341,
      "url": "https://elektrahealth.com/"
-    },
-    {
-     "date": "2026-08-13",
-     "what": "In the news: The Race to Build the Ultimate Menopause Health Platform",
-     "observation_id": 11382,
-     "url": "https://techround.co.uk/?post_type=post&p=157041"
-    },
-    {
-     "date": "2026-08-11",
-     "what": "In the news: Do women really need a menopause workout?",
-     "observation_id": 11382,
-     "url": "https://www.sandiegouniontribune.com/2026/08/11/do-women-really-need-a-menopause-workout/"
     }
    ],
    "trend": {
@@ -18392,18 +18276,6 @@
      "what": "Job posted (9 open)",
      "observation_id": 10355,
      "url": "https://jobs.ashbyhq.com/engflow"
-    },
-    {
-     "date": "2026-10-14",
-     "what": "In the news: Linux Foundation Launches BUILD Foundation to Sustain Large-Scale, Multi-Language Build an",
-     "observation_id": 11383,
-     "url": "https://www.prnewswire.com/news-releases/linux-foundation-launches-build-foundation-to-sustain-large-scale-multi-language-build-and-test-systems-302907935.html"
-    },
-    {
-     "date": "2026-10-14",
-     "what": "In the news: Linux Foundation Launches BUILD Foundation to Sustain Large-Scale, Multi-Language Build an",
-     "observation_id": 11383,
-     "url": "https://finance.yahoo.com/technology/articles/linux-foundation-launches-build-foundation-070000356.html"
     }
    ],
    "trend": {
@@ -18726,22 +18598,16 @@
      "url": "https://eudia.com/"
     },
     {
-     "date": "2026-09-22",
-     "what": "In the news: Meet The Legal Innovators UK Sponsors \u2013 Nov 4 + 5",
-     "observation_id": 11384,
-     "url": "https://www.artificiallawyer.com/2026/09/22/meet-the-legal-innovators-uk-sponsors-nov-4-5/"
-    },
-    {
      "date": "2026-09-01",
      "what": "In the news: Eudia und Harbor wollen die KI-Transformation f\u00fcr Rechtsabteilungen in Unternehmen in Part",
      "observation_id": 11384,
      "url": "https://www.finanznachrichten.de/nachrichten-2026-09/69468061-eudia-und-harbor-wollen-die-ki-transformation-fuer-rechtsabteilungen-in-unternehmen-in-partnerschaft-beschleunigen-248.htm"
     },
     {
-     "date": "2026-09-01",
-     "what": "In the news: Eudia and Harbor Partner to Accelerate AI Transformation for Enterprise Legal Teams",
+     "date": "2026-08-25",
+     "what": "In the news: Eudia beschleunigt die KI-Transformation in Unternehmen mit Gemini Enterprise for Legal vo",
      "observation_id": 11384,
-     "url": "https://www.financialcontent.com/article/accwirecq-2026-9-1-eudia-and-harbor-partner-to-accelerate-ai-transformation-for-enterprise-legal-teams"
+     "url": "https://www.finanznachrichten.de/nachrichten-2026-08/69403181-eudia-beschleunigt-die-ki-transformation-in-unternehmen-mit-gemini-enterprise-for-legal-von-google-cloud-248.htm"
     },
     {
      "date": "2025-03-25",
@@ -19397,24 +19263,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10345,
      "url": "https://everlab.com.au/"
-    },
-    {
-     "date": "2026-10-20",
-     "what": "In the news: Ex-Revolut founders\u2019 preventive health startup Emerald hits \u00a32.9M total funding, targets 1",
-     "observation_id": 11385,
-     "url": "https://techfundingnews.com/emerald-raises-1-4m-preventive-health-innovate-uk-boost-capital/"
-    },
-    {
-     "date": "2026-10-14",
-     "what": "In the news: The Dataset Inside You: Why Your Gut Microbiome Is Personalised Health's Most Underrated R",
-     "observation_id": 11385,
-     "url": "https://www.analyticsinsight.net/healthcare/the-dataset-inside-you-why-your-gut-microbiome-is-personalised-healths-most-underrated-resource"
-    },
-    {
-     "date": "2026-10-13",
-     "what": "In the news: The Gut Microbiome Is the Most Overlooked Biomarker in Preventive Health, Here\u2019s Why That ",
-     "observation_id": 11385,
-     "url": "https://techbullion.com/the-gut-microbiome-is-the-most-overlooked-biomarker-in-preventive-health-heres-why-that-needs-to-change/"
     }
    ],
    "trend": {
@@ -19978,18 +19826,6 @@
      "url": "https://finalis.com/"
     },
     {
-     "date": "2026-09-10",
-     "what": "In the news: Former LPL CEO Joins a Private Startup \u2014 Here's What Investors Actually Need to Know",
-     "observation_id": 11387,
-     "url": "https://www.ainvest.com/news/lpl-ceo-joins-private-startup-investors-2609/"
-    },
-    {
-     "date": "2026-09-03",
-     "what": "In the news: Optimal Expanding as it Celebrates Anniversary of Launch",
-     "observation_id": 11387,
-     "url": "https://www.prnewswire.com/news-releases/optimal-expanding-as-it-celebrates-anniversary-of-launch-302869404.html"
-    },
-    {
      "date": "2026-08-13",
      "what": "In the news: Senior US market watchdog official exits to join dealmaking fintech Finalis",
      "observation_id": 11387,
@@ -20318,8 +20154,8 @@
    "domain": "eatfishwife.com",
    "legal_name": "Fishwife Tinned Seafood Co",
    "bucket": "Active",
-   "last_activity": "2026-10-06",
-   "rule": "In the news: The 13 Best Holiday Gifts for Foodies (That Are Going to Sell Out Fast) 2026-10-06",
+   "last_activity": "2026-09-30",
+   "rule": "In the news: Fishwife CEO Becca Millstein\u2019s Disciplined Daily Routine for Sustainable Growth 2026-09-30",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -20329,22 +20165,22 @@
    },
    "signals": [
     {
-     "date": "2026-10-06",
-     "what": "In the news: The 13 Best Holiday Gifts for Foodies (That Are Going to Sell Out Fast)",
-     "observation_id": 11389,
-     "url": "https://www.eater.com/shopping/920231/best-cool-food-gifts-that-will-sell-out-limited-edition"
-    },
-    {
-     "date": "2026-10-06",
-     "what": "In the news: I'm a Food Writer\u201316 Amazon Pantry Items I'm Stocking Up on During Prime Day",
-     "observation_id": 11389,
-     "url": "https://www.yahoo.com/lifestyle/articles/im-food-writer-16-amazon-120300394.html"
-    },
-    {
      "date": "2026-09-30",
      "what": "In the news: Fishwife CEO Becca Millstein\u2019s Disciplined Daily Routine for Sustainable Growth",
      "observation_id": 11389,
      "url": "https://www.webpronews.com/fishwife-ceo-becca-millsteins-disciplined-daily-routine-for-sustainable-growth/"
+    },
+    {
+     "date": "2026-09-25",
+     "what": "In the news: Is the Fishwife x Dieux collaboration marketing magic or madness?",
+     "observation_id": 11389,
+     "url": "https://insideretail.com.au/business/is-the-fishwife-x-dieux-collaboration-a-marketing-flop-or-a-brilliant-brand-move-202609"
+    },
+    {
+     "date": "2026-09-21",
+     "what": "In the news: Dieux and Fishwife Team Up on Limited-edition Eye Masks",
+     "observation_id": 11389,
+     "url": "https://wwd.com/pop-culture/new-fashion-releases/dieux-fishwife-eye-mask-collaboration-1239244444/"
     }
    ],
    "trend": {
@@ -20883,12 +20719,6 @@
      "what": "In the news: New Real-World Data From Oova and Flora Fertility Reveals the Hidden Cost of the Fertility",
      "observation_id": 11388,
      "url": "https://www.prnewswire.com/news-releases/new-real-world-data-from-oova-and-flora-fertility-reveals-the-hidden-cost-of-the-fertility-journey-before-treatment-begins-302890961.html"
-    },
-    {
-     "date": "2026-09-28",
-     "what": "In the news: FEMTECH LEADERS FLORA FERTILITY AND CLUE PARTNER TO ADVANCE FERTILITY EDUCATION AND ACCESS",
-     "observation_id": 11388,
-     "url": "https://www.prnewswire.com/news-releases/femtech-leaders-flora-fertility-and-clue-partner-to-advance-fertility-education-and-access-302891514.html"
     },
     {
      "date": "2025-08-15",
@@ -21528,18 +21358,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10342,
      "url": "https://flowmedical.co/"
-    },
-    {
-     "date": "2026-09-28",
-     "what": "In the news: HeartX Cardiovascular Accelerator Announces Five Startup Companies Selected for the 2026 P",
-     "observation_id": 11391,
-     "url": "https://www.prnewswire.com/news-releases/heartx-cardiovascular-accelerator-announces-five-startup-companies-selected-for-the-2026-program-302890448.html"
-    },
-    {
-     "date": "2026-09-28",
-     "what": "In the news: HEARTX CARDIOVASCULAR ACCELERATOR ANNOUNCES FIVE STARTUP COMPANIES SELECTED FOR THE 2026 P",
-     "observation_id": 11391,
-     "url": "https://hta.health/news/2026/9/28/heartx-cardiovascular-accelerator-announces-five-startup-companies-selected-for-the-2026-program"
     },
     {
      "date": "2022-04-15",
@@ -22404,12 +22222,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10367,
      "url": "https://flychain.us/"
-    },
-    {
-     "date": "2026-08-13",
-     "what": "In the news: Motivity Emphasizes Community Engagement at ABA C.A.R.E.S. Conference",
-     "observation_id": 11394,
-     "url": "https://www.tipranks.com/news/private-companies/motivity-emphasizes-community-engagement-at-aba-c-a-r-e-s-conference"
     }
    ],
    "trend": {
@@ -23559,12 +23371,6 @@
      "url": "https://www.thesaasnews.com/news/fusepay-raises-350000-pre-seed/"
     },
     {
-     "date": "2026-07-30",
-     "what": "In the news: Seychelles-based startup launches AI-native OS for trade businesses",
-     "observation_id": 11396,
-     "url": "https://disruptafrica.com/2026/07/30/seychelles-based-startup-launches-ai-native-os-for-trade-businesses/"
-    },
-    {
      "date": "2026-01-15",
      "what": "Homepage changed (Web Archive)",
      "observation_id": 10769,
@@ -23731,6 +23537,12 @@
    },
    "badges": [
     {
+     "kind": "form_d",
+     "label": "Raised, per news 2026-08",
+     "recent": true,
+     "url": "https://www.thesaasnews.com/news/fusepay-raises-350000-pre-seed/"
+    },
+    {
      "kind": "headcount",
      "label": "7 people, -42% in 12 mo"
     }
@@ -23870,12 +23682,6 @@
      "what": "Homepage changed (Web Archive)",
      "observation_id": 10773,
      "url": "https://web.archive.org/web/*/gdevelop.io"
-    },
-    {
-     "date": "2026-09-25",
-     "what": "In the news: A Game Studio in Minutes: JIYI SOON Aims to Redefine Game Creation with AI \u00b7 TechNode",
-     "observation_id": 11397,
-     "url": "https://technode.com/2026/09/25/a-game-studio-in-minutes-jiyi-soon-ai-game-creation/"
     }
    ],
    "trend": {
@@ -25980,12 +25786,6 @@
      "url": "https://www.sec.gov/Archives/edgar/data/1822863/000182286326000001/primary_doc.xml"
     },
     {
-     "date": "2026-08-12",
-     "what": "In the news: FYI, Your Favorite Skiwear Brand Makes Seriously Cute Activewear Too",
-     "observation_id": 11404,
-     "url": "https://www.whowhatwear.com/fashion/fall/halfdays-fall-activewear-review"
-    },
-    {
      "date": "2026-06-15",
      "what": "Homepage changed (Web Archive)",
      "observation_id": 10788,
@@ -27339,12 +27139,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10372,
      "url": "https://headway.io/"
-    },
-    {
-     "date": "2026-08-05",
-     "what": "In the news: Make Remote Collaboration Easy",
-     "observation_id": 11408,
-     "url": "https://builtin.com/articles/make-remote-collaboration-easy"
     },
     {
      "date": "2026-06-15",
@@ -28766,12 +28560,6 @@
      "what": "Homepage changed (Web Archive)",
      "observation_id": 10811,
      "url": "https://web.archive.org/web/*/huckleberrycare.com"
-    },
-    {
-     "date": "2026-08-10",
-     "what": "In the news: Aw, it\u2019s baby\u2019s first AI surveillance system | Commentary",
-     "observation_id": 11412,
-     "url": "https://www.seattletimes.com/business/aw-its-babys-first-ai-surveillance-system-commentary/"
     }
    ],
    "trend": {
@@ -29292,7 +29080,7 @@
    "domain": "useideem.com",
    "legal_name": null,
    "bucket": "Fading",
-   "last_activity": "2026-08-11",
+   "last_activity": "2026-08-05",
    "rule": "Headcount down 15% in 6 months, to 11 (Akta)",
    "composite": 0.133,
    "scores": {
@@ -29302,12 +29090,6 @@
     "footprint": 0.667
    },
    "signals": [
-    {
-     "date": "2026-08-11",
-     "what": "In the news: Philippines pushes national ID as foundation for financial identity verification",
-     "observation_id": 11413,
-     "url": "https://www.biometricupdate.com/202608/philippines-pushes-national-id-as-foundation-for-financial-identity-verification"
-    },
     {
      "date": "2026-08-05",
      "what": "In the news: Hyperstacks Deploys Ideem\u2019s Phishing-Resistant Passkey Authentication for Philippine Banks",
@@ -29906,7 +29688,7 @@
    "domain": "indemn.ai",
    "legal_name": "Indemn Inc",
    "bucket": "Fading",
-   "last_activity": "2026-08-19",
+   "last_activity": "2026-07-15",
    "rule": "Headcount down 31% in 6 months, to 11 (Akta)",
    "composite": 0.12,
    "scores": {
@@ -29916,12 +29698,6 @@
     "footprint": 0.6
    },
    "signals": [
-    {
-     "date": "2026-08-19",
-     "what": "In the news: Jewelers Mutual CEO Scott Murphy to retire after 12 years of expansion",
-     "observation_id": 11416,
-     "url": "https://www.insurancebusinessmag.com/us/news/breaking-news/jewelers-mutual-ceo-scott-murphy-to-retire-after-12-years-of-expansion-586584.aspx"
-    },
     {
      "date": "2026-07-15",
      "what": "Homepage changed (Web Archive)",
@@ -30993,18 +30769,6 @@
      "what": "Homepage changed (Web Archive)",
      "observation_id": 10846,
      "url": "https://web.archive.org/web/*/k-id.com"
-    },
-    {
-     "date": "2026-10-13",
-     "what": "In the news: Chi controlla i controllori: il mercato della verifica dell\u2019et\u00e0 sui social",
-     "observation_id": 11422,
-     "url": "https://www.startupbusiness.it/chi-controlla-i-controllori-il-mercato-della-verifica-delleta-sui-social/206945/"
-    },
-    {
-     "date": "2026-08-24",
-     "what": "In the news: Age Estimation Software: The Best Providers in 2026",
-     "observation_id": 11422,
-     "url": "https://www.finsmes.com/2026/08/age-estimation-software-the-best-providers-in-2026.html"
     }
    ],
    "trend": {
@@ -32709,9 +32473,9 @@
    "description": "Kloopify is a sustainability platform that provides procurement teams with detailed environmental impact data and analytics for every purchased item, enabling organizations to decarbonize their supply chains while maintaining cost, quality, and delivery standards.",
    "domain": "kloopify.com",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Active",
    "last_activity": "2026-04-15",
-   "rule": "Website now redirects to dalinea.com, often an acquisition or rebrand",
+   "rule": "Renamed: the site now redirects to dalinea.com, and the company has 10 people (Akta)",
    "composite": 0.027,
    "scores": {
     "form_d": 0.0,
@@ -32891,8 +32655,8 @@
      "label": "10 people"
     },
     {
-     "kind": "redirect",
-     "label": "Now dalinea.com"
+     "kind": "rising",
+     "label": "Renamed: now dalinea.com"
     }
    ],
    "mail": {
@@ -34944,9 +34708,9 @@
    "description": "M7 Health provides a platform that optimizes nurse scheduling and staffing by aligning shifts with individual preferences and professional goals, helping health systems improve retention and create more flexible, predictable work environments for nurses.",
    "domain": "m7health.com",
    "legal_name": null,
-   "bucket": "Active",
+   "bucket": "No Public Activity",
    "last_activity": "2026-10-15",
-   "rule": "Homepage changed (Web Archive) 2026-10-15",
+   "rule": "Acquired, per the news: Ascend Learning Acquires AI Scheduling Platform M7 Health (2026-09-21)",
    "composite": 0.238,
    "scores": {
     "form_d": 0.0,
@@ -34966,18 +34730,6 @@
      "what": "Job posted (4 open)",
      "observation_id": 10388,
      "url": "https://jobs.ashbyhq.com/m7health"
-    },
-    {
-     "date": "2026-09-21",
-     "what": "In the news: Ascend Learning acquires M7 Health, AI-powered clinical scheduling platform",
-     "observation_id": 11429,
-     "url": "https://healthcaredealhub.com/news/ascend-learning-acquires-m7-health-apyx"
-    },
-    {
-     "date": "2026-09-21",
-     "what": "In the news: Ascend Learning Acquires M7 Health, Connecting the Full Healthcare Career to Scheduling",
-     "observation_id": 11429,
-     "url": "https://www.globenewswire.com/news-release/2026/09/21/3365483/0/en/ascend-learning-acquires-m7-health-connecting-the-full-healthcare-career-to-scheduling.html"
     },
     {
      "date": "2026-09-21",
@@ -35150,12 +34902,12 @@
      "label": "58 people, +16% in 12 mo"
     },
     {
-     "kind": "news_warning",
-     "label": "News: Mergers & Acquisitions"
-    },
-    {
      "kind": "hiring",
      "label": "Hiring: 4 open"
+    },
+    {
+     "kind": "redirect",
+     "label": "Acquired (news)"
     }
    ],
    "mail": {
@@ -35509,12 +35261,6 @@
      "what": "Homepage changed (Web Archive)",
      "observation_id": 10881,
      "url": "https://web.archive.org/web/*/magicport.ai"
-    },
-    {
-     "date": "2026-09-23",
-     "what": "In the news: Singapore dominates Southeast Asian logistics tech funding",
-     "observation_id": 11430,
-     "url": "https://www.intellinews.com/singapore-dominates-southeast-asian-logistics-tech-funding-469552/?source=asia-telecoms-and-it"
     },
     {
      "date": "2026-09-10",
@@ -36059,12 +35805,6 @@
      "what": "Homepage changed (Web Archive)",
      "observation_id": 10889,
      "url": "https://web.archive.org/web/*/martie.com"
-    },
-    {
-     "date": "2026-08-18",
-     "what": "In the news: Trying Out Thrive Market: The Last Installation Of My Online Grocery Shopping Membership J",
-     "observation_id": 11432,
-     "url": "https://whatever.scalzi.com/2026/08/18/trying-out-thrive-market-the-last-installation-of-my-online-grocery-shopping-membership-journey/"
     }
    ],
    "trend": {
@@ -36368,21 +36108,9 @@
     },
     {
      "date": "2026-10-21",
-     "what": "In the news: Mary Technology Partners With Harvey to Bring Reviewed Case Facts Into Legal AI",
-     "observation_id": 11433,
-     "url": "https://www.unite.ai/mary-technology-partners-with-harvey-to-bring-reviewed-case-facts-into-legal-ai/"
-    },
-    {
-     "date": "2026-10-21",
      "what": "In the news: Mary Technology Integrates with Harvey to Enhance Legal Fact Investigation Efficiency",
      "observation_id": 11433,
      "url": "https://third-news.com/article/a0500a1a-cd61-11f1-9ebb-9ca3ba08e13f"
-    },
-    {
-     "date": "2026-10-21",
-     "what": "In the news: Harvey adds Australian startup Mary's case-fact tools to its legal AI",
-     "observation_id": 11433,
-     "url": "https://thenextweb.com/news/harvey-mary-technology-legal-ai-case-facts"
     },
     {
      "date": "2026-04-15",
@@ -37275,12 +37003,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10404,
      "url": "https://mbue.ai/"
-    },
-    {
-     "date": "2026-07-30",
-     "what": "In the news: Nemetschek Q2 2026 slides: recurring revenue hits 95% as Build surges By Investing.com",
-     "observation_id": 11436,
-     "url": "https://in.investing.com/news/company-news/nemetschek-q2-2026-slides-recurring-revenue-hits-95-as-build-surges-93CH-5524992"
     },
     {
      "date": "2026-06-15",
@@ -39440,9 +39162,9 @@
    "description": "",
    "domain": "mortyhq.com",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Unresolved",
    "last_activity": null,
-   "rule": "No email records and no dated signal in a year",
+   "rule": "Can't confirm the website on file is the company's: no email records and nothing dated in a year",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -39653,9 +39375,9 @@
    "description": "Mr Yum is a comprehensive platform that provides restaurants and hospitality businesses with ordering, payment, and marketing tools, enabling seamless digital experiences for customers while driving revenue and engagement for leading brands.",
    "domain": "mryum.com",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Active",
    "last_activity": null,
-   "rule": "Website now redirects to meandu.com, often an acquisition or rebrand",
+   "rule": "Renamed: the site now redirects to meandu.com, and the company has 212 people (+4% in 12 months, Akta)",
    "composite": 0.02,
    "scores": {
     "form_d": 0.0,
@@ -39828,8 +39550,8 @@
      "label": "212 people, +4% in 12 mo"
     },
     {
-     "kind": "redirect",
-     "label": "Now meandu.com"
+     "kind": "rising",
+     "label": "Renamed: now meandu.com"
     },
     {
      "kind": "traffic",
@@ -41694,8 +41416,8 @@
    "domain": "nilosaude.com.br",
    "legal_name": null,
    "bucket": "Active",
-   "last_activity": "2026-09-11",
-   "rule": "In the news: Como startups de sa\u00fade est\u00e3o competindo diretamente com planos tradicionais no Brasil 2026-09-11",
+   "last_activity": "2026-09-04",
+   "rule": "Website updated (sitemap) 2026-09-04",
    "composite": 0.127,
    "scores": {
     "form_d": 0.0,
@@ -41704,12 +41426,6 @@
     "footprint": 0.633
    },
    "signals": [
-    {
-     "date": "2026-09-11",
-     "what": "In the news: Como startups de sa\u00fade est\u00e3o competindo diretamente com planos tradicionais no Brasil",
-     "observation_id": 11448,
-     "url": "https://startupi.com.br/healthtechs-competem-planos-saude-brasil/"
-    },
     {
      "date": "2026-09-04",
      "what": "Website updated (sitemap)",
@@ -42521,19 +42237,13 @@
      "date": "2026-10-16",
      "what": "In the news: North.cloud Raises $60M Series B to Unify Spend Intelligence and Enable Full Automation Ac",
      "observation_id": 11450,
-     "url": "https://www.einnews.com/article/950260440/live"
-    },
-    {
-     "date": "2026-10-16",
-     "what": "In the news: North.cloud Raises $60M Series B to Unify Spend Intelligence and Enable Full Automation Ac",
-     "observation_id": 11450,
      "url": "https://aithority.com/machine-learning/north-cloud-raises-60m-series-b-to-unify-spend-intelligence-and-enable-full-automation-across-cloud-ai-and-data/"
     },
     {
-     "date": "2026-10-16",
-     "what": "In the news: North.cloud Raises $60M Series B",
+     "date": "2026-10-15",
+     "what": "In the news: North.cloud Raises $60M to Expand AI Spend Management",
      "observation_id": 11450,
-     "url": "https://www.thesaasnews.com/news/north-cloud-raises-60m-series-b/"
+     "url": "https://ventureburn.com/north-cloud-raises-60m-ai-spend-management/"
     }
    ],
    "trend": {
@@ -42695,6 +42405,12 @@
     "rising": false
    },
    "badges": [
+    {
+     "kind": "form_d",
+     "label": "Raised, per news 2026-10",
+     "recent": true,
+     "url": "https://www.startupresearcher.com/news/north-cloud-closes-usd60-million-series-b-funding-round"
+    },
     {
      "kind": "rising",
      "label": "Activity rising"
@@ -43361,8 +43077,8 @@
    "domain": "ohnorman.com",
    "legal_name": null,
    "bucket": "Active",
-   "last_activity": "2026-10-19",
-   "rule": "In the news: 7 unexpected celebrity brands that shoppers actually love 2026-10-19",
+   "last_activity": "2026-09-24",
+   "rule": "In the news: Hutton Brickyards Partners With Oh Norman! To Launch The \"Oh Norman! Good Dog Getaway\" 2026-09-24",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -43372,22 +43088,10 @@
    },
    "signals": [
     {
-     "date": "2026-10-19",
-     "what": "In the news: 7 unexpected celebrity brands that shoppers actually love",
+     "date": "2026-09-24",
+     "what": "In the news: Hutton Brickyards Partners With Oh Norman! To Launch The \"Oh Norman! Good Dog Getaway\"",
      "observation_id": 11453,
-     "url": "https://www.usatoday.com/story/shopping/entertainment/celebrity/2026/10/19/surprising-celebrity-brands-worth-trying/92330230007/"
-    },
-    {
-     "date": "2026-10-19",
-     "what": "In the news: 7 unexpected celebrity brands that shoppers actually love",
-     "observation_id": 11453,
-     "url": "https://www.desmoinesregister.com/story/shopping/entertainment/celebrity/2026/10/19/surprising-celebrity-brands-worth-trying/92330230007/"
-    },
-    {
-     "date": "2026-10-19",
-     "what": "In the news: 7 unexpected celebrity brands that shoppers actually love",
-     "observation_id": 11453,
-     "url": "https://citizen-times.com/story/shopping/entertainment/celebrity/2026/10/19/surprising-celebrity-brands-worth-trying/92330230007/"
+     "url": "https://www.prnewswire.com/news-releases/hutton-brickyards-partners-with-oh-norman-to-launch-the-oh-norman-good-dog-getaway-302888793.html"
     }
    ],
    "trend": {
@@ -45114,9 +44818,9 @@
    "description": "OPEN is a holistic wellness platform that offers both physical and digital experiences, combining movement, breathwork, meditation, and sound to support mental and physical well-being, accessible through in-person sessions or its digital app.",
    "domain": "withopen.com",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Unresolved",
    "last_activity": "2019-12-26",
-   "rule": "No email records and no dated signal in a year",
+   "rule": "Can't confirm the website on file is the company's: no email records and nothing dated in a year",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -45662,18 +45366,6 @@
      "url": "https://operant.ai/"
     },
     {
-     "date": "2026-09-01",
-     "what": "In the news: AIR raises $50M to help companies vet the skills and add-ons AI agents use",
-     "observation_id": 11459,
-     "url": "https://techcrunch.com/2026/09/01/air-raises-50m-to-help-companies-vet-the-skills-and-add-ons-ai-agents-use/"
-    },
-    {
-     "date": "2026-08-28",
-     "what": "In the news: Operant AI launches Semantic Firewall to enforce AI agents in real-time as enterprise adop",
-     "observation_id": 11459,
-     "url": "https://cxotoday.com/media-coverage/operant-ai-launches-semantic-firewall-to-enforce-ai-agents-in-real-time-as-enterprise-adoption-scales-in-india/?utm_source=rss&utm_medium=rss&utm_campaign=operant-ai-launches-semantic-firewall-to-enforce-ai-agents-in-real-time-as-enterprise-adoption-scales-in-india"
-    },
-    {
      "date": "2026-08-28",
      "what": "In the news: Operant AI Launches Semantic Firewall for Enterprises",
      "observation_id": 11459,
@@ -46012,12 +45704,6 @@
      "url": "https://www.thesaasnews.com/news/orca-fraud-raises-2-35m-seed/"
     },
     {
-     "date": "2026-10-09",
-     "what": "In the news: ITWeb TV: AI-driven fraud rises as criminals target human trust",
-     "observation_id": 11460,
-     "url": "https://www.itweb.co.za/article/itweb-tv-ai-driven-fraud-rises-as-criminals-target-human-trust/LPp6V7rBrBa7DKQz"
-    },
-    {
      "date": "2026-06-15",
      "what": "Homepage changed (Web Archive)",
      "observation_id": 11269,
@@ -46183,6 +45869,12 @@
     "rising": false
    },
    "badges": [
+    {
+     "kind": "form_d",
+     "label": "Raised, per news 2026-10",
+     "recent": true,
+     "url": "https://www.thesaasnews.com/news/orca-fraud-raises-2-35m-seed/"
+    },
     {
      "kind": "rising",
      "label": "Activity rising"
@@ -46806,7 +46498,7 @@
    "domain": "outmarket.ai",
    "legal_name": "Outmarket Inc",
    "bucket": "Active",
-   "last_activity": "2026-10-22",
+   "last_activity": "2026-10-21",
    "rule": "Headcount up 70% in 6 months, to 63 (Akta)",
    "composite": 0.1,
    "scores": {
@@ -46817,22 +46509,22 @@
    },
    "signals": [
     {
-     "date": "2026-10-22",
-     "what": "In the news: Outmarket Launches Outmarket Lite, Bringing AI-Native Insurance Workflows to Agencies of A",
-     "observation_id": 11464,
-     "url": "https://globalfintechseries.com/insurtech/outmarket-launches-outmarket-lite-bringing-ai-native-insurance-workflows-to-agencies-of-all-sizes/"
-    },
-    {
      "date": "2026-10-21",
      "what": "In the news: Outmarket AI brings AI-native insurance workflows to agencies of all sizes",
      "observation_id": 11464,
      "url": "https://www.finextra.com/pressarticle/111393/outmarket-ai-brings-ai-native-insurance-workflows-to-agencies-of-all-sizes?utm_medium=rssfinextra&utm_source=finextrafeed"
     },
     {
-     "date": "2026-10-19",
-     "what": "In the news: Agency Tech: Building Bridges and Empowering People -- How AI Is Impacting Workflows and A",
+     "date": "2026-10-06",
+     "what": "In the news: Outmarket AI Raises $34.5 Million Series B, Bringing Total Funding To $56.5 Million",
      "observation_id": 11464,
-     "url": "https://www.insurancejournal.com/magazines/mag-features/2026/10/19/889117.htm"
+     "url": "https://pulse2.com/outmarket-ai-raises-34-5-million-series-b-bringing-total-funding-to-56-5-million/"
+    },
+    {
+     "date": "2026-09-30",
+     "what": "In the news: Outmarket AI Raises $34.5 Million In Series B Funding Round",
+     "observation_id": 11464,
+     "url": "https://superbcrew.com/outmarket-ai-raises-34-5-million-in-series-b-funding-round/"
     }
    ],
    "trend": {
@@ -46994,6 +46686,12 @@
     "rising": false
    },
    "badges": [
+    {
+     "kind": "form_d",
+     "label": "Raised, per news 2026-10",
+     "recent": true,
+     "url": "https://pulse2.com/outmarket-ai-raises-34-5-million-series-b-bringing-total-funding-to-56-5-million/"
+    },
     {
      "kind": "rising",
      "label": "Activity rising"
@@ -47464,12 +47162,6 @@
      "what": "Job posted (13 open)",
      "observation_id": 10436,
      "url": "https://boards.greenhouse.io/ownwell"
-    },
-    {
-     "date": "2026-09-10",
-     "what": "In the news: TaxDrop Names Top Property Tax Appeal Services for Homeowners",
-     "observation_id": 11465,
-     "url": "https://www.financialcontent.com/article/abnewswire-2026-9-10-taxdrop-names-top-property-tax-appeal-services-for-homeowners"
     }
    ],
    "trend": {
@@ -48065,8 +47757,8 @@
    "domain": "paireyewear.com",
    "legal_name": null,
    "bucket": "Active",
-   "last_activity": "2026-10-21",
-   "rule": "In the news: Yotpo Discover Helps Ecommerce Brands Influence How AI Recommends Their Products 2026-10-21",
+   "last_activity": "2026-08-31",
+   "rule": "In the news: Pair Eyewear launches Sesame Street glasses with Big Bird, Elmo and more 2026-08-31",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -48076,22 +47768,16 @@
    },
    "signals": [
     {
-     "date": "2026-10-21",
-     "what": "In the news: Yotpo Discover Helps Ecommerce Brands Influence How AI Recommends Their Products",
-     "observation_id": 11467,
-     "url": "https://www.financialcontent.com/article/abnewswire-2026-10-21-yotpo-discover-helps-ecommerce-brands-influence-how-ai-recommends-their-products"
-    },
-    {
-     "date": "2026-10-21",
-     "what": "In the news: Yotpo Discover Helps Ecommerce Brands Influence How AI Recommends Their Products",
-     "observation_id": 11467,
-     "url": "https://menafn.com/1111842541/Yotpo-Discover-Helps-Ecommerce-Brands-Influence-How-AI-Recommends-Their-Products"
-    },
-    {
      "date": "2026-08-31",
      "what": "In the news: Pair Eyewear launches Sesame Street glasses with Big Bird, Elmo and more",
      "observation_id": 11467,
      "url": "https://www.goodmorningamerica.com/style/story/pair-eyewear-launches-sesame-street-glasses-big-bird-76108187"
+    },
+    {
+     "date": "2026-08-28",
+     "what": "In the news: Pair Eyewear Expands Performance Series With ColorIQ Driving Lenses",
+     "observation_id": 11467,
+     "url": "https://www.visionmonday.com/launchpad/frame-collection-1/article/pair-eyewear-expands-performance-series-with-coloriq-driving-lenses"
     },
     {
      "date": "2023-11-02",
@@ -48476,24 +48162,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10286,
      "url": "https://particlehealth.com/"
-    },
-    {
-     "date": "2026-08-19",
-     "what": "In the news: FTC sends investigative inquiries to health tech companies",
-     "observation_id": 11334,
-     "url": "https://medicalbuyer.co.in/ftc-sends-investigative-inquiries-to-health-tech-companies/"
-    },
-    {
-     "date": "2026-08-18",
-     "what": "In the news: Epic responds to potential FTC antitrust probe",
-     "observation_id": 11334,
-     "url": "https://www.healthcareitnews.com/news/epic-responds-potential-ftc-antitrust-probe"
-    },
-    {
-     "date": "2026-08-17",
-     "what": "In the news: Epic faces FTC antitrust probe: Report",
-     "observation_id": 11334,
-     "url": "https://www.beckershospitalreview.com/healthcare-information-technology/ehrs/epic-faces-ftc-antitrust-probe-report/"
     },
     {
      "date": "2026-06-15",
@@ -49937,12 +49605,6 @@
      "url": "https://photon.health/"
     },
     {
-     "date": "2026-10-08",
-     "what": "In the news: Notice of Data Security Incident",
-     "observation_id": 11470,
-     "url": "https://www.advfn.com/stock-market/stock-news/99464195/notice-of-data-security-incident"
-    },
-    {
      "date": "2026-09-15",
      "what": "New subdomain certified",
      "observation_id": 11005,
@@ -50862,9 +50524,9 @@
    "description": "Presta offers a comprehensive lending platform that enables financial institutions to streamline their loan origination process, from application to underwriting and servicing, enhancing efficiency and customer experience in the lending ecosystem.",
    "domain": "presta.ai",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Unresolved",
    "last_activity": null,
-   "rule": "No email records and no dated signal in a year",
+   "rule": "Can't confirm the website on file is the company's: no email records and nothing dated in a year",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -51810,12 +51472,6 @@
      "url": "https://www.businesswire.com/news/home/20260921367282/en/Radformation-Receives-USFDA-510k-Clearance-for-OptiPlan-Automated-VMAT-Planning"
     },
     {
-     "date": "2026-09-21",
-     "what": "In the news: Automated VMAT Planning Receives FDA Clearance",
-     "observation_id": 11473,
-     "url": "http://www.itnonline.com/content/automated-vmat-planning-receives-fda-clearance"
-    },
-    {
      "date": "2023-05-26",
      "what": "Form D filed",
      "observation_id": 11775,
@@ -52175,16 +51831,10 @@
      "url": "https://www.financialcontent.com/article/gnwcq-2026-10-8-holobiome-and-radicle-science-launch-us-historys-largest-mental-wellness-trial-targeting-the-gut-brain-axis"
     },
     {
-     "date": "2026-10-08",
-     "what": "In the news: Andrew Shao, Ph.D., Senior Vice President of Global Regulatory and Scientific Affairs at N",
+     "date": "2026-09-08",
+     "what": "In the news: Radicle Science Expands Leadership Across Science, Data, and Health Economics for Precisio",
      "observation_id": 11474,
-     "url": "https://www.financialcontent.com/article/bizwire-2026-10-8-andrew-shao-phd-senior-vice-president-of-global-regulatory-and-scientific-affairs-at-niagen-bioscience-honored-with-the-2026-annette-dickinson-trailblazer-award-by-radicle-science-and-council-for-responsible-nutrition-crn"
-    },
-    {
-     "date": "2026-10-08",
-     "what": "In the news: Andrew Shao, Ph.D., Senior Vice President of Global Regulatory and Scientific Affairs at N",
-     "observation_id": 11474,
-     "url": "https://www.businesswire.com/news/home/20261008014757/en/Andrew-Shao-Ph.D.-Senior-Vice-President-of-Global-Regulatory-and-Scientific-Affairs-at-Niagen-Bioscience-Honored-with-the-2026-Annette-Dickinson-Trailblazer-Award-by-Radicle-Science-and-Council-for-Responsible-Nutrition-CRN"
+     "url": "https://www.financialcontent.com/article/gnwcq-2026-9-8-radicle-science-expands-leadership-across-science-data-and-health-economics-for-precision-wellness"
     },
     {
      "date": "2022-06-03",
@@ -52536,7 +52186,7 @@
    "domain": "radish.health",
    "legal_name": "Radish Health Inc",
    "bucket": "Active",
-   "last_activity": "2026-09-19",
+   "last_activity": "2026-07-19",
    "rule": "Headcount up 22% in 6 months, to 22 (Akta)",
    "composite": 0.1,
    "scores": {
@@ -52546,12 +52196,6 @@
     "footprint": 0.5
    },
    "signals": [
-    {
-     "date": "2026-09-19",
-     "what": "In the news: News by Dow Jones Newswires on TradingView, 2026-09-19",
-     "observation_id": 11475,
-     "url": "https://www.tradingview.com/news/DJN_DN20260915000301:0/"
-    },
     {
      "date": "2026-07-19",
      "what": "Website updated (sitemap)",
@@ -53054,7 +52698,7 @@
    "domain": "rebelspacetech.com",
    "legal_name": null,
    "bucket": "Active",
-   "last_activity": "2026-10-14",
+   "last_activity": "2026-09-30",
    "rule": "Headcount up 17% in 6 months, to 14 (Akta)",
    "composite": 0.157,
    "scores": {
@@ -53064,12 +52708,6 @@
     "footprint": 0.787
    },
    "signals": [
-    {
-     "date": "2026-10-14",
-     "what": "In the news: What Is Space Beach? Inside SoCal\u2019s Space Industry Hub",
-     "observation_id": 11476,
-     "url": "https://builtin.com/articles/space-beach"
-    },
     {
      "date": "2026-09-30",
      "what": "Website updated (sitemap)",
@@ -53352,12 +52990,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10447,
      "url": "https://redactable.com/"
-    },
-    {
-     "date": "2026-08-13",
-     "what": "In the news: Nitro Smart Redact: the complete guide to automated AI redaction",
-     "observation_id": 11477,
-     "url": "https://www.cio.com/article/4209059/nitro-smart-redact-the-complete-guide-to-automated-ai-redaction.html"
     }
    ],
    "trend": {
@@ -55637,7 +55269,7 @@
    "legal_name": "Rings AI Inc",
    "bucket": "Active",
    "last_activity": "2026-10-06",
-   "rule": "In the news: Rings AI and Perplexity Partner to Bring Team Relationship Intelligence into Perplexity Co 2026-10-06",
+   "rule": "In the news: Rings AI and Perplexity Forge Partnership to Enhance Relationship Intelligence Tools 2026-10-06",
    "composite": 0.151,
    "scores": {
     "form_d": 0.144,
@@ -55646,12 +55278,6 @@
     "footprint": 0.5
    },
    "signals": [
-    {
-     "date": "2026-10-06",
-     "what": "In the news: Rings AI and Perplexity Partner to Bring Team Relationship Intelligence into Perplexity Co",
-     "observation_id": 11485,
-     "url": "https://www.prnewswire.com/news-releases/rings-ai-and-perplexity-partner-to-bring-team-relationship-intelligence-into-perplexity-computer-302899876.html"
-    },
     {
      "date": "2026-10-06",
      "what": "In the news: Rings AI and Perplexity Forge Partnership to Enhance Relationship Intelligence Tools",
@@ -56426,9 +56052,9 @@
    "description": "Salesken provides AI-powered tools that enhance sales performance by analyzing customer conversations, offering real-time coaching, and delivering actionable insights to improve deal outcomes, customer engagement, and revenue forecasting. Its platform automates sales pipeline management and helps sales teams close more deals by providing personalized guidance and predictive analytics.",
    "domain": "salesken.ai",
    "legal_name": null,
-   "bucket": "Active",
-   "last_activity": "2026-10-12",
-   "rule": "In the news: 6 Best Convin Alternatives for Revenue Teams [2026] 2026-10-12",
+   "bucket": "Quiet",
+   "last_activity": null,
+   "rule": "Site live; no dated signal found",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -56436,14 +56062,7 @@
     "hiring": 0.0,
     "footprint": 0.5
    },
-   "signals": [
-    {
-     "date": "2026-10-12",
-     "what": "In the news: 6 Best Convin Alternatives for Revenue Teams [2026]",
-     "observation_id": 11487,
-     "url": "https://pipeline.zoominfo.com/sales/convin-alternatives"
-    }
-   ],
+   "signals": [],
    "trend": {
     "months": [
      {
@@ -57599,9 +57218,9 @@
    "description": "Season provides personalized nutrition consultations with board-certified dietitians, paired with chef-designed recipes and pre-made meals tailored to individual health goals. The service integrates virtual dietitian appointments and a curated food marketplace, with most sessions covered by insurance.",
    "domain": "seasonhealth.com",
    "legal_name": null,
-   "bucket": "Active",
-   "last_activity": "2026-07-27",
-   "rule": "In the news: Digital Clinical Nutrition Platforms Market to Reach $2.78Bn by 2036 as Medical Nutrition  2026-07-27",
+   "bucket": "Quiet",
+   "last_activity": null,
+   "rule": "Site live; no dated signal found",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -57609,14 +57228,7 @@
     "hiring": 0.0,
     "footprint": 0.5
    },
-   "signals": [
-    {
-     "date": "2026-07-27",
-     "what": "In the news: Digital Clinical Nutrition Platforms Market to Reach $2.78Bn by 2036 as Medical Nutrition ",
-     "observation_id": 11492,
-     "url": "https://www.factmr.com/media-release/2157/digital-clinical-nutrition-platforms-market"
-    }
-   ],
+   "signals": [],
    "trend": {
     "months": [
      {
@@ -57908,9 +57520,9 @@
    "description": "Segwise provides an AI-powered platform that automates the monitoring and analysis of campaign and creative data for apps and games. It delivers actionable insights on Return on Ad Spend, detects anomalies, and tracks revenue and retention metrics, helping teams optimize performance without the need for engineering resources.",
    "domain": "segwise.ai",
    "legal_name": null,
-   "bucket": "Active",
-   "last_activity": "2026-09-18",
-   "rule": "In the news: Vibe Expands Connected TV Platform With Agent Access and Six New Integrations 2026-09-18",
+   "bucket": "Quiet",
+   "last_activity": null,
+   "rule": "Site live; no dated signal found",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -57918,20 +57530,7 @@
     "hiring": 0.0,
     "footprint": 0.5
    },
-   "signals": [
-    {
-     "date": "2026-09-18",
-     "what": "In the news: Vibe Expands Connected TV Platform With Agent Access and Six New Integrations",
-     "observation_id": 11493,
-     "url": "https://martechseries.com/sales-marketing/programmatic-buying/vibe-expands-connected-tv-platform-with-agent-access-and-six-new-integrations/"
-    },
-    {
-     "date": "2026-09-17",
-     "what": "In the news: Vibe Expands Connected TV Platform With Agent Access and Six New Integrations",
-     "observation_id": 11493,
-     "url": "https://www.financialcontent.com/article/bizwire-2026-9-17-vibe-expands-connected-tv-platform-with-agent-access-and-six-new-integrations"
-    }
-   ],
+   "signals": [],
    "trend": {
     "months": [
      {
@@ -58150,9 +57749,9 @@
    "description": "Sendspark is a video messaging platform designed for sales teams, enabling users to create personalized video emails at scale with AI-driven customization, helping increase engagement, book more meetings, and drive revenue. The platform integrates with sales sequences and marketing automation to streamline outreach and enhance conversion rates.",
    "domain": "sendspark.com",
    "legal_name": null,
-   "bucket": "Active",
-   "last_activity": "2026-09-08",
-   "rule": "In the news: Best AI Sales Video Generator for Enterprise Outreach 2026 2026-09-08",
+   "bucket": "Quiet",
+   "last_activity": null,
+   "rule": "Site live; no dated signal found",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -58160,26 +57759,7 @@
     "hiring": 0.0,
     "footprint": 0.5
    },
-   "signals": [
-    {
-     "date": "2026-09-08",
-     "what": "In the news: Best AI Sales Video Generator for Enterprise Outreach 2026",
-     "observation_id": 11494,
-     "url": "https://openart.ai/blog/best-ai-sales-video-generator-enterprise-outreach/"
-    },
-    {
-     "date": "2026-09-08",
-     "what": "In the news: Best AI Sales Video Generator for Enterprise Outreach 2026",
-     "observation_id": 11494,
-     "url": "https://openart.ai/blog/best-ai-sales-video-generator-enterprise-outreach/"
-    },
-    {
-     "date": "2026-07-29",
-     "what": "In the news: Best Loom Alternatives to Record Your Screen",
-     "observation_id": 11494,
-     "url": "https://www.descript.com/blog/article/best-loom-alternatives"
-    }
-   ],
+   "signals": [],
    "trend": {
     "months": [
      {
@@ -59192,9 +58772,9 @@
    "description": "SideQuestVR is a platform that enables developers to distribute early access and experimental VR content, including games and apps, to users outside traditional app stores, offering a wider range of experiences for VR enthusiasts.",
    "domain": "sidequestvr.com",
    "legal_name": null,
-   "bucket": "Active",
-   "last_activity": "2026-07-30",
-   "rule": "In the news: Rec Room Died, Horizon Worlds Left VR, and Now Somebody Is Rebuilding Altspace 2026-07-30",
+   "bucket": "Quiet",
+   "last_activity": null,
+   "rule": "Site live; no dated signal found",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -59202,14 +58782,7 @@
     "hiring": 0.0,
     "footprint": 0.5
    },
-   "signals": [
-    {
-     "date": "2026-07-30",
-     "what": "In the news: Rec Room Died, Horizon Worlds Left VR, and Now Somebody Is Rebuilding Altspace",
-     "observation_id": 11496,
-     "url": "https://vr.org/articles/sidequest-altspace-revival-social-vr-2026"
-    }
-   ],
+   "signals": [],
    "trend": {
     "months": [
      {
@@ -59372,10 +58945,6 @@
     {
      "kind": "headcount",
      "label": "17 people, -35% in 12 mo"
-    },
-    {
-     "kind": "news_warning",
-     "label": "News: Product Launches & Enhancements"
     },
     {
      "kind": "traffic",
@@ -59912,9 +59481,9 @@
    "description": "Sourcemap provides a comprehensive platform for mapping, monitoring, and verifying supply chains from raw materials to finished products. It helps companies ensure compliance with global regulations, track sustainability metrics, and assess risks across their extended supplier networks.",
    "domain": "sourcemap.com",
    "legal_name": "Sourcemap Inc",
-   "bucket": "Active",
-   "last_activity": "2026-10-16",
-   "rule": "In the news: SJ Fall Summit: What Does Human Rights Due Diligence Look Like in 2026? 2026-10-16",
+   "bucket": "Quiet",
+   "last_activity": "2023-02-27",
+   "rule": "Site live; last dated signal 2023-02-27",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -59923,18 +59492,6 @@
     "footprint": 0.5
    },
    "signals": [
-    {
-     "date": "2026-10-16",
-     "what": "In the news: SJ Fall Summit: What Does Human Rights Due Diligence Look Like in 2026?",
-     "observation_id": 11497,
-     "url": "https://www.einnews.com/article/950360662/live"
-    },
-    {
-     "date": "2026-08-14",
-     "what": "In the news: Global Food Supply Chain Traceability & Compliance Software Market \u2014 Analysis of Key Trend",
-     "observation_id": 11497,
-     "url": "https://www.futuremarketinsights.com/reports/food-supply-chain-traceability-and-compliance-software-market"
-    },
     {
      "date": "2023-02-27",
      "what": "Form D filed",
@@ -60274,7 +59831,7 @@
    "domain": "spade.com",
    "legal_name": null,
    "bucket": "Active",
-   "last_activity": "2026-10-24",
+   "last_activity": "2026-10-16",
    "rule": "Headcount up 53% in 6 months, to 46 (Akta)",
    "composite": 0.1,
    "scores": {
@@ -60284,12 +59841,6 @@
     "footprint": 0.5
    },
    "signals": [
-    {
-     "date": "2026-10-24",
-     "what": "In the news: Why The Next Generation Of American Optimists Are Bullish On The Future",
-     "observation_id": 11498,
-     "url": "https://www.forbes.com/sites/alexknapp/2026/10/24/why-the-next-generation-of-american-optimists-are-bullish-on-the-future/"
-    },
     {
      "date": "2026-10-16",
      "what": "In the news: Spade Trains a Transaction Foundation Model and Launches Predictions, Making It Available ",
@@ -60301,6 +59852,12 @@
      "what": "In the news: Spade Trains a Transaction Foundation Model and Launches Predictions, Making It Available ",
      "observation_id": 11498,
      "url": "https://www.citybiz.co/article/919109/spade-trains-a-transaction-foundation-model-and-launches-predictions-making-it-available-across-financial-services/"
+    },
+    {
+     "date": "2026-10-08",
+     "what": "In the news: Why Spade\u2019s Oban MacTavish Thinks Banking AI Should Focus on Revenue, Not Cost Cutting",
+     "observation_id": 11498,
+     "url": "https://finovate.com/why-spades-oban-mactavish-thinks-banking-ai-should-focus-on-revenue-not-cost-cutting/"
     }
    ],
    "trend": {
@@ -60828,7 +60385,7 @@
    "domain": "starcloud.com",
    "legal_name": "Starcloud, Inc",
    "bucket": "Active",
-   "last_activity": "2026-10-21",
+   "last_activity": "2025-01-21",
    "rule": "Headcount up 57% in 6 months, to 66 (Akta)",
    "composite": 0.1,
    "scores": {
@@ -60838,24 +60395,6 @@
     "footprint": 0.5
    },
    "signals": [
-    {
-     "date": "2026-10-21",
-     "what": "In the news: Orbital Data Centers Are About To Be Put to the Test",
-     "observation_id": 11500,
-     "url": "https://www.kiplinger.com/business/orbital-data-centers-are-about-to-be-put-to-the-test"
-    },
-    {
-     "date": "2026-10-21",
-     "what": "In the news: Global Space-Based Data Center Market Forecast To 2040 Market To Reach $28.16 Billion As I",
-     "observation_id": 11500,
-     "url": "https://menafn.com/1111842648/Global-Space-Based-Data-Center-Market-Forecast-To-2040-Market-To-Reach-2816-Billion-As-In-Orbit-AI-Edge-Computing-And-Orbital-Cloud-Demand-Accelerate-At-183-CAGR"
-    },
-    {
-     "date": "2026-10-21",
-     "what": "In the news: Corporate 'Orbital Data Centre' Proposals Are Dangerous For Humanity",
-     "observation_id": 11500,
-     "url": "https://menafn.com/1111846862/Corporate-Orbital-Data-Centre-Proposals-Are-Dangerous-For-Humanity"
-    },
     {
      "date": "2025-01-21",
      "what": "Website updated (sitemap)",
@@ -61183,9 +60722,9 @@
    "description": "StayTuned Digital provides a suite of apps designed to optimize and enhance ecommerce stores, helping merchants improve performance, increase sales, and streamline operations across multiple platforms.",
    "domain": "staytuned.digital",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Active",
    "last_activity": "2026-09-02",
-   "rule": "Website now redirects to zenpire.tech, often an acquisition or rebrand",
+   "rule": "Renamed: the site now redirects to zenpire.tech, and the company has 32 people (-16% in 12 months, Akta)",
    "composite": 0.045,
    "scores": {
     "form_d": 0.0,
@@ -61376,8 +60915,8 @@
      "label": "32 people, -16% in 12 mo"
     },
     {
-     "kind": "redirect",
-     "label": "Now zenpire.tech"
+     "kind": "rising",
+     "label": "Renamed: now zenpire.tech"
     }
    ],
    "mail": {
@@ -62404,12 +61943,6 @@
      "what": "In the news: Sugarwork appoints Andre Liao as CEO",
      "observation_id": 11503,
      "url": "https://newsnreleases.com/2026/08/18/sugarwork-appoints-andre-liao-as-ceo/"
-    },
-    {
-     "date": "2026-07-28",
-     "what": "In the news: Decidr AI Industries (ASX:DAI) Gains AWS Global Co-Sell Channel\u2014Can Partnership Status Tra",
-     "observation_id": 11503,
-     "url": "https://kalkine.com.au/news/technology/senetas-asxsen-advances-capital-return-plan-as-shareholders-support-value-distribution-strategy"
     }
    ],
    "trend": {
@@ -62993,18 +62526,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10487,
      "url": "https://sumawealth.com/"
-    },
-    {
-     "date": "2026-08-10",
-     "what": "In the news: First Partner Jennifer Siebel Newsom, Senate President pro Tem Monique Lim\u00f3n celebrate wom",
-     "observation_id": 11505,
-     "url": "https://www.gov.ca.gov/2026/08/10/first-partner-jennifer-siebel-newsom-senate-president-pro-tem-monique-limon-celebrate-women-founders-leading-innovation-in-california/"
-    },
-    {
-     "date": "2026-07-30",
-     "what": "In the news: 2024 year in review: Doubling down on what works",
-     "observation_id": 11505,
-     "url": "https://www.acumenamerica.org/where-to-next/2024-year-in-review-doubling-down-on-what-works"
     },
     {
      "date": "2025-11-25",
@@ -64946,7 +64467,7 @@
    "domain": "tangible-markets.com",
    "legal_name": "Tangible Technologies, Inc",
    "bucket": "Active",
-   "last_activity": "2026-10-22",
+   "last_activity": "2026-10-15",
    "rule": "Headcount up 13% in 6 months, to 52 (Akta)",
    "composite": 0.263,
    "scores": {
@@ -64956,12 +64477,6 @@
     "footprint": 0.5
    },
    "signals": [
-    {
-     "date": "2026-10-22",
-     "what": "In the news: Auctions Can Give Evergreen Investors New Exit Option",
-     "observation_id": 11509,
-     "url": "https://www.wealthmanagement.com/alternative-investments/secondary-auctions-offer-new-exit-for-evergreen-funds"
-    },
     {
      "date": "2026-10-15",
      "what": "Homepage changed (Web Archive)",
@@ -65279,7 +64794,7 @@
    "domain": "tetsuwan.com",
    "legal_name": null,
    "bucket": "Active",
-   "last_activity": "2026-09-25",
+   "last_activity": "2026-08-27",
    "rule": "Headcount up 20% in 6 months, to 12 (Akta)",
    "composite": 0.121,
    "scores": {
@@ -65289,24 +64804,6 @@
     "footprint": 0.607
    },
    "signals": [
-    {
-     "date": "2026-09-25",
-     "what": "In the news: Anthropic\u2019s new AI system lets lab machines talk to each other and run experiments | Mint",
-     "observation_id": 11510,
-     "url": "https://www.livemint.com/ai/anthropics-new-ai-system-lets-lab-machines-talk-to-each-other-and-run-experiments-11790319460236.html"
-    },
-    {
-     "date": "2026-09-25",
-     "what": "In the news: Anthropic\u2019s New AI Lets Lab Machines Talk To Each Other To Automate Research: Report",
-     "observation_id": 11510,
-     "url": "https://www.ndtvprofit.com/technology/anthropic-s-new-ai-lets-lab-machines-talk-to-each-other-to-automate-research-report-12096853#publisher=newsstand"
-    },
-    {
-     "date": "2026-08-30",
-     "what": "In the news: Anthropic Opens a Research Preview of the Model Hardware Standard (MHS): A Shared Specific",
-     "observation_id": 11510,
-     "url": "https://www.marktechpost.com/2026/08/29/anthropic-opens-a-research-preview-of-the-model-hardware-standard-mhs-a-shared-specification-for-ai-agents-to-safely-operate-physical-devices/"
-    },
     {
      "date": "2026-08-27",
      "what": "Website updated (sitemap)",
@@ -66150,12 +65647,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10506,
      "url": "https://torigen.com/"
-    },
-    {
-     "date": "2026-08-13",
-     "what": "In the news: Novel Cancer Vaccine Uses Animal's Own Tumor Cells",
-     "observation_id": 11513,
-     "url": "https://www.dvm360.com/view/novel-cancer-vaccine-uses-animals-own-tumor-cells"
     }
    ],
    "trend": {
@@ -67353,16 +66844,10 @@
      "url": "https://thefintechtimes.com/transfis-raj-kamal-on-stablecoin-payments-versus-speculation/"
     },
     {
-     "date": "2026-09-04",
-     "what": "In the news: Stablecoins Move Fast. The Last Mile Still Breaks",
+     "date": "2026-08-14",
+     "what": "In the news: TransFi Launches JARVIS, an AI-Powered Compliance Intelligence Platform for Cross-Border P",
      "observation_id": 11517,
-     "url": "https://thefintechtimes.com/stablecoins-move-fast-the-last-mile-still-breaks/"
-    },
-    {
-     "date": "2026-08-29",
-     "what": "In the news: Just how \"direct\" is Bitget Wallet's bank transfer?",
-     "observation_id": 11517,
-     "url": "https://www.ainvest.com/news/direct-bitget-wallet-bank-transfer-2608/"
+     "url": "https://www.globenewswire.com/news-release/2026/08/14/3345395/0/en/transfi-launches-jarvis-an-ai-powered-compliance-intelligence-platform-for-cross-border-payments.html"
     }
    ],
    "trend": {
@@ -67706,16 +67191,16 @@
      "url": "https://commercialobserver.com/2026/10/trebellar-series-a/"
     },
     {
-     "date": "2026-10-05",
-     "what": "In the news: Trebellar Raises $18 Million Series A To Bring AI To Corporate Real Estate Management",
-     "observation_id": 11519,
-     "url": "https://pulse2.com/trebellar-raises-18-million-series-a-to-bring-ai-to-corporate-real-estate-management/"
-    },
-    {
      "date": "2026-09-26",
      "what": "In the news: Trebellar Secures $18M Series A to Replace Spreadsheets with AI Real Estate Software",
      "observation_id": 11519,
      "url": "https://ventureburn.com/trebellar-secures-18m-series-a/"
+    },
+    {
+     "date": "2026-09-25",
+     "what": "In the news: Trebellar (IA gesti\u00f3n inmobiliaria) cierra una ronda de \u20ac16M liderada por liderada por Blo",
+     "observation_id": 11519,
+     "url": "https://www.webcapitalriesgo.com/trebellar-ia-gestion-inmobiliaria-cierra-una-ronda-de-e16m-liderada-por-liderada-por-blossom-participan-haystack-alt-1flourish-y-bynd/"
     },
     {
      "date": "2026-09-24",
@@ -67883,6 +67368,12 @@
     "rising": false
    },
    "badges": [
+    {
+     "kind": "form_d",
+     "label": "Raised, per news 2026-10",
+     "recent": true,
+     "url": "https://pulse2.com/trebellar-raises-18-million-series-a-to-bring-ai-to-corporate-real-estate-management/"
+    },
     {
      "kind": "rising",
      "label": "Activity rising"
@@ -68899,12 +68390,6 @@
      "what": "Website updated (sitemap)",
      "observation_id": 10504,
      "url": "https://usergems.com/"
-    },
-    {
-     "date": "2026-09-23",
-     "what": "In the news: Champion Tracking Software: 8 Best Tools for 2026",
-     "observation_id": 11522,
-     "url": "https://pipeline.zoominfo.com/sales/champion-tracking-software"
     }
    ],
    "trend": {
@@ -69190,8 +68675,8 @@
    "domain": "vahan.co",
    "legal_name": null,
    "bucket": "Active",
-   "last_activity": "2026-10-13",
-   "rule": "In the news: Build, Buy, Or Rent? How Indian CTOs Are Rethinking The AI Stack 2026-10-13",
+   "last_activity": "2026-08-25",
+   "rule": "In the news: Vahan.ai works with NVIDIA to fine-tune smaller AI model for blue-collar hiring 2026-08-25",
    "composite": 0.1,
    "scores": {
     "form_d": 0.0,
@@ -69201,22 +68686,16 @@
    },
    "signals": [
     {
-     "date": "2026-10-13",
-     "what": "In the news: Build, Buy, Or Rent? How Indian CTOs Are Rethinking The AI Stack",
-     "observation_id": 11523,
-     "url": "https://inc42.com/buzz/build-buy-or-rent-how-indian-ctos-are-rethinking-the-ai-stack/"
-    },
-    {
-     "date": "2026-08-25",
-     "what": "In the news: Vahan.ai works with NVIDIA to fine-tune smaller AI model for blue-collar hiring",
-     "observation_id": 11523,
-     "url": "https://www.fortuneindia.com/startups-news/vahanai-works-with-nvidia-to-fine-tune-smaller-ai-model-for-blue-collar-hiring/155594"
-    },
-    {
      "date": "2026-08-25",
      "what": "In the news: Vahan.ai works with NVIDIA to fine-tune smaller AI model for blue-collar hiring",
      "observation_id": 11523,
      "url": "https://www.fortuneindia.com/amp/story/startups-news/vahanai-works-with-nvidia-to-fine-tune-smaller-ai-model-for-blue-collar-hiring/155594"
+    },
+    {
+     "date": "2026-08-24",
+     "what": "In the news: Vahan AI fine-tunes 30-billion-parameter Nvidia Nemotron model for blue-collar hiring",
+     "observation_id": 11523,
+     "url": "https://economictimes.indiatimes.com/ai/ai-insights/vahan-ai-fine-tunes-30-billion-parameter-nvidia-nemotron-model-for-blue-collar-hiring/articleshow/133462698.cms"
     }
    ],
    "trend": {
@@ -71181,12 +70660,6 @@
      "url": "https://boards.greenhouse.io/vivvi"
     },
     {
-     "date": "2026-09-25",
-     "what": "In the news: Dandelion Launches AI-Native Legacy and Estate Planning Platform in California, New York, ",
-     "observation_id": 11528,
-     "url": "https://www.einpresswire.com/article/943452858/dandelion-launches-ai-native-legacy-and-estate-planning-platform-in-california-new-york-colorado-and-washington"
-    },
-    {
      "date": "2026-07-15",
      "what": "Homepage changed (Web Archive)",
      "observation_id": 11181,
@@ -71525,18 +70998,6 @@
      "what": "Homepage changed (Web Archive)",
      "observation_id": 11185,
      "url": "https://web.archive.org/web/*/vouch.us"
-    },
-    {
-     "date": "2026-09-26",
-     "what": "In the news: Corgi Is Worth $5 Billion, Nearly Quadruple Its Value Five Months Ago",
-     "observation_id": 11529,
-     "url": "https://www.forbes.com/sites/richardnieva/2026/09/26/corgi-5-billion-valuation/"
-    },
-    {
-     "date": "2026-09-26",
-     "what": "In the news: Corgi Is Now Worth $5 Billion Thanks To Four Funding Rounds Five Months",
-     "observation_id": 11529,
-     "url": "https://www.forbes.com/sites/richardnieva/2026/09/25/corgi-5-billion-valuation/"
     },
     {
      "date": "2026-09-24",
@@ -72174,12 +71635,6 @@
      "what": "In the news: Wagmo and Wonderdog Partner to Bring Early Disease Detection to Employee Pet Benefits",
      "observation_id": 11531,
      "url": "https://www.businesswire.com/news/home/20261001009393/en/Wagmo-and-Wonderdog-Partner-to-Bring-Early-Disease-Detection-to-Employee-Pet-Benefits"
-    },
-    {
-     "date": "2026-08-11",
-     "what": "In the news: There\u2019s a $158 Billion Opportunity in the Wellness Industry, but It Isn\u2019t for Humans",
-     "observation_id": 11531,
-     "url": "https://www.inc.com/lisa-bonos/theres-a-158-billion-opportunity-in-the-wellness-industry-but-it-isnt-for-humans/91376800"
     },
     {
      "date": "2023-08-22",
@@ -74597,18 +74052,6 @@
      "what": "Homepage changed (Web Archive)",
      "observation_id": 11212,
      "url": "https://web.archive.org/web/*/zyphe.com"
-    },
-    {
-     "date": "2026-08-25",
-     "what": "In the news: The 263% Deepfake Loss Number: Who Counts It, Who Pays, Who Gets Paid",
-     "observation_id": 11539,
-     "url": "https://www.ainvest.com/news/263-deepfake-loss-number-counts-pays-paid-2608/"
-    },
-    {
-     "date": "2026-08-14",
-     "what": "In the news: How Does FinCEN Regulate Cryptocurrency?",
-     "observation_id": 11539,
-     "url": "https://financefeeds.com/how-does-fincen-regulate-cryptocurrency/"
     }
    ],
    "trend": {
@@ -74892,21 +74335,21 @@
  ],
  "calls": [
   {
+   "id": 127,
+   "kind": "gone",
+   "reason": "Acquired, per the news: Ascend Learning Acquires AI Scheduling Platform M7 Health (2026-09-21)",
+   "ask": "Confirm the terms and what the fund received, then update the mark."
+  },
+  {
    "id": 7,
    "kind": "gone",
    "reason": "Website now redirects to flocksafety.com, often an acquisition or rebrand",
    "ask": "Was this an acquisition? Confirm what happened to the fund's shares and update the mark."
   },
   {
-   "id": 84,
+   "id": 146,
    "kind": "gone",
-   "reason": "Website now redirects to dev.to, often an acquisition or rebrand",
-   "ask": "Was this an acquisition? Confirm what happened to the fund's shares and update the mark."
-  },
-  {
-   "id": 118,
-   "kind": "gone",
-   "reason": "Website now redirects to dalinea.com, often an acquisition or rebrand",
+   "reason": "Website now redirects to typeface.ai, often an acquisition or rebrand",
    "ask": "Was this an acquisition? Confirm what happened to the fund's shares and update the mark."
   },
   {
@@ -74942,17 +74385,18 @@
   {
    "id": 170,
    "kind": "rising",
-   "reason": "Headcount +200% in 12 months, to 63",
-   "ask": "Momentum is up. Are they raising, and what do they need from us?"
+   "reason": "Headcount +200% in 12 months, to 63; Raised, per news 2026-10 filed",
+   "ask": "Is a round open, and does the fund have pro rata?"
   },
   {
    "id": 18,
    "kind": "rising",
-   "reason": "Headcount +175% in 12 months, to 22",
-   "ask": "Momentum is up. Are they raising, and what do they need from us?"
+   "reason": "Headcount +175% in 12 months, to 22; Raised, per news 2026-09 filed",
+   "ask": "Is a round open, and does the fund have pro rata?"
   }
  ],
- "form_d_year": 9,
+ "form_d_year": 17,
+ "raised_news": 8,
  "people": {
   "companies": 171,
   "now": 9958,
