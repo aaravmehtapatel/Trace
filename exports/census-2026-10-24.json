@@ -74963,21 +74963,21 @@
  },
  "accuracy": {
   "n": 165,
-  "judged": 134,
-  "agree_pct": 78,
+  "judged": 108,
+  "agree_pct": 80,
   "base_growing_pct": 46,
   "by_free_status": {
    "Active": {
-    "n": 127,
-    "growing": 64,
-    "flat": 40,
-    "shrinking": 23
+    "n": 101,
+    "growing": 53,
+    "flat": 32,
+    "shrinking": 16
    },
    "Quiet": {
-    "n": 31,
-    "growing": 10,
-    "flat": 10,
-    "shrinking": 11
+    "n": 57,
+    "growing": 21,
+    "flat": 18,
+    "shrinking": 18
    },
    "Fading": {
     "n": 3,
@@ -74995,12 +74995,12 @@
   "signals": {
    "site_updated_90d": {
     "with": {
-     "n": 123,
-     "pct": 50
+     "n": 98,
+     "pct": 53
     },
     "without": {
-     "n": 42,
-     "pct": 33
+     "n": 67,
+     "pct": 36
     }
    },
    "hiring_now": {
@@ -75046,46 +75046,36 @@
   },
   "quiet_but_growing": [
    {
-    "name": "Ciphero",
-    "growth_6": 25,
-    "total": 10
+    "name": "Outmarket AI",
+    "growth_6": 70,
+    "total": 63
    },
    {
-    "name": "Packsmith",
-    "growth_6": 25,
-    "total": 35
+    "name": "Starcloud",
+    "growth_6": 57,
+    "total": 66
    },
    {
-    "name": "WATS",
-    "growth_6": 24,
-    "total": 21
+    "name": "North",
+    "growth_6": 54,
+    "total": 60
    },
    {
-    "name": "Big Leap Health",
-    "growth_6": 18,
-    "total": 13
+    "name": "Spade",
+    "growth_6": 53,
+    "total": 46
    },
    {
-    "name": "Auditive",
-    "growth_6": 17,
-    "total": 7
+    "name": "Mesta",
+    "growth_6": 37,
+    "total": 41
    }
   ],
   "active_but_shrinking": [
    {
-    "name": "FusePay",
-    "growth_6": -42,
-    "total": 7
-   },
-   {
     "name": "Mbue",
     "growth_6": -33,
     "total": 8
-   },
-   {
-    "name": "Indemn",
-    "growth_6": -31,
-    "total": 11
    },
    {
     "name": "Particle Health",
@@ -75096,6 +75086,16 @@
     "name": "DoWhatWorks",
     "growth_6": -20,
     "total": 12
+   },
+   {
+    "name": "Sway",
+    "growth_6": -20,
+    "total": 12
+   },
+   {
+    "name": "Getro",
+    "growth_6": -16,
+    "total": 16
    }
   ],
   "thresholds": {

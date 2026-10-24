@@ -194,11 +194,13 @@ def timeline(web: dict | None, certs: dict | None, fds: list[dict], today: date,
 
 def score_entity(conn, cfg: Config, e: dict, today: date, lag: dict | None = None, end: date | None = None,
                  use_headcount: bool = True) -> dict:
-    """use_headcount=False scores from free public data only, which is how calibrate.py grades
-    the free signals against the licensed headcount."""
+    """use_headcount=False scores from free public data only (no Akta headcount or news), which
+    is how calibrate.py grades the free signals against the licensed headcount."""
     fp, eng, hire = (latest(conn, e["id"], k) for k in ("footprint", "engineering", "hiring"))
     web, certs, mail, reg, traffic, news, hc = (latest(conn, e["id"], k) for k in
                                                ("web_history", "cert_history", "mail", "domain_reg", "traffic", "news", "headcount"))
+    if not use_headcount:
+        news = None  # Akta news is licensed too; the free-only score must not see it
     fds = filings(conn, e["id"])
     tl = timeline(web, certs, fds, today, news, lag, end)
     hcp = ((hc or {}).get("payload") or {}) if use_headcount else {}
