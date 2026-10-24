@@ -7,7 +7,7 @@ import json
 from datetime import date
 from pathlib import Path
 
-from src import score
+from src import calibrate, score
 from src.config import Config
 
 TEMPLATE = Path(__file__).with_name("report_template.html")
@@ -61,13 +61,23 @@ def collect(conn, cfg: Config) -> dict:
         })
     counts = {b: sum(1 for c in companies if c["bucket"] == b) for b in ORDER}
     form_d_year = sum(1 for c in companies if any(b["kind"] == "form_d" and b.get("recent") for b in c["badges"]))
+    # Portfolio headcount now and a year ago, over companies Akta has a full year for.
+    year_ago = score.month_keys(13, date.fromisoformat(score_date))[0]
+    with_hc = [c for c in companies if (c.get("headcount") or {}).get("monthly")
+               and (c["headcount"].get("total") or 0) <= score.MAX_PLAUSIBLE_HEADCOUNT]
+    now_total = sum(c["headcount"]["total"] or 0 for c in with_hc if year_ago in c["headcount"]["monthly"])
+    then_total = sum(c["headcount"]["monthly"][year_ago] or 0 for c in with_hc if year_ago in c["headcount"]["monthly"])
+    people = {"companies": len(with_hc), "now": now_total, "year_ago": then_total,
+              "growth_pct": round(100 * (now_total - then_total) / then_total) if then_total else None,
+              "growing": sum(1 for c in with_hc if (c["headcount"].get("growth_6") or 0) >= calibrate.GROWING),
+              "shrinking": sum(1 for c in with_hc if (c["headcount"].get("growth_6") or 0) <= calibrate.SHRINKING)}
     linked = conn.execute("SELECT COUNT(*) FROM match_candidates WHERE state IN ('AUTO_LINKED', 'CONFIRMED')").fetchone()[0]
     reviewed = conn.execute("SELECT COUNT(*) FROM match_candidates WHERE reviewed_at IS NOT NULL").fetchone()[0]
     observations = conn.execute("SELECT COUNT(*) FROM signal_observations").fetchone()[0]
     return {
         "fund": cfg.fund_name, "score_date": score_date, "generated": date.today().isoformat(),
         "counts": counts, "total": len(companies), "companies": companies, "calls": calls(companies),
-        "form_d_year": form_d_year,
+        "form_d_year": form_d_year, "people": people, "accuracy": calibrate.calibrate(conn, cfg),
         "method": {"weights": cfg.weights, "auto_link": cfg.auto_link, "reject": cfg.reject,
                    "window_days": cfg.window_days, "active_days": score.ACTIVE_DAYS, "fading_ratio": score.FADING_RATIO,
                    "trend_months": [score.TREND_RECENT, score.TREND_PRIOR],
@@ -83,9 +93,14 @@ def _has(c: dict, kind: str) -> bool:
 def calls(companies: list[dict], limit: int = 10) -> list[dict]:
     """Who a partner should contact this week, each with the reason and the question to ask.
     Recently dark first (a mark or a write-off may be due), then fading, then rising."""
-    gone = [c for c in companies if c["bucket"] == "No Public Activity"]
-    fading = sorted((c for c in companies if c["bucket"] == "Fading"),
-                    key=lambda c: c["trend"]["rate_prior"] - c["trend"]["rate_recent"], reverse=True)
+    # Redirects to another company (likely exits) before sites that simply went dark.
+    gone = sorted((c for c in companies if c["bucket"] == "No Public Activity"),
+                  key=lambda c: (not _has(c, "redirect"), c["name"]))
+    # Headcount-backed fades first, steepest drop first; website-only fades are weaker evidence.
+    hc_fading = sorted((c for c in companies if c["bucket"] == "Fading" and (c.get("headcount") or {}).get("growth_6") is not None),
+                       key=lambda c: c["headcount"]["growth_6"])
+    web_fading = [c for c in companies if c["bucket"] == "Fading" and c not in hc_fading]
+    fading = hc_fading + web_fading[:1]
     rising = sorted((c for c in companies if c["bucket"] == "Active" and
                      (_has(c, "rising") or any(b["kind"] == "form_d" and b.get("recent") for b in c["badges"]))),
                     key=lambda c: c["composite"], reverse=True)
@@ -97,14 +112,21 @@ def calls(companies: list[dict], limit: int = 10) -> list[dict]:
                     if redirect else "Is the company still operating? If not, start the write-off."})
     for c in fading[:4]:
         warn = next((n for n in c["news"] if n.get("warning")), None)
+        fns = ((c.get("headcount") or {}).get("functions") or {})
+        eng = fns.get("Engineering", {})
+        detail = f"; engineering {eng['growth_6']:+}%" if eng.get("growth_6") is not None else ""
         out.append({"id": c["id"], "kind": "fading",
-                    "reason": c["rule"] + (f". In the news: {warn['title']}" if warn else ""),
-                    "ask": "What changed this quarter: the team, the product focus, or runway?"})
+                    "reason": c["rule"] + detail + (f". In the news: {warn['title']}" if warn else ""),
+                    "ask": "Who left, and what changed: the team, the product focus, or runway?"
+                    if c.get("headcount") else "What changed this quarter: the team, the product focus, or runway?"})
+    rising.sort(key=lambda c: ((c.get("headcount") or {}).get("growth_12") or 0), reverse=True)
     for c in rising[:limit - len(out)]:
         filed = next((b for b in c["badges"] if b["kind"] == "form_d" and b.get("recent")), None)
+        hc = c.get("headcount") or {}
+        grew = f"Headcount {hc['growth_12']:+}% in 12 months, to {hc['total']}" if hc.get("growth_12") else None
         out.append({"id": c["id"], "kind": "rising",
-                    "reason": f"{filed['label']} filed and activity is up" if filed and _has(c, "rising")
-                    else f"{filed['label']} filed" if filed else "Public activity is up sharply",
+                    "reason": "; ".join(x for x in (grew, f"{filed['label']} filed" if filed else None) if x)
+                    or "Public activity is up sharply",
                     "ask": "Is a round open, and does the fund have pro rata?" if filed
                     else "Momentum is up. Are they raising, and what do they need from us?"})
     return out[:limit]

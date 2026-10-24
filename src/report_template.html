@@ -104,6 +104,28 @@
   .legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-3); margin: 4px 0 0; flex-wrap: wrap; }
   .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
 
+  /* Accuracy */
+  section.accuracy { padding: 48px 0 0; }
+  .accuracy h2 { font-size: 22px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.005em; }
+  .accuracy .claim { font-size: 20px; font-weight: 300; max-width: 52ch; margin: 6px 0 22px; line-height: 1.35; }
+  .accuracy .claim b { font-weight: 600; }
+  .acc-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; }
+  .acc-card { background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; padding: 18px 20px; }
+  .acc-card h3 { font-size: 15px; font-weight: 600; margin: 0 0 12px; }
+  .acc-row { display: grid; grid-template-columns: 150px 1fr 44px; gap: 12px; align-items: center; font-size: 14px; margin-bottom: 10px; }
+  .stack { display: flex; height: 12px; border-radius: 3px; overflow: hidden; background: #E3E7EB; }
+  .stack span { display: block; height: 100%; }
+  .stack .g { background: var(--raised); } .stack .f { background: #A7B1BC; } .stack .s { background: var(--fading); }
+  .acc-legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-3); margin-top: 6px; }
+  .acc-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+  .sig { font-size: 14px; margin: 0 0 8px; color: var(--ink-2); }
+  .sig b { color: var(--ink); font-weight: 600; }
+  .misses { font-size: 14px; margin: 12px 0 0; padding-left: 18px; color: var(--ink-2); }
+  .rule-line { margin: 18px 0 0; font-size: 15px; max-width: 70ch; }
+  .hc { margin-top: 4px; }
+  .hc path { fill: none; stroke: var(--ink); stroke-width: 1.6; }
+  .hc text { font-size: 10px; fill: #7B8693; }
+
   /* Register */
   section.register { padding: 48px 0 24px; }
   .register h2 { font-size: 22px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.005em; }
@@ -187,6 +209,8 @@
     .mark { width: 14px; height: 14px; }
     th.hide-sm, td.hide-sm { display: none; }
     .call { grid-template-columns: 1fr; gap: 6px; }
+    .acc-grid { grid-template-columns: 1fr; }
+    .acc-row { grid-template-columns: 110px 1fr 36px; }
     input[type=search] { min-width: 0; flex: 1; }
     .count { margin-left: 0; width: 100%; }
     aside.record { padding: 20px 16px 40px; }
@@ -212,6 +236,19 @@
     <h2>Calls this week</h2>
     <p>Who a partner should contact, why, and what to ask. Companies that went dark come first, then the ones fading, then the ones picking up.</p>
     <ol class="call-list" id="calls"></ol>
+  </div>
+</section>
+
+<section class="accuracy" id="accuracy-section">
+  <div class="wrap">
+    <h2>How far to trust free public data</h2>
+    <p class="claim" id="acc-claim"></p>
+    <div class="acc-grid">
+      <div class="acc-card"><h3>What headcount did, by the status free data gave</h3><div id="acc-status"></div>
+        <div class="acc-legend"><span><i style="background:var(--raised)"></i>Growing</span><span><i style="background:#A7B1BC"></i>Flat</span><span><i style="background:var(--fading)"></i>Shrinking</span></div></div>
+      <div class="acc-card"><h3>Which free signals carry information</h3><div id="acc-signals"></div><div id="acc-misses"></div></div>
+    </div>
+    <p class="rule-line" id="acc-rule"></p>
   </div>
 </section>
 
@@ -255,7 +292,7 @@ const DATA = /*__CENSUS_DATA__*/null;
 
 const BUCKETS = {
   "Active":             { key: "active", color: "var(--active)", headline: "are active", def: "A dated public signal in the last 90 days, and no sign of decline." },
-  "Fading":             { key: "fading", color: "var(--fading)", headline: "are fading", def: "Dated public activity in the last 3 months fell below a third of the 9 months before." },
+  "Fading":             { key: "fading", color: "var(--fading)", headline: "are fading", def: "Headcount down 15% or more in 6 months (Akta), or a significant drop in dated public activity with nothing current to contradict it." },
   "Quiet":              { key: "quiet", color: "var(--quiet)", headline: "are quiet", def: "The site is live, but nothing public is dated in the last 90 days." },
   "No Public Activity": { key: "dark", color: "var(--dark)", headline: "show no public activity", def: "The site is down, parked, expired or now points to a different company." },
   "Unresolved":         { key: "unresolved", color: "var(--unresolved)", headline: "we haven't placed yet", def: "No website verified yet, so no status is given.", hollow: true },
@@ -299,7 +336,7 @@ const parts = ORDER.filter((b) => DATA.counts[b]).map((b) =>
   `<span class="k k-${BUCKETS[b].key}"><b>${DATA.counts[b]}</b> ${BUCKETS[b].headline}</span>`);
 const last = parts.pop();
 $("#headline").innerHTML = `Of ${DATA.total} portfolio companies, ${parts.join(", ")}, and ${last}.`;
-$("#lede").textContent = `Built only from public records: each company's website and its history in the Web Archive, certificate logs, email and domain records, GitHub, job boards and SEC filings. Founders don't have to send anything. ${DATA.form_d_year} companies filed a Form D in the past year (ringed in green). Select any mark to see the evidence.`;
+$("#lede").textContent = `Built only from public records: each company's website and its history in the Web Archive, certificate logs, email and domain records, GitHub, job boards and SEC filings. Founders don't have to send anything. ${DATA.form_d_year} companies filed a Form D in the past year (ringed in green).${DATA.people && DATA.people.year_ago ? ` Across the ${DATA.people.companies} companies with licensed headcount (Akta), the portfolio employs ${DATA.people.now.toLocaleString()} people, ${DATA.people.growth_pct >= 0 ? "up" : "down"} ${Math.abs(DATA.people.growth_pct)}% in a year.` : ""} Select any mark to see the evidence.`;
 
 // Field
 const field = $("#field");
@@ -427,6 +464,48 @@ function chart(c) {
     <div class="legend"><span><i style="background:#6B8BBF"></i>Homepage changes</span><span><i style="background:#2F62A8"></i>New subdomains</span><span><i style="background:#B07D1E"></i>News</span><span><i style="background:var(--raised)"></i>Form D</span><span>Last 3 months right of the line: ${c.trend.rate_recent}/month vs ${c.trend.rate_prior} before</span></div>`;
 }
 
+function hcChart(h) {
+  const ms = Object.keys(h.monthly || {}).sort(), vals = ms.map((m) => h.monthly[m]);
+  if (vals.length < 3) return "";
+  const W = 456, H = 70, lo = Math.min(...vals), hi = Math.max(...vals), span = Math.max(1, hi - lo);
+  const x = (i) => 6 + i * (W - 40) / (vals.length - 1), y = (v) => 8 + (H - 22) * (1 - (v - lo) / span);
+  const d = vals.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
+  const lab = (m) => new Date(m + "-01T00:00:00").toLocaleDateString("en-US", { month: "short", year: "2-digit" });
+  return `<svg class="hc" width="100%" viewBox="0 0 ${W} ${H}" role="img" aria-label="Monthly headcount">
+    <path d="${d}"/><text x="${x(vals.length - 1) + 4}" y="${y(vals[vals.length - 1]) + 3}">${vals[vals.length - 1]}</text>
+    <text x="${x(0)}" y="${H - 2}">${lab(ms[0])}</text><text x="${x(vals.length - 1) - 24}" y="${H - 2}">${lab(ms[ms.length - 1])}</text>
+    <text x="${x(0) + 2}" y="${y(vals[0]) - 4}">${vals[0]}</text></svg>`;
+}
+function functions(h) {
+  const fns = Object.entries(h.functions || {}).filter(([, f]) => f.count);
+  if (!fns.length) return "";
+  return `<dl class="facts" style="margin-top:8px">${fns.map(([n, f]) => `<dt>${esc(n)}</dt><dd>${f.count}${f.growth_6 != null ? ` (${f.growth_6 > 0 ? "+" : ""}${f.growth_6}% in 6 months)` : ""}</dd>`).join("")}</dl>`;
+}
+
+// Accuracy
+(function () {
+  const a = DATA.accuracy;
+  if (!a || !a.n) { $("#accuracy-section").hidden = true; return; }
+  $("#acc-claim").innerHTML = `We graded the free census against licensed headcount for <b>${a.n}</b> companies. Where free data gave a clear status, it matched what headcount did <b>${a.agree_pct}%</b> of the time.`;
+  $("#acc-status").innerHTML = ["Active", "Quiet", "Fading", "No Public Activity"].map((st) => {
+    const r = a.by_free_status[st]; if (!r || !r.n) return "";
+    const pct = (k) => (100 * r[k] / r.n).toFixed(1);
+    return `<div class="acc-row"><span>${esc(st)}</span><div class="stack"><span class="g" style="width:${pct("growing")}%"></span><span class="f" style="width:${pct("flat")}%"></span><span class="s" style="width:${pct("shrinking")}%"></span></div><span class="muted">${r.n}</span></div>`;
+  }).join("");
+  const NAMES = { site_updated_90d: "A dated site update in the last 90 days", hiring_now: "A job posted in the last 60 days",
+    shipping_now: "A code push in the last 30 days", raised_12mo: "A Form D in the last 12 months", has_email: "Working company email" };
+  const sigs = Object.entries(a.signals).filter(([, v]) => v.with.n >= 3 && v.without.n >= 3);
+  $("#acc-signals").innerHTML = sigs.map(([k, v]) => `<p class="sig"><b>${NAMES[k] || k}</b>: ${v.with.pct}% growing with it, ${v.without.pct}% without (${v.with.n} vs ${v.without.n} companies).</p>`).join("")
+    || `<p class="sig">Not enough companies yet to compare signals.</p>`;
+  const miss = (a.quiet_but_growing || []).map((r) => `${esc(r.name)} (${r.growth_6 > 0 ? "+" : ""}${r.growth_6}%)`).join(", ");
+  const fool = (a.active_but_shrinking || []).map((r) => `${esc(r.name)} (${r.growth_6}%)`).join(", ");
+  $("#acc-misses").innerHTML = `<ul class="misses">${miss ? `<li>Looked quiet, actually growing: ${miss}</li>` : ""}${fool ? `<li>Looked active, actually shrinking: ${fool}</li>` : ""}</ul>`;
+  const q = a.by_free_status["Quiet"];
+  $("#acc-rule").textContent = q && q.n
+    ? `So the census runs free checks on every company every month and buys headcount where free data is weakest: of the companies it called quiet, ${Math.round(100 * q.growing / q.n)}% were growing and ${Math.round(100 * q.shrinking / q.n)}% shrinking.`
+    : "";
+})();
+
 // Record
 let returnFocus = null;
 function openRecord(id, from) {
@@ -464,7 +543,8 @@ function openRecord(id, from) {
     <p class="where">${[c.city, c.sector].filter(Boolean).map(esc).join(", ")}</p>
     ${c.description ? `<p class="desc">${esc(c.description)}</p>` : ""}
     <div class="verdict" style="--c:${meta.color}"><b>${esc(label(c))}</b><span>${esc(pretty(c.rule))}</span>${badges(c)}</div>
-    <h3>Activity, last 18 months</h3>${chart(c)}
+    ${c.headcount && c.headcount.monthly ? `<h3>Headcount (Akta, from LinkedIn)</h3>${hcChart(c.headcount)}${functions(c.headcount)}` : ""}
+    <h3>Public activity, last 18 months</h3>${chart(c)}
     <h3>Dated signals</h3>${signals}
     ${c.news && c.news.length ? `<h3>In the news (Akta)</h3><ol class="timeline">${c.news.map((n) => `<li><time>${fmtDate(n.date)}${n.publisher ? ", " + esc(n.publisher) : ""}</time><a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a></li>`).join("")}</ol>` : ""}
     <h3>SEC filings</h3>${filings}

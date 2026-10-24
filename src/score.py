@@ -34,6 +34,7 @@ RISING_RATIO, MIN_RECENT_EVENTS = 2.0, 3
 P_VALUE, MIN_EXPECTED = 0.15, 2.5
 CAPS = {"web": 3, "certs": 3, "form_d": 2, "news": 3}   # per month, so one noisy source can't dominate
 HEADCOUNT_DROP, HEADCOUNT_GROWTH = -15, 25   # % change over 6 and 12 months
+MAX_PLAUSIBLE_HEADCOUNT = 1500
 CHART_MONTHS = 18
 
 
@@ -191,13 +192,21 @@ def timeline(web: dict | None, certs: dict | None, fds: list[dict], today: date,
                       and p_rise < P_VALUE}
 
 
-def score_entity(conn, cfg: Config, e: dict, today: date, lag: dict | None = None, end: date | None = None) -> dict:
+def score_entity(conn, cfg: Config, e: dict, today: date, lag: dict | None = None, end: date | None = None,
+                 use_headcount: bool = True) -> dict:
+    """use_headcount=False scores from free public data only, which is how calibrate.py grades
+    the free signals against the licensed headcount."""
     fp, eng, hire = (latest(conn, e["id"], k) for k in ("footprint", "engineering", "hiring"))
     web, certs, mail, reg, traffic, news, hc = (latest(conn, e["id"], k) for k in
                                                ("web_history", "cert_history", "mail", "domain_reg", "traffic", "news", "headcount"))
     fds = filings(conn, e["id"])
     tl = timeline(web, certs, fds, today, news, lag, end)
-    hcp = (hc or {}).get("payload") or {}
+    hcp = ((hc or {}).get("payload") or {}) if use_headcount else {}
+    # A pre-seed portfolio company with thousands of staff is a different company on the same
+    # website (otis.com is Otis Elevator, not the vet startup). Don't use that headcount.
+    implausible = bool(hcp.get("total") and hcp["total"] > MAX_PLAUSIBLE_HEADCOUNT)
+    if implausible:
+        hcp = {}
     headcount_falling = hcp.get("growth_6") is not None and hcp["growth_6"] <= HEADCOUNT_DROP
     warnings = [i for i in ((news or {}).get("payload") or {}).get("items", []) if i.get("warning")]
     w = cfg.weights
@@ -261,8 +270,14 @@ def score_entity(conn, cfg: Config, e: dict, today: date, lag: dict | None = Non
     expired = bool(expires and expires < today.isoformat())
     no_mail = bool(mail and not mail["payload"].get("has_mx"))
 
+    final_host = (fp or {}).get("payload", {}).get("final_host") or ""
+    institutional = bool((fp or {}).get("payload", {}).get("redirected_off_domain")) and \
+        any(final_host.endswith(t) for t in (".edu", ".gov", ".ac.uk", ".edu.au"))
     if not e["main_domain"]:
         bucket, rule = "Unresolved", "No verified website yet"
+    elif institutional:
+        # fora.ai -> fora.northeastern.edu: the site on file isn't the company's.
+        bucket, rule = "Unresolved", f"The website on file now points to {final_host}, so it's probably not this company's"
     elif not live or expired or (no_mail and (last_days is None or last_days > 365)):
         if expired:
             why = f"domain registration expired {expires}"
@@ -305,6 +320,8 @@ def score_entity(conn, cfg: Config, e: dict, today: date, lag: dict | None = Non
         badges.append({"kind": "headcount", "label": f"{hcp['total']} people" + (f", {g:+}% in 12 mo" if g is not None else "")})
     if tl["fading"] and hcp and not headcount_falling:
         badges.append({"kind": "site_quiet", "label": "Website quieter, headcount isn't"})
+    if implausible:
+        badges.append({"kind": "no_mail", "label": "Headcount matched a much larger company; ignored"})
     if warnings:
         badges.append({"kind": "news_warning", "label": "News: " + (warnings[0].get("tag") or "warning sign")})
     if hire and hire["payload"].get("open_roles"):
