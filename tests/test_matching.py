@@ -56,3 +56,11 @@ def test_parked_or_redirected_sites_are_not_linked():
     assert verify("Morty", {"domain": "morty.ai", "status": 200, "parked": True}, AUTO, REJECT)["state"] == "REJECTED"
     rebrand = _probe("mryum.com", "me&u", redirected_off_domain=True, final_host="meandu.com")
     assert verify("Mr Yum", rebrand, AUTO, REJECT)["state"] == "PENDING_REVIEW"
+
+
+def test_redirect_to_own_new_domain_is_a_move():
+    from src.score import moved_not_gone
+    assert moved_not_gone("EdSights", {"final_host": "edsights.com"})
+    assert moved_not_gone("PropHero", {"final_host": "prophero.com.au"})
+    assert not moved_not_gone("Aerodome", {"final_host": "flocksafety.com"})
+    assert not moved_not_gone("Fora", {"final_host": "fora.northeastern.edu"})

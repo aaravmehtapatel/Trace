@@ -4,9 +4,9 @@
  "generated": "2026-10-24",
  "counts": {
   "Raised Again": 21,
-  "Active Footprint": 81,
-  "Quiet Phase": 90,
-  "No Public Activity": 24,
+  "Active Footprint": 87,
+  "Quiet Phase": 100,
+  "No Public Activity": 8,
   "Unresolved": 49
  },
  "total": 265,
@@ -629,15 +629,15 @@
    "description": "Axis Pay is a financial platform that enables small businesses to manage payroll, contractor payments, and employee reimbursements through a mobile wallet. It offers features such as instant salary payments, salary advances, and cashback rewards, all while ensuring secure transactions and same-day onboarding.",
    "domain": "axispay.app",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Quiet Phase",
    "last_activity": null,
-   "rule": "Website now redirects to axisapp.com, often an acquisition or rebrand",
-   "composite": 0.04,
+   "rule": "Site live; no dated signal found",
+   "composite": 0.14,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.2
+    "footprint": 0.7
    },
    "signals": [],
    "filings": [],
@@ -795,15 +795,15 @@
    "description": "Beyond Will is a personalized digital assistant that provides step-by-step guidance for organizing and updating estate plans, helping users manage their legal and financial affairs efficiently.",
    "domain": "beyondwill.com",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Active Footprint",
    "last_activity": "2026-10-21",
-   "rule": "Website now redirects to beyondwill.co, often an acquisition or rebrand",
-   "composite": 0.098,
+   "rule": "Website updated (sitemap) 2026-10-21",
+   "composite": 0.198,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.49
+    "footprint": 0.99
    },
    "signals": [
     {
@@ -1519,15 +1519,15 @@
    "description": "Ceres Technology offers an AI-powered platform that predicts multi-tier supply chain risks leveraging 25,000+ real-time datasets to help businesses anticipate delays and disruptions months in advance.",
    "domain": "cerestechnology.io",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Quiet Phase",
    "last_activity": null,
-   "rule": "Website now redirects to cerestec.io, often an acquisition or rebrand",
-   "composite": 0.04,
+   "rule": "Site live; no dated signal found",
+   "composite": 0.14,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.2
+    "footprint": 0.7
    },
    "signals": [],
    "filings": [],
@@ -1684,15 +1684,15 @@
    "description": "Circle is an AI-powered platform that connects benefit providers, health companies, and communities by integrating systems, workflows, and data to optimize member experiences. It offers tools for identifying new markets, tracking customer life cycles, and uncovering revenue opportunities through data analytics and machine learning.",
    "domain": "joincircle.com",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Quiet Phase",
    "last_activity": null,
-   "rule": "Website now redirects to joincircle.co.uk, often an acquisition or rebrand",
-   "composite": 0.04,
+   "rule": "Site live; no dated signal found",
+   "composite": 0.14,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.2
+    "footprint": 0.7
    },
    "signals": [],
    "filings": [],
@@ -2646,15 +2646,15 @@
    "description": "EdSights uses AI-powered SMS communication and chatbots to help higher education institutions improve student retention by providing real-time insights, personalized support, and data-driven interventions based on student feedback. The platform enables universities to engage students effectively and monitor their persistence through tools like the Student Voice Score (SVS), offering actionable insights to enhance the student experience.",
    "domain": "edsights.io",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Active Footprint",
    "last_activity": "2026-10-14",
-   "rule": "Website now redirects to edsights.com, often an acquisition or rebrand",
-   "composite": 0.196,
+   "rule": "Website updated (sitemap) 2026-10-14",
+   "composite": 0.296,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.513,
-    "footprint": 0.467
+    "footprint": 0.967
    },
    "signals": [
     {
@@ -5277,15 +5277,15 @@
    "description": "Knap provides a local AI-powered LLM allowing users to search, process and interact with their emails and documents privately on their own devices. Knap ensures complete data control and security while enhancing productivity through instant workflow automations",
    "domain": "knap.ai",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Active Footprint",
    "last_activity": "2026-08-27",
-   "rule": "Website now redirects to knapsack.ai, often an acquisition or rebrand",
-   "composite": 0.061,
+   "rule": "Website updated (sitemap) 2026-08-27",
+   "composite": 0.161,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.307
+    "footprint": 0.807
    },
    "signals": [
     {
@@ -5506,15 +5506,15 @@
    "description": "Liti provides a digital health platform that supports weight loss and metabolic health improvement through personalized, data-driven programs. Leveraging a multidisciplinary team, the service focuses on behavioral change to reduce obesity-related diseases and enhance overall well-being.",
    "domain": "litisaude.com.br",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Active Footprint",
    "last_activity": "2026-09-18",
-   "rule": "Website now redirects to liti.com.br, often an acquisition or rebrand",
-   "composite": 0.076,
+   "rule": "Website updated (sitemap) 2026-09-18",
+   "composite": 0.176,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.38
+    "footprint": 0.88
    },
    "signals": [
     {
@@ -6940,15 +6940,15 @@
    "description": "OneDay offers weekly coaching, a supportive community, and tailored action plans to help aspiring entrepreneurs launch their businesses, combining mentorship from experienced founders with practical resources to accelerate business development.",
    "domain": "oneday.co.uk",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Active Footprint",
    "last_activity": "2026-09-25",
-   "rule": "Website now redirects to oneday.org, often an acquisition or rebrand",
-   "composite": 0.081,
+   "rule": "Website updated (sitemap) 2026-09-25",
+   "composite": 0.181,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.403
+    "footprint": 0.903
    },
    "signals": [
     {
@@ -7093,15 +7093,15 @@
    "description": "OPEN is a holistic wellness platform that offers both physical and digital experiences, combining movement, breathwork, meditation, and sound to support mental and physical well-being, accessible through in-person sessions or its digital app.",
    "domain": "withopen.com",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Quiet Phase",
    "last_activity": "2019-12-26",
-   "rule": "Website now redirects to o-p-e-n.com, often an acquisition or rebrand",
-   "composite": 0.04,
+   "rule": "Site live; last dated signal 2019-12-26",
+   "composite": 0.14,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.2
+    "footprint": 0.7
    },
    "signals": [
     {
@@ -7887,12 +7887,12 @@
    "bucket": "Raised Again",
    "last_activity": "2026-10-14",
    "rule": "Form D filed 2026-04-29",
-   "composite": 0.357,
+   "composite": 0.457,
    "scores": {
     "form_d": 0.753,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.467
+    "footprint": 0.967
    },
    "signals": [
     {
@@ -8048,15 +8048,15 @@
    "description": "Presta offers a comprehensive lending platform that enables financial institutions to streamline their loan origination process, from application to underwriting and servicing, enhancing efficiency and customer experience in the lending ecosystem.",
    "domain": "presta.ai",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Quiet Phase",
    "last_activity": null,
-   "rule": "Website now redirects to prestatech.com, often an acquisition or rebrand",
-   "composite": 0.04,
+   "rule": "Site live; no dated signal found",
+   "composite": 0.14,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.2
+    "footprint": 0.7
    },
    "signals": [],
    "filings": [],
@@ -8089,15 +8089,15 @@
    "description": "PropHero is a property investment platform that uses advanced technology, Big Data, and AI to help users find, buy, and manage high-return, low-risk investment properties in Australia. The platform simplifies the entire investment process by offering personalized property recommendations, negotiation support, and portfolio management tools, allowing investors to save time and maximize profitability.",
    "domain": "prophero.com.au",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Quiet Phase",
    "last_activity": null,
-   "rule": "Website now redirects to prophero.com, often an acquisition or rebrand",
-   "composite": 0.04,
+   "rule": "Site live; no dated signal found",
+   "composite": 0.14,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.2
+    "footprint": 0.7
    },
    "signals": [],
    "filings": [],
@@ -8492,15 +8492,15 @@
    "description": "Rebel Space Technologies provides an AI-powered platform for comprehensive space system cybersecurity, offering real-time threat monitoring, rapid response capabilities, and proactive risk mitigation for critical mission operations.",
    "domain": "rebelspace.tech",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Quiet Phase",
    "last_activity": null,
-   "rule": "Website now redirects to rebelspacetech.com, often an acquisition or rebrand",
-   "composite": 0.04,
+   "rule": "Site live; no dated signal found",
+   "composite": 0.14,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.2
+    "footprint": 0.7
    },
    "signals": [],
    "filings": [],
@@ -9534,15 +9534,15 @@
    "description": "SmartHop is a booking and fleet management platform that helps trucking carriers and independent dispatchers optimize load selection, automate routine tasks, and streamline communication, enabling them to maximize profits, reduce downtime, and cut overhead costs.",
    "domain": "smarthop.co",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Quiet Phase",
    "last_activity": "2024-11-29",
-   "rule": "Website now redirects to smarthop.com, often an acquisition or rebrand",
-   "composite": 0.04,
+   "rule": "Site live; last dated signal 2024-11-29",
+   "composite": 0.14,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.2
+    "footprint": 0.7
    },
    "signals": [
     {
@@ -9725,15 +9725,15 @@
    "description": "Starboard provides AI-powered SaaS tools that automate and optimize freight forwarding operations, enabling companies to streamline quoting, shipment processing, and invoice reconciliation while enhancing productivity and competitiveness.",
    "domain": "trystarboard.com",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Quiet Phase",
    "last_activity": null,
-   "rule": "Website now redirects to starboard.biz, often an acquisition or rebrand",
-   "composite": 0.04,
+   "rule": "Site live; no dated signal found",
+   "composite": 0.14,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.2
+    "footprint": 0.7
    },
    "signals": [],
    "filings": [],
@@ -11289,15 +11289,15 @@
    "description": "Vincent is a search and discovery engine for alternative asset investing, providing investors with access to a wide range of opportunities and research across private markets.",
    "domain": "getvincent.com",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Quiet Phase",
    "last_activity": null,
-   "rule": "Website now redirects to withvincent.com, often an acquisition or rebrand",
-   "composite": 0.04,
+   "rule": "Site live; no dated signal found",
+   "composite": 0.14,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.0,
-    "footprint": 0.2
+    "footprint": 0.7
    },
    "signals": [],
    "filings": [],
@@ -11323,15 +11323,15 @@
    "description": "Vitalize Care offers a comprehensive platform for health systems that utilizes predictive scheduling and AI to optimize staffing in response to real-time patient demand and acuity. The solution automates scheduling tasks, reduces labor costs, and enhances nurse retention by providing flexible and transparent scheduling options.",
    "domain": "vitalizecare.co",
    "legal_name": null,
-   "bucket": "No Public Activity",
+   "bucket": "Active Footprint",
    "last_activity": "2026-10-21",
-   "rule": "Website now redirects to vitalize.care, often an acquisition or rebrand",
-   "composite": 0.237,
+   "rule": "Job posted (20 open) 2026-10-21",
+   "composite": 0.337,
    "scores": {
     "form_d": 0.0,
     "engineering": 0.0,
     "hiring": 0.987,
-    "footprint": 0.2
+    "footprint": 0.7
    },
    "signals": [
     {

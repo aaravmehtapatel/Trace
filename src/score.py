@@ -13,6 +13,7 @@ import math
 from datetime import date, timedelta
 
 from src.config import Config
+from src.match.normalize import normalize
 
 ACTIVE_DAYS = 90
 RAISE_WINDOW_MONTHS = 24
@@ -29,6 +30,23 @@ def _days_since(d: str | None, today: date) -> int | None:
 
 def _recency(days: int | None, horizon: int) -> float:
     return 0.0 if days is None or days < 0 else max(0.0, 1 - days / horizon)
+
+
+def site_stem(host: str | None) -> str:
+    """Registrable name of a host: fora.northeastern.edu -> northeastern, prophero.com.au -> prophero."""
+    labels = (host or "").lower().split(".")
+    if len(labels) > 2 and labels[-2] in ("co", "com", "org", "net", "ac"):
+        return labels[-3]
+    return labels[-2] if len(labels) >= 2 else labels[0]
+
+
+def moved_not_gone(company: str, p: dict) -> bool:
+    """A redirect to the company's own new domain (edsights.io -> edsights.com) is a move,
+    not a disappearance. A redirect to a site that doesn't carry the name (aerodome.com ->
+    flocksafety.com) is what we flag."""
+    compact = normalize(company).replace(" ", "")
+    stem = site_stem(p.get("final_host")).replace("-", "")
+    return bool(compact) and (compact in stem or (len(stem) >= 4 and stem in compact))
 
 
 def latest(conn, entity_id: int, kind: str) -> dict | None:
@@ -77,7 +95,8 @@ def score_entity(conn, cfg: Config, e: dict, today: date) -> dict:
     live = False
     if fp:
         p = fp["payload"]
-        live = p.get("status") == 200 and not p.get("parked") and not p.get("redirected_off_domain")
+        moved = bool(p.get("redirected_off_domain")) and moved_not_gone(e["raw_name"], p)
+        live = p.get("status") == 200 and not p.get("parked") and (not p.get("redirected_off_domain") or moved)
         cert_days = -_days_since(p.get("cert_not_after"), today) if p.get("cert_not_after") else None
         s_fp = (0.5 if live else 0) + (0.2 if cert_days and cert_days > 14 else 0) \
             + 0.3 * _recency(_days_since(p.get("sitemap_lastmod"), today), ACTIVE_DAYS)

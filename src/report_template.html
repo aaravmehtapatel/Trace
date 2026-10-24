@@ -219,7 +219,7 @@ const BUCKETS = {
   "Raised Again":       { key: "raised", color: "var(--raised)", headline: "raised again", def: "Filed a Form D with the SEC in the last 24 months." },
   "Active Footprint":   { key: "active", color: "var(--active)", headline: "show activity this quarter", def: "A dated public signal in the last 90 days: a code push, a job posting, a site update." },
   "Quiet Phase":        { key: "quiet", color: "var(--quiet)", headline: "are quiet", def: "The site is live, but nothing public is dated in the last 90 days." },
-  "No Public Activity": { key: "dark", color: "var(--dark)", headline: "show no public activity", def: "The site is down, parked for sale or redirects elsewhere." },
+  "No Public Activity": { key: "dark", color: "var(--dark)", headline: "show no public activity", def: "The site is down, parked for sale or now points to a different company." },
   "Unresolved":         { key: "unresolved", color: "var(--unresolved)", headline: "we haven't placed yet", def: "No website verified yet, so no status is given.", hollow: true },
 };
 const ORDER = Object.keys(BUCKETS);
@@ -385,7 +385,7 @@ const m = DATA.method;
 $("#rules").innerHTML = [
   `<b>Raised again</b> if a Form D or amendment from a matched SEC filer is dated in the last ${m.raise_window_months} months.`,
   `<b>Unresolved</b> if no website has been verified. We don't guess a status for a company we can't find.`,
-  `<b>No public activity</b> if the site is down, parked or redirects to another company, dated by the last signal we have.`,
+  `<b>No public activity</b> if the site is down, parked or now points to a different company, dated by the last signal we have. A move to the company's own new domain doesn't count.`,
   `<b>Active</b> if any dated signal falls in the last ${m.active_days} days.`,
   `<b>Quiet</b> otherwise: the site is live, but nothing is dated recently.`,
 ].map((r) => `<li>${r}</li>`).join("");
