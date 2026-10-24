@@ -9,9 +9,9 @@ Run on Everywhere Ventures' public portfolio (265 companies, 24 Oct 2026):
 | Status | Companies | How it's decided |
 |---|---|---|
 | Raised again | 21 | A Form D or D/A from a matched SEC filer in the last 24 months |
-| Active | 81 | A dated public signal in the last 90 days: code push, job posting, site update |
-| Quiet | 90 | Site live, nothing dated in 90 days |
-| No public activity | 24 | Site down, parked, or redirecting elsewhere (Aerodome now redirects to its acquirer, Flock Safety) |
+| Active | 87 | A dated public signal in the last 90 days: code push, job posting, site update |
+| Quiet | 100 | Site live, nothing dated in 90 days |
+| No public activity | 8 | Site down, parked, or now pointing to a different company (Aerodome redirects to its acquirer, Flock Safety). A move to the company's own new domain doesn't count |
 | Unresolved | 49 | No website verified, so no status is given |
 
 A hand check of 20 random classified companies found every site and filer consistent with the fund's own description.
