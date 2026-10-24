@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portfolio Census</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #EDF0F2;
+    --sheet: #F8F9FA;
+    --ink: #18212B;
+    --ink-2: #4A5562;
+    --ink-3: #7B8693;
+    --rule: #CDD3D9;
+    --raised: #2E7D4F;
+    --active: #2F62A8;
+    --quiet: #B07D1E;
+    --dark: #7D3B5B;
+    --unresolved: #8E98A3;
+    --focus: #2F62A8;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Public Sans", system-ui, sans-serif; font-size: 16px; line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+  a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: currentColor; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+
+  /* Masthead */
+  header { padding: 56px 0 28px; }
+  .fund { font-weight: 600; font-size: 15px; margin: 0; }
+  .issue { color: var(--ink-3); font-size: 15px; margin: 0; }
+  h1 {
+    font-weight: 300; font-size: clamp(28px, 3.6vw, 44px); line-height: 1.18; letter-spacing: -0.012em;
+    margin: 28px 0 0; max-width: 36ch;
+  }
+  h1 b { font-weight: 600; }
+  h1 .k { white-space: nowrap; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 8px; text-decoration-skip-ink: none; }
+  .k-raised { text-decoration-color: var(--raised) !important; }
+  .k-active { text-decoration-color: var(--active) !important; }
+  .k-quiet { text-decoration-color: var(--quiet) !important; }
+  .k-dark { text-decoration-color: var(--dark) !important; }
+  .k-unresolved { text-decoration-color: var(--unresolved) !important; text-decoration-style: dotted !important; }
+  .lede { color: var(--ink-2); max-width: 62ch; margin: 18px 0 0; }
+
+  /* The field: one mark per company */
+  .field { margin: 40px 0 8px; border-top: 1px solid var(--rule); }
+  .band { display: grid; grid-template-columns: 230px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--rule); }
+  .band h2 { font-size: 16px; font-weight: 600; margin: 0; display: flex; gap: 10px; align-items: baseline; }
+  .band h2 .n { font-weight: 300; font-size: 28px; line-height: 1; min-width: 2.2ch; }
+  .band p { margin: 4px 0 0; color: var(--ink-3); font-size: 14px; line-height: 1.4; }
+  .marks { display: flex; flex-wrap: wrap; gap: 5px; align-content: flex-start; padding-top: 4px; }
+  .mark {
+    width: 16px; height: 16px; border: 0; padding: 0; border-radius: 3px; cursor: pointer;
+    background: var(--c); transition: transform .12s ease;
+  }
+  .mark:hover, .mark:focus-visible { transform: scale(1.35); }
+  .mark.hollow { background: transparent; box-shadow: inset 0 0 0 1.5px var(--c); }
+  .mark.review { background-image: linear-gradient(135deg, transparent 45%, var(--sheet) 45%, var(--sheet) 55%, transparent 55%); }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal .mark { animation: land .5s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i) * 4ms); }
+    @keyframes land { from { opacity: 0; transform: translateY(6px); } }
+  }
+  .tip {
+    position: fixed; z-index: 20; pointer-events: none; background: var(--ink); color: var(--sheet);
+    font-size: 13px; line-height: 1.35; padding: 8px 10px; border-radius: 4px; max-width: 280px; display: none;
+  }
+  .tip strong { display: block; font-weight: 600; }
+
+  /* Register */
+  section.register { padding: 48px 0 24px; }
+  .register h2 { font-size: 22px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.005em; }
+  .register > .wrap > p { color: var(--ink-2); margin: 0 0 20px; max-width: 62ch; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin-bottom: 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font: inherit; font-size: 14px; border: 1px solid var(--rule); background: var(--sheet); color: var(--ink);
+    padding: 5px 11px; border-radius: 999px; cursor: pointer; display: inline-flex; gap: 7px; align-items: center;
+  }
+  .chip i { width: 9px; height: 9px; border-radius: 2px; background: var(--c); display: inline-block; }
+  .chip.hollow i { background: transparent; box-shadow: inset 0 0 0 1.5px var(--c); }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--sheet); border-color: var(--ink); }
+  select, input[type=search] {
+    font: inherit; font-size: 14px; border: 1px solid var(--rule); background: var(--sheet); color: var(--ink);
+    padding: 6px 10px; border-radius: 6px;
+  }
+  input[type=search] { min-width: 220px; }
+  .count { color: var(--ink-3); font-size: 14px; margin-left: auto; }
+  .table-wrap { background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th { text-align: left; font-weight: 600; color: var(--ink-2); padding: 10px 14px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  td { padding: 11px 14px; border-bottom: 1px solid #E3E7EB; vertical-align: top; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: #EEF2F6; }
+  tbody tr:last-child td { border-bottom: 0; }
+  td .name { font-weight: 600; }
+  td .sub { color: var(--ink-3); font-size: 13px; }
+  .status { display: inline-flex; gap: 8px; align-items: center; white-space: nowrap; }
+  .status i { width: 10px; height: 10px; border-radius: 2px; background: var(--c); flex: none; }
+  .status.hollow i { background: transparent; box-shadow: inset 0 0 0 1.5px var(--c); }
+  td.date { white-space: nowrap; color: var(--ink-2); }
+  .empty { padding: 28px 14px; color: var(--ink-2); }
+
+  /* Record */
+  .scrim { position: fixed; inset: 0; background: rgba(24,33,43,.28); opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 30; }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  aside.record {
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(520px, 100%); background: var(--sheet); z-index: 31;
+    transform: translateX(100%); transition: transform .26s cubic-bezier(.2,.7,.2,1); overflow-y: auto;
+    border-left: 1px solid var(--rule); padding: 28px 32px 48px;
+  }
+  aside.record.open { transform: none; }
+  @media (prefers-reduced-motion: reduce) { aside.record, .scrim { transition: none; } .mark { transition: none; } }
+  .close { position: sticky; top: 0; float: right; font: inherit; font-size: 14px; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+  .record h2 { font-size: 26px; font-weight: 600; margin: 0 0 2px; letter-spacing: -0.01em; }
+  .record .where { color: var(--ink-3); margin: 0; font-size: 14px; }
+  .record .desc { color: var(--ink-2); font-size: 15px; margin: 14px 0 0; }
+  .verdict { margin: 22px 0 0; padding: 14px 16px; border-radius: 6px; background: var(--paper); border-left: 4px solid var(--c); }
+  .verdict b { display: block; font-size: 17px; }
+  .verdict span { color: var(--ink-2); font-size: 14px; }
+  .record h3 { font-size: 15px; font-weight: 600; margin: 28px 0 8px; }
+  .timeline { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--rule); }
+  .timeline li { position: relative; padding: 0 0 12px 18px; font-size: 14px; }
+  .timeline li::before { content: ""; position: absolute; left: -4px; top: 7px; width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); }
+  .timeline time { display: block; color: var(--ink-3); font-size: 13px; }
+  dl.facts { display: grid; grid-template-columns: 150px 1fr; gap: 6px 14px; margin: 0; font-size: 14px; }
+  dl.facts dt { color: var(--ink-3); }
+  dl.facts dd { margin: 0; overflow-wrap: anywhere; }
+  .bars { display: grid; gap: 8px; font-size: 13px; }
+  .bar { display: grid; grid-template-columns: 110px 1fr 40px; gap: 10px; align-items: center; }
+  .bar .track { height: 6px; background: #E3E7EB; border-radius: 3px; overflow: hidden; }
+  .bar .fill { height: 100%; background: var(--ink-2); }
+  .bar .v { text-align: right; color: var(--ink-2); }
+  .muted { color: var(--ink-3); font-size: 14px; margin: 0; }
+  .pending { font-size: 14px; margin: 0; padding-left: 18px; }
+
+  /* Method */
+  footer { padding: 32px 0 72px; color: var(--ink-2); font-size: 14px; }
+  footer h2 { font-size: 16px; color: var(--ink); font-weight: 600; margin: 0 0 10px; }
+  footer .cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; border-top: 1px solid var(--rule); padding-top: 28px; }
+  footer ol { margin: 0; padding-left: 20px; }
+  footer li { margin-bottom: 6px; }
+  footer p { margin: 0 0 8px; }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 0 16px; }
+    header { padding-top: 32px; }
+    h1 .k { white-space: normal; }
+    .band { grid-template-columns: 1fr; gap: 10px; }
+    .mark { width: 14px; height: 14px; }
+    th.hide-sm, td.hide-sm { display: none; }
+    input[type=search] { min-width: 0; flex: 1; }
+    .count { margin-left: 0; width: 100%; }
+    aside.record { padding: 20px 16px 40px; }
+    dl.facts { grid-template-columns: 1fr; gap: 0 0; }
+    dl.facts dd { margin-bottom: 8px; }
+    footer .cols { grid-template-columns: 1fr; gap: 24px; }
+  }
+</style>
+</head>
+<body>
+<header class="wrap">
+  <p class="fund" id="fund"></p>
+  <p class="issue" id="issue"></p>
+  <h1 id="headline"></h1>
+  <p class="lede">Built only from public records: SEC Form D filings, each company's own website, GitHub and public job boards. Founders don't have to send anything. Select any mark to see the evidence behind it.</p>
+  <div class="field" id="field" role="list" aria-label="Portfolio companies by status"></div>
+</header>
+
+<div class="tip" id="tip" role="tooltip"></div>
+
+<section class="register">
+  <div class="wrap">
+    <h2>Every company</h2>
+    <p>Sorted by status, strongest signals first within each. Select a row to open its record.</p>
+    <div class="controls">
+      <div class="chips" id="chips" role="group" aria-label="Filter by status"></div>
+      <select id="sector" aria-label="Filter by sector"><option value="">All sectors</option></select>
+      <input type="search" id="q" placeholder="Search companies" aria-label="Search companies">
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Company</th><th>Status</th><th class="hide-sm">Why</th><th class="hide-sm">Sector</th><th>Last signal</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="cols">
+    <div>
+      <h2>How a status is decided</h2>
+      <ol id="rules"></ol>
+    </div>
+    <div>
+      <h2>What this run checked</h2>
+      <div id="stats"></div>
+    </div>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="record" id="record" role="dialog" aria-modal="true" aria-labelledby="r-name" tabindex="-1"></aside>
+
+<script>
+const DATA = /*__CENSUS_DATA__*/null;
+
+const BUCKETS = {
+  "Raised Again":       { key: "raised", color: "var(--raised)", headline: "raised again", def: "Filed a Form D with the SEC in the last 24 months." },
+  "Active Footprint":   { key: "active", color: "var(--active)", headline: "show activity this quarter", def: "A dated public signal in the last 90 days: a code push, a job posting, a site update." },
+  "Quiet Phase":        { key: "quiet", color: "var(--quiet)", headline: "are quiet", def: "The site is live, but nothing public is dated in the last 90 days." },
+  "No Public Activity": { key: "dark", color: "var(--dark)", headline: "show no public activity", def: "The site is down, parked for sale or redirects elsewhere." },
+  "Unresolved":         { key: "unresolved", color: "var(--unresolved)", headline: "we haven't placed yet", def: "No website verified yet, so no status is given.", hollow: true },
+};
+const ORDER = Object.keys(BUCKETS);
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmtDate = (d) => d ? new Date(d + "T00:00:00").toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "";
+const money = (n) => n == null ? "" : n >= 1e6 ? `$${(n / 1e6).toFixed(n >= 1e7 ? 0 : 1)}M` : `$${Math.round(n / 1e3)}K`;
+const pretty = (t) => String(t ?? "").replace(/\b(\d{4}-\d{2}-\d{2})\b/g, (d) => fmtDate(d));
+const label = (c) => c.bucket === "No Public Activity"
+  ? (c.last_activity ? `No public activity since ${fmtDate(c.last_activity)}` : "No public activity")
+  : c.bucket;
+
+const companies = DATA.companies.slice().sort((a, b) =>
+  ORDER.indexOf(a.bucket) - ORDER.indexOf(b.bucket) || (b.composite - a.composite) || a.name.localeCompare(b.name));
+const byId = new Map(companies.map((c) => [c.id, c]));
+
+// Masthead
+const month = new Date(DATA.score_date + "T00:00:00").toLocaleDateString("en-US", { month: "long", year: "numeric" });
+$("#fund").textContent = DATA.fund;
+$("#issue").textContent = `Portfolio census, ${month}`;
+document.title = `${DATA.fund} portfolio census`;
+const parts = ORDER.filter((b) => DATA.counts[b]).map((b) =>
+  `<span class="k k-${BUCKETS[b].key}"><b>${DATA.counts[b]}</b> ${BUCKETS[b].headline}</span>`);
+const last = parts.pop();
+$("#headline").innerHTML = `Of ${DATA.total} portfolio companies, ${parts.join(", ")}, and ${last}.`;
+
+// Field
+const field = $("#field");
+let i = 0;
+for (const b of ORDER) {
+  const group = companies.filter((c) => c.bucket === b);
+  const meta = BUCKETS[b];
+  const band = document.createElement("div");
+  band.className = "band";
+  band.setAttribute("role", "listitem");
+  band.innerHTML = `<div><h2><span class="n">${group.length}</span>${esc(b)}</h2><p>${esc(meta.def)}</p></div>`;
+  const marks = document.createElement("div");
+  marks.className = "marks";
+  for (const c of group) {
+    const m = document.createElement("button");
+    m.className = "mark" + (meta.hollow ? " hollow" : "") + (c.pending.length && meta.hollow ? " review" : "");
+    m.style.setProperty("--c", meta.color);
+    m.style.setProperty("--i", i++);
+    m.dataset.id = c.id;
+    m.setAttribute("aria-label", `${c.name}: ${label(c)}`);
+    marks.appendChild(m);
+  }
+  band.appendChild(marks);
+  field.appendChild(band);
+}
+requestAnimationFrame(() => field.classList.add("reveal"));
+
+const tip = $("#tip");
+field.addEventListener("pointerover", (e) => {
+  const m = e.target.closest(".mark"); if (!m) return;
+  const c = byId.get(+m.dataset.id);
+  tip.innerHTML = `<strong>${esc(c.name)}</strong>${esc(pretty(c.rule))}`;
+  tip.style.display = "block";
+});
+field.addEventListener("pointermove", (e) => {
+  const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8);
+  tip.style.left = x + "px"; tip.style.top = (e.clientY + 16) + "px";
+});
+field.addEventListener("pointerout", (e) => { if (e.target.closest(".mark")) tip.style.display = "none"; });
+field.addEventListener("click", (e) => { const m = e.target.closest(".mark"); if (m) openRecord(+m.dataset.id, m); });
+
+// Register
+const state = { bucket: null, sector: "", q: "" };
+const chips = $("#chips");
+for (const b of ORDER) {
+  const chip = document.createElement("button");
+  chip.className = "chip" + (BUCKETS[b].hollow ? " hollow" : "");
+  chip.style.setProperty("--c", BUCKETS[b].color);
+  chip.setAttribute("aria-pressed", "false");
+  chip.innerHTML = `<i></i>${esc(b)} <span>${DATA.counts[b] || 0}</span>`;
+  chip.addEventListener("click", () => {
+    state.bucket = state.bucket === b ? null : b;
+    chips.querySelectorAll(".chip").forEach((x) => x.setAttribute("aria-pressed", String(x === chip && state.bucket === b)));
+    render();
+  });
+  chips.appendChild(chip);
+}
+[...new Set(companies.map((c) => c.sector).filter(Boolean))].sort().forEach((s) =>
+  $("#sector").insertAdjacentHTML("beforeend", `<option>${esc(s)}</option>`));
+$("#sector").addEventListener("change", (e) => { state.sector = e.target.value; render(); });
+$("#q").addEventListener("input", (e) => { state.q = e.target.value.trim().toLowerCase(); render(); });
+
+function render() {
+  const rows = companies.filter((c) =>
+    (!state.bucket || c.bucket === state.bucket) && (!state.sector || c.sector === state.sector) &&
+    (!state.q || `${c.name} ${c.domain || ""} ${c.legal_name || ""} ${c.city || ""}`.toLowerCase().includes(state.q)));
+  $("#count").textContent = `${rows.length} of ${companies.length}`;
+  $("#rows").innerHTML = rows.length ? rows.map((c) => {
+    const meta = BUCKETS[c.bucket];
+    return `<tr data-id="${c.id}" tabindex="0">
+      <td><div class="name">${esc(c.name)}</div><div class="sub">${esc(c.domain || "No verified site")}${c.city ? ", " + esc(c.city) : ""}</div></td>
+      <td><span class="status${meta.hollow ? " hollow" : ""}" style="--c:${meta.color}"><i></i>${esc(label(c))}</span></td>
+      <td class="hide-sm">${esc(pretty(c.rule))}</td>
+      <td class="hide-sm">${esc(c.sector || "")}</td>
+      <td class="date">${fmtDate(c.last_activity) || "None found"}</td></tr>`;
+  }).join("") : `<tr><td colspan="5" class="empty">No companies match these filters. Clear the search or pick another status.</td></tr>`;
+}
+$("#rows").addEventListener("click", (e) => { const tr = e.target.closest("tr[data-id]"); if (tr) openRecord(+tr.dataset.id, tr); });
+$("#rows").addEventListener("keydown", (e) => {
+  const tr = e.target.closest("tr[data-id]"); if (tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openRecord(+tr.dataset.id, tr); }
+});
+render();
+
+// Record
+let returnFocus = null;
+function openRecord(id, from) {
+  const c = byId.get(id), meta = BUCKETS[c.bucket], w = DATA.method.weights;
+  returnFocus = from;
+  const signals = c.signals.length
+    ? `<ol class="timeline">${c.signals.map((s) => `<li><time>${fmtDate(s.date)}</time>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.what)}</a>` : esc(s.what)}</li>`).join("")}</ol>`
+    : `<p class="muted">No dated public signal found.</p>`;
+  const filings = c.filings.length
+    ? `<dl class="facts">${c.filings.map((f) => `<dt>${fmtDate(f.date)}</dt><dd><a href="${esc(f.url)}" target="_blank" rel="noopener">Form ${esc(f.form)}</a>, ${esc(f.filer)}${f.sold ? `, ${money(f.sold)} sold` : ""}${f.offering ? ` of ${money(f.offering)} offered` : ""}</dd>`).join("")}</dl>`
+    : `<p class="muted">No Form D filing linked to this company.</p>`;
+  const site = c.site ? `<dl class="facts">
+      <dt>Website</dt><dd><a href="https://${esc(c.domain)}/" target="_blank" rel="noopener">${esc(c.domain)}</a>${c.site.status ? ` (HTTP ${c.site.status})` : c.site.error ? ` (${esc(c.site.error)})` : ""}</dd>
+      ${c.site.redirected_off_domain ? `<dt>Redirects to</dt><dd>${esc(c.site.final_host)}</dd>` : ""}
+      ${c.legal_name ? `<dt>Legal name on site</dt><dd>${esc(c.legal_name)}</dd>` : ""}
+      ${c.site.sitemap_lastmod ? `<dt>Site last updated</dt><dd>${fmtDate(c.site.sitemap_lastmod)}</dd>` : ""}
+      ${c.site.cert_not_after ? `<dt>TLS certificate</dt><dd>Valid until ${fmtDate(c.site.cert_not_after)}</dd>` : ""}
+      ${c.github ? `<dt>GitHub</dt><dd><a href="${esc(c.github.url)}" target="_blank" rel="noopener">${esc(c.github.login)}</a>, ${c.github.events_in_window} public events in ${DATA.method.window_days} days</dd>` : ""}
+      ${c.hiring ? `<dt>Open roles</dt><dd><a href="${esc(c.hiring.url)}" target="_blank" rel="noopener">${c.hiring.open_roles} on ${esc(c.hiring.board)}</a></dd>` : ""}
+    </dl>` : `<p class="muted">No verified website, so the site, GitHub and hiring checks didn't run.</p>`;
+  const pending = c.pending.length
+    ? `<h3>Awaiting review</h3><ul class="pending">${c.pending.map((p) => `<li>${p.source === "domain" ? "Website" : "Form D filer"}: ${esc(p.candidate_name)} (${esc(p.candidate_key)}), match score ${p.score.toFixed(2)}</li>`).join("")}</ul>`
+    : "";
+  const bars = Object.entries(c.scores).map(([k, v]) => {
+    const name = { form_d: "Form D", engineering: "Engineering", hiring: "Hiring", footprint: "Website" }[k];
+    return `<div class="bar"><span>${name} <span class="muted" style="font-size:12px">×${w[k]}</span></span><div class="track"><div class="fill" style="width:${Math.round((v || 0) * 100)}%"></div></div><span class="v">${(v || 0).toFixed(2)}</span></div>`;
+  }).join("");
+  $("#record").innerHTML = `
+    <button class="close" id="close">Close</button>
+    <h2 id="r-name">${esc(c.name)}</h2>
+    <p class="where">${[c.city, c.sector].filter(Boolean).map(esc).join(", ")}</p>
+    ${c.description ? `<p class="desc">${esc(c.description)}</p>` : ""}
+    <div class="verdict" style="--c:${meta.color}"><b>${esc(label(c))}</b><span>${esc(pretty(c.rule))}</span></div>
+    <h3>Dated signals</h3>${signals}
+    <h3>SEC filings</h3>${filings}
+    <h3>Public footprint</h3>${site}
+    ${pending}
+    <h3>Ranking score: ${(c.composite || 0).toFixed(2)}</h3>
+    <p class="muted" style="margin-bottom:10px">Orders companies within a status. It never decides the status.</p>
+    <div class="bars">${bars}</div>`;
+  $("#record").classList.add("open"); $("#scrim").classList.add("open");
+  tip.style.display = "none";
+  $("#close").addEventListener("click", closeRecord);
+  $("#record").focus();
+}
+function closeRecord() {
+  $("#record").classList.remove("open"); $("#scrim").classList.remove("open");
+  if (returnFocus) returnFocus.focus();
+}
+$("#scrim").addEventListener("click", closeRecord);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && $("#record").classList.contains("open")) closeRecord(); });
+
+// Method
+const m = DATA.method;
+$("#rules").innerHTML = [
+  `<b>Raised again</b> if a Form D or amendment from a matched SEC filer is dated in the last ${m.raise_window_months} months.`,
+  `<b>Unresolved</b> if no website has been verified. We don't guess a status for a company we can't find.`,
+  `<b>No public activity</b> if the site is down, parked or redirects to another company, dated by the last signal we have.`,
+  `<b>Active</b> if any dated signal falls in the last ${m.active_days} days.`,
+  `<b>Quiet</b> otherwise: the site is live, but nothing is dated recently.`,
+].map((r) => `<li>${r}</li>`).join("");
+$("#stats").innerHTML = `
+  <p>${m.observations.toLocaleString()} public observations across ${DATA.total} companies, generated ${fmtDate(DATA.generated)}.</p>
+  <p>${m.linked_matches} matches linked automatically at a score of ${m.auto_link} or higher; below ${m.reject} they're dropped. ${m.pending_review} companies have a possible match waiting for a person to confirm.</p>
+  <p>A website only counts once the live page names the company and describes what the fund says it does.</p>`;
+</script>
+</body>
+</html>

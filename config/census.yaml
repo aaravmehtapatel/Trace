@@ -1,0 +1,36 @@
+# Census settings for one fund. Weights and thresholds are a thesis, not a fact:
+# tune them after the first run against real filings.
+
+fund:
+  name: Everywhere Ventures
+  # SEC fair-access rules: a descriptive name plus a real contact address.
+  # The SEC_USER_AGENT env var overrides this.
+  sec_user_agent: "Portfolio Census Research admin@example.com"
+
+paths:
+  db: data/portfolio_monitor.db
+  raw: data/raw
+
+window_days: 30
+
+probe:
+  timeout_seconds: 5
+  concurrency: 20
+
+match:
+  auto_link: 0.92   # at or above: linked without review
+  reject: 0.72      # below: dropped
+  # Between the two: sent to `review-queue`.
+
+weights:
+  form_d: 0.35
+  engineering: 0.25
+  hiring: 0.20
+  footprint: 0.20
+
+# Portfolio targets. Only `name` is required; domain, github_org and cik make
+# matching exact instead of fuzzy. first_check_date is when the fund invested,
+# so a Form D filed after it counts as "Raised Again".
+# `init` pulls the full list from the fund's own portfolio page; rows here add to
+# or correct it (e.g. a known domain or CIK).
+portfolio: []

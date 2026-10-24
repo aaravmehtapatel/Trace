@@ -1,0 +1,12 @@
+# Secrets
+.env
+
+# Regenerable: `init` + `sync` rebuild these from public sources
+data/raw/
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+__pycache__/
+.pytest_cache/
+.DS_Store
