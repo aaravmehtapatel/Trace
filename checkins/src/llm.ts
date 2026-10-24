@@ -75,7 +75,10 @@ function extractJson(text: string): unknown {
 
 export async function callJson<T>(c: JsonCall<T>): Promise<T> {
   const cacheOn = process.env.CHECKINS_CACHE !== "off" && !override;
-  const key = createHash("sha256").update(`${c.step}\n${c.system}\n${c.user}`).digest("hex").slice(0, 24);
+  // Request ids carry a random suffix ("tallyline-2026-Q3-1a2b3c"); leave it out of the key so a
+  // rerun with the same choices hits the cache. The prompt itself is unchanged.
+  const stable = (t: string) => t.replace(/(-\d{4}-Q\d)-[0-9a-f]{6}\b/g, "$1-<id>");
+  const key = createHash("sha256").update(`${c.step}\n${stable(c.system)}\n${stable(c.user)}`).digest("hex").slice(0, 24);
   const cached = join(CACHE_DIR, `${key}.json`);
   if (cacheOn && existsSync(cached)) return c.schema.parse(JSON.parse(readFileSync(cached, "utf8")));
 

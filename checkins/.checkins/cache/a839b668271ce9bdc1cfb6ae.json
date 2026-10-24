@@ -1,0 +1,16 @@
+{
+  "questions": [
+    {
+      "text": "Billing data implies monthly revenue churn of 8.1% in July, 9.5% in August and 11.6% in September, an average of 9.7%. That compares with the 2.4% reported for Q2. Could you break down how much of this comes from Toast-integrated customers versus others? Does September's figure already include the Harbor & Vine notice ($9,200 MRR, effective 2026-11-21), or will that land on top? Given that cancellations are concentrated in the Toast base (41% of customers), what is holding back the Orders API v2 rebuild (6 to 8 engineer-weeks), and when could it start?",
+      "why": "The highest-severity finding: churn is roughly 4x the reported rate. The suspected cause has a known fix that hasn't started, and the largest account's loss may not yet show in the numbers."
+    },
+    {
+      "text": "At $2,347,000 cash and $214,000 net burn in September, runway works out to 11.0 months. The Q2 update said about 22 months, and Dana's estimate is about 12. What drove burn up from $151,000 to $214,000 over the quarter, when headcount fell from 17 to 15 and no hires were made? With all six H2 roles still open (target starts October to December) and churn rising, what runway are you planning against? Is the $750k to $1M bridge from Northbeam and Ridgeline a firm plan with a target close date, or still exploratory?",
+      "why": "Runway is half what was last reported. Burn rose while headcount fell, which is unexplained, and the hiring plan and bridge timing are unresolved."
+    },
+    {
+      "text": "The mid-market pipeline fell from $41k to $12k in potential MRR, with 3 of 9 groups still active and no signed deals. What happened to the other 6 groups? Who now owns the 3 active deals, given that sales headcount is down to 1 after Marcus Bell left? On the Meridian pilot, has the LOI been confirmed as still in force through the pause until SOC 2 Type II (earliest Q3 2027)? Have you decided whether to commit the roughly $60k and 9 to 12 months that SOC 2 would require?",
+      "why": "Both Q2 growth channels have stalled. The data room is missing the outcome of 6 pipeline deals and the status of the Meridian LOI, and MRR is already 15.0% below plan ($68,000 vs $80,000)."
+    }
+  ]
+}

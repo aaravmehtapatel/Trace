@@ -1,0 +1,19 @@
+# Render Blueprint: New > Blueprint > pick this repo. Render clones the whole repo, so the
+# server can read exports/ (the census) and site/ (the front page) next to checkins/.
+services:
+  - type: web
+    name: trace
+    runtime: node
+    plan: free
+    buildCommand: cd checkins && npm ci --include=dev
+    startCommand: cd checkins && npm run web
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # Shared password for the whole site (Render asks for it on first deploy).
+      - key: TRACE_PASSWORD
+        sync: false
+      # Only needed for check-ins the cache doesn't cover.
+      - key: CENSUS_ANTHROPIC_API_KEY
+        sync: false

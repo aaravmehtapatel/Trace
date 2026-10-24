@@ -2,6 +2,7 @@
 // founder's pane approves, edits or withholds each drafted answer. Both agents run in this
 // process over a local thread; the page polls /api/state.
 import { existsSync, readdirSync, readFileSync, rmSync, statSync } from "node:fs";
+import { timingSafeEqual } from "node:crypto";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { extname, join, resolve, sep } from "node:path";
 import { type Decision, finalize } from "./approval.ts";
@@ -42,6 +43,19 @@ function censusPage(): string | null {
   return latest ? readFileSync(join(EXPORTS, latest), "utf8") : null;
 }
 const PORT = Number(process.env.PORT ?? 4321);
+// Locally Trace listens on loopback only; on a host such as Render (which sets RENDER and PORT)
+// it has to accept outside connections.
+const HOST = process.env.HOST ?? (process.env.RENDER ? "0.0.0.0" : "127.0.0.1");
+// Hosted publicly, one shared password keeps strangers off the licensed data and from spending
+// the model key on check-ins. Unset locally, so nothing changes on a laptop.
+const PASSWORD = process.env.TRACE_PASSWORD;
+function authorized(req: IncomingMessage): boolean {
+  if (!PASSWORD) return true;
+  const [scheme, value] = (req.headers.authorization ?? "").split(" ");
+  if (scheme !== "Basic" || !value) return false;
+  const pass = Buffer.from(value, "base64").toString("utf8").split(":").slice(1).join(":");
+  return pass.length === PASSWORD.length && timingSafeEqual(Buffer.from(pass), Buffer.from(PASSWORD));
+}
 const FOUNDER = process.env.FOUNDER_NAME ?? "Dana Okafor";
 
 type Phase = "idle" | "vc_working" | "founder_drafting" | "awaiting_founder" | "done" | "error";
@@ -111,6 +125,11 @@ function send(res: ServerResponse, status: number, data: unknown, type = "applic
 createServer(async (req, res) => {
   try {
     const url = new URL(req.url ?? "/", "http://localhost");
+    if (url.pathname === "/healthz") return send(res, 200, { ok: true });
+    if (!authorized(req)) {
+      res.writeHead(401, { "WWW-Authenticate": 'Basic realm="Trace", charset="UTF-8"', "Content-Type": "text/plain" });
+      return res.end("Trace needs the shared password.");
+    }
     if (req.method === "GET" && (url.pathname === "/census" || url.pathname === "/census/")) {
       const census = censusPage();
       if (!census) { res.writeHead(302, { Location: "/checkins" }); return res.end(); }
@@ -143,4 +162,4 @@ createServer(async (req, res) => {
   } catch (e) {
     send(res, 500, { error: String(e) });
   }
-}).listen(PORT, "127.0.0.1", () => console.log(`Trace on http://localhost:${PORT} (front page), http://localhost:${PORT}/census and http://localhost:${PORT}/checkins`));
+}).listen(PORT, HOST, () => console.log(`Trace on http://localhost:${PORT} (front page), http://localhost:${PORT}/census and http://localhost:${PORT}/checkins${PASSWORD ? " (password required)" : ""}`));

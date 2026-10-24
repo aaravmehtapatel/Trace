@@ -1,0 +1,126 @@
+{
+  "answers": [
+    {
+      "question_id": "f1",
+      "answer": "Your figures match the billing export. It has no churn column, but churn can be derived from the MRR, new and expansion fields. For example, June MRR of $63,000 plus $8,100 of new and expansion MRR, less July MRR of $66,000, leaves about $5,100 lost.\n\nToast vs. others: the billing export does not split MRR or churn by POS, so I can't give a dollar breakdown. Customer success records that about 40 single-location Toast restaurants cancelled from July to September, mostly citing sync errors, and that Square and Clover customers showed no unusual cancellations. A mid-August count was 14 cancellations in July and 11 in early August, almost all Toast.\n\nHarbor & Vine: the account ($9,200 MRR) gave notice on 2026-09-22, effective 2026-11-21. The export doesn't say whether September's $68,000 MRR reflects it. Since the effective date is in November, it would normally fall after September, but the data room doesn't confirm this. Dana is meeting their CFO on 2026-10-06 to try to save the account.\n\nOrders API v2 rebuild: it has not started. On 2026-07-21 the team chose a hotfix over a rebuild, with a plan to revisit in Q4. On 2026-08-11 Dana said the rebuild would not happen before the Meridian launch. Meridian has since paused (2026-09-24). No start date for the rebuild is recorded.",
+      "sources": [
+        {
+          "path": "systems/billing_mrr_monthly.csv",
+          "quote": "2026-07,66000,7200,900,291"
+        },
+        {
+          "path": "systems/billing_mrr_monthly.csv",
+          "quote": "2026-09,68000,7400,900,283"
+        },
+        {
+          "path": "customers/account-health.md",
+          "quote": "About 40 single-location Toast restaurants cancelled in July to September. Most cited sync errors."
+        },
+        {
+          "path": "customers/account-health.md",
+          "quote": "Square and Clover customers: no unusual cancellations."
+        },
+        {
+          "path": "meetings/2026-08-11-leadership-sync.md",
+          "quote": "Jo counted 14 cancellations in July and 11 so far in August, almost all Toast."
+        },
+        {
+          "path": "customers/account-health.md",
+          "quote": "Gave 60-day notice on 2026-09-22, effective 2026-11-21."
+        },
+        {
+          "path": "customers/account-health.md",
+          "quote": "Dana is meeting their CFO on 2026-10-06 to try to save it."
+        },
+        {
+          "path": "strategy/decision-log.md",
+          "quote": "Hotfix the Toast sync instead of rebuilding on Toast's new Orders API. Revisit in Q4."
+        },
+        {
+          "path": "meetings/2026-08-11-leadership-sync.md",
+          "quote": "Priya wants to rebuild on Orders API v2 (6 to 8 eng-weeks). Dana: not before the Meridian launch."
+        },
+        {
+          "path": "product/incidents.md",
+          "quote": "Estimate: 6 to 8 engineer-weeks. Not started."
+        },
+        {
+          "path": "customers/pipeline-notes.md",
+          "quote": "2026-09-24: Meridian paused the pilot \"until SOC 2 Type II is in place\"."
+        }
+      ]
+    },
+    {
+      "question_id": "f2",
+      "answer": "The bank export confirms your figures:\n- June: cash fell from $3,069,000 to $2,918,000 ($151,000 net burn).\n- September: cash fell from $2,561,000 to $2,347,000 ($214,000 net burn).\n\nBy line item, June to September:\n- Payroll out rose from $154,100 to $208,700.\n- Other out rose from $59,900 to $73,300.\n- Revenue collected rose only from $63,000 to $68,000.\n\nOver the same period, headcount fell from 17 to 15. The data room does not explain why payroll rose while headcount fell.\n\nRunway planning: the only runway model is dated 2026-05-31 and shows about 22 months at $140k a month. It assumed MRR would keep growing about 10% a month, and it has not been updated. At the 2026-09-15 leadership sync, Dana estimated about 12 months at the current rate, and less once the H2 hires start. The H2 hiring plan said net burn would stay under $160k a month through December. The six H2 roles remain open, and whether to cut them has not been decided; it will be revisited after the bridge conversations. No updated runway figure is documented.\n\nBridge: this is exploratory. The record says Dana will sound out Northbeam and Ridgeline informally in October about a $750k to $1M SAFE. No target close date is documented.",
+      "sources": [
+        {
+          "path": "systems/bank_cash_monthly.csv",
+          "quote": "2026-06,3069000,63000,0,154100,59900,2918000"
+        },
+        {
+          "path": "systems/bank_cash_monthly.csv",
+          "quote": "2026-09,2561000,68000,0,208700,73300,2347000"
+        },
+        {
+          "path": "company/team.md",
+          "quote": "| **Total** | **17** | **15** |"
+        },
+        {
+          "path": "finance/runway-model.md",
+          "quote": "**Runway: about 22 months at $140k per month**, which takes us to roughly March 2028."
+        },
+        {
+          "path": "finance/runway-model.md",
+          "quote": "MRR keeps growing ~10% a month, so net burn stays flat even as headcount grows."
+        },
+        {
+          "path": "meetings/2026-09-15-leadership-sync.md",
+          "quote": "Dana: at this rate we have about 12 months, less once the H2 hires start."
+        },
+        {
+          "path": "hiring/hiring-plan-h2.md",
+          "quote": "Note: the plan says total net burn stays under $160k a month through December with these hires."
+        },
+        {
+          "path": "strategy/decision-log.md",
+          "quote": "Keep the six H2 roles open for now. Revisit after the bridge conversations."
+        },
+        {
+          "path": "meetings/2026-09-15-leadership-sync.md",
+          "quote": "Cut the H2 hiring plan. Not decided. Revisit after the bridge conversations."
+        },
+        {
+          "path": "meetings/2026-09-15-leadership-sync.md",
+          "quote": "Bridge of $750k to $1M on a SAFE from Northbeam and Ridgeline. Dana to sound them out informally in October."
+        }
+      ]
+    },
+    {
+      "question_id": "f3",
+      "answer": "Mid-market pipeline: the pipeline went from 9 groups ($41k potential MRR) on 2026-07-01 to 3 active groups ($12k) on 2026-09-30. The notes say Marcus owned most of these deals before he left. The data room does not record what happened to the other 6 groups.\n\nDeal ownership: sales headcount is now 1, and the search for a Head of Sales replacement has not started. The data room does not say who now owns the 3 active deals.\n\nMeridian: Meridian paused the pilot on 2026-09-24 \"until SOC 2 Type II is in place\", with Q3 2027 as the earliest realistic date. Nothing in the data room confirms whether the LOI remains in force during the pause.\n\nSOC 2: Priya estimates 9 to 12 months and about $60k. No decision on whether to commit to it is recorded.",
+      "sources": [
+        {
+          "path": "customers/pipeline-notes.md",
+          "quote": "2026-09-30: 3 groups still active, $12k potential MRR. Marcus (Head of Sales) owned most of these deals before he left."
+        },
+        {
+          "path": "company/team.md",
+          "quote": "Marcus Bell, Head of Sales, left 2026-08-29. Search for a replacement hasn't started"
+        },
+        {
+          "path": "company/team.md",
+          "quote": "| Sales | 3 | 1 |"
+        },
+        {
+          "path": "customers/pipeline-notes.md",
+          "quote": "2026-09-24: Meridian paused the pilot \"until SOC 2 Type II is in place\". Earliest realistic date: Q3 2027."
+        },
+        {
+          "path": "meetings/2026-09-15-leadership-sync.md",
+          "quote": "Meridian: SOC 2 Type II is a blocker. Priya estimates 9 to 12 months and about $60k."
+        }
+      ]
+    }
+  ]
+}

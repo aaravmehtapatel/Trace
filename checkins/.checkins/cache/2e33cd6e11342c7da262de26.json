@@ -1,0 +1,12 @@
+{
+  "status": "concern",
+  "bottom_line": "Both legs of the thesis broke this quarter. The bank wedge is paused until SOC 2 Type II, earliest Q3 2027 at about $60k. The core product is losing Toast customers at a billing-implied 9.7% monthly revenue churn, rising to 11.6% in September, against the 2.4% we were told for Q2. The Toast fix (6 to 8 engineer-weeks) still has no start date. Runway is 11 months at September's $214k burn, not 22, and the company itself cannot explain why payroll rose from $154k to $209k while headcount fell from 17 to 15. Harbor & Vine's notice ($9,200, about 13.5% of MRR, effective 2026-11-21) would take MRR below June's $63k. Meanwhile all six H2 hires remain open and a $750k–$1M bridge ask from us is coming informally in October. Before 2026-11-05, Elena should withhold any bridge commitment until there is a reforecast showing burn cut to fit the existing runway. She should also press for the Toast rebuild to be started now rather than deferred again, and treat the unexplained payroll increase and the missing ownership of the sales pipeline as management-control issues, not data gaps.",
+  "board_questions": [
+    "Why did payroll outflow rise from $154,100 to $208,700 between June and September while headcount fell from 17 to 15 with no hires? What does October payroll show?",
+    "What is the updated runway model with H2 hires frozen, Harbor & Vine lost, and churn at the current ~10%? What burn level does it require, and by when?",
+    "Will you formally freeze or cancel the six H2 roles now, rather than waiting on the bridge outcome? Will you redirect two engineers to start the Toast Orders API v2 rebuild this month, with a ship date?",
+    "What came out of the 2026-10-06 meeting with Harbor & Vine's CFO? Is the $9,200 departure already reflected in September's $68,000 MRR or still to come?",
+    "Is the Meridian LOI still in force during the pause? Is the bank channel still the strategy if SOC 2 means no bank revenue before Q3 2027 and runway ends around August 2027?",
+    "Who owns the 3 remaining mid-market deals ($12k potential MRR)? What happened to the other 6 groups? Why was the Q2 churn figure of 2.4% so far from what billing now implies?"
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "answers": [
+    {
+      "question_id": "s1",
+      "answer": "MRR from the Stripe billing export: July 2026 $66,000; August 2026 $67,500; September 2026 $68,000. Q2 ended at $63,000 in June.",
+      "sources": [
+        {
+          "path": "systems/billing_mrr_monthly.csv",
+          "quote": "2026-07,66000,7200,900,291"
+        },
+        {
+          "path": "systems/billing_mrr_monthly.csv",
+          "quote": "2026-08,67500,7000,800,288"
+        },
+        {
+          "path": "systems/billing_mrr_monthly.csv",
+          "quote": "2026-09,68000,7400,900,283"
+        }
+      ]
+    },
+    {
+      "question_id": "s2",
+      "answer": "From the Mercury bank export, net burn is opening cash minus closing cash, with no financing inflows in the quarter:\n- July: $168,000\n- August: $189,000\n- September: $214,000\n\nCash at 2026-09-30 was $2,347,000. The 2026-09-15 leadership sync also records August burn as $189k, against a plan of $150k.",
+      "sources": [
+        {
+          "path": "systems/bank_cash_monthly.csv",
+          "quote": "2026-07,2918000,66000,0,170800,63200,2750000"
+        },
+        {
+          "path": "systems/bank_cash_monthly.csv",
+          "quote": "2026-08,2750000,67500,0,189800,66700,2561000"
+        },
+        {
+          "path": "systems/bank_cash_monthly.csv",
+          "quote": "2026-09,2561000,68000,0,208700,73300,2347000"
+        },
+        {
+          "path": "meetings/2026-09-15-leadership-sync.md",
+          "quote": "Cash: burn was $189k in August, well above the plan's $150k."
+        }
+      ]
+    },
+    {
+      "question_id": "s3",
+      "answer": "The only formal runway model is dated 2026-05-31. It shows about 22 months at $140k a month. It assumed MRR grows about 10% a month and that the six H2 hires fit inside the $140k average. Neither assumption has held:\n- MRR grew from $63,000 (June) to $68,000 (September).\n- Burn reached $214,000 in September.\n\nOn 2026-09-15, Dana estimated about 12 months at the current rate, and less once the H2 hires start. By simple arithmetic, $2,347,000 of cash divided by September's $214,000 burn is about 11 months. That assumes burn stays flat and no H2 hires start. The model has not been updated.",
+      "sources": [
+        {
+          "path": "finance/runway-model.md",
+          "quote": "**Runway: about 22 months at $140k per month**, which takes us to roughly March 2028."
+        },
+        {
+          "path": "finance/runway-model.md",
+          "quote": "MRR keeps growing ~10% a month, so net burn stays flat even as headcount grows."
+        },
+        {
+          "path": "finance/runway-model.md",
+          "quote": "Six H2 hires are budgeted inside the $140k average, because they start late in the year."
+        },
+        {
+          "path": "meetings/2026-09-15-leadership-sync.md",
+          "quote": "Dana: at this rate we have about 12 months, less once the H2 hires start."
+        },
+        {
+          "path": "systems/bank_cash_monthly.csv",
+          "quote": "2026-09,2561000,68000,0,208700,73300,2347000"
+        }
+      ]
+    },
+    {
+      "question_id": "s4",
+      "answer": "The billing export has no churn column, so no exact churn figure is recorded.\n\nImplied churned plus contraction MRR, derived as prior MRR + new + expansion − ending MRR:\n- July: $5,100 (about 8.1% of opening MRR)\n- August: $6,300 (about 9.5%)\n- September: $7,800 (about 11.6%)\n\nFor comparison, Q2 average revenue churn was reported as 2.4%.\n\nLogo churn:\n- Active customers went from 289 to 283 net.\n- CS counted 14 cancellations in July and 11 in August as of 2026-08-11.\n- Account health records about 40 single-location Toast cancellations in July to September, mostly citing sync errors.\n\nIn addition, Harbor & Vine Hospitality Group ($9,200 MRR) gave notice on 2026-09-22, effective 2026-11-21.",
+      "sources": [
+        {
+          "path": "systems/billing_mrr_monthly.csv",
+          "quote": "2026-06,63000,6200,700,289"
+        },
+        {
+          "path": "systems/billing_mrr_monthly.csv",
+          "quote": "2026-07,66000,7200,900,291"
+        },
+        {
+          "path": "systems/billing_mrr_monthly.csv",
+          "quote": "2026-08,67500,7000,800,288"
+        },
+        {
+          "path": "systems/billing_mrr_monthly.csv",
+          "quote": "2026-09,68000,7400,900,283"
+        },
+        {
+          "path": "meetings/2026-08-11-leadership-sync.md",
+          "quote": "Jo counted 14 cancellations in July and 11 so far in August, almost all Toast."
+        },
+        {
+          "path": "customers/account-health.md",
+          "quote": "About 40 single-location Toast restaurants cancelled in July to September. Most cited sync errors."
+        },
+        {
+          "path": "customers/account-health.md",
+          "quote": "Gave 60-day notice on 2026-09-22, effective 2026-11-21."
+        },
+        {
+          "path": "investor-updates/2026-q2.md",
+          "quote": "| Monthly revenue churn | 2.4% average |"
+        }
+      ]
+    },
+    {
+      "question_id": "s5",
+      "answer": "The latest headcount on record is 15 as of 2026-09-01, down from 17 on 2026-06-30. There is no separate 2026-09-30 figure.\n\nDepartures:\n- One account executive left on 2026-08-08.\n- Marcus Bell, Head of Sales, left on 2026-08-29.\n\nNo hires are recorded this quarter. Sales went from 3 to 1; all other functions are unchanged.",
+      "sources": [
+        {
+          "path": "company/team.md",
+          "quote": "| **Total** | **17** | **15** |"
+        },
+        {
+          "path": "company/team.md",
+          "quote": "Marcus Bell, Head of Sales, left 2026-08-29."
+        },
+        {
+          "path": "company/team.md",
+          "quote": "One account executive left 2026-08-08."
+        },
+        {
+          "path": "company/team.md",
+          "quote": "| Sales | 3 | 1 |"
+        }
+      ]
+    },
+    {
+      "question_id": "s6",
+      "answer": "We are behind plan on every Q3 target:\n- **MRR:** $68,000 against a target of $80,000.\n- **Customers:** 283 against a target of 340.\n- **Average net burn:** about $190,000 a month (July to September, from the bank export) against a target of $150,000.\n- **Bank channel bet:** the Meridian pilot, targeted for September, is paused.\n- **Mid-market bet:** the pipeline went from 9 groups to 3 active.",
+      "sources": [
+        {
+          "path": "strategy/2026-plan.md",
+          "quote": "| Q3 (Sep) | $80,000 | 340 | $150,000 |"
+        },
+        {
+          "path": "systems/billing_mrr_monthly.csv",
+          "quote": "2026-09,68000,7400,900,283"
+        },
+        {
+          "path": "systems/bank_cash_monthly.csv",
+          "quote": "2026-09,2561000,68000,0,208700,73300,2347000"
+        },
+        {
+          "path": "customers/pipeline-notes.md",
+          "quote": "2026-09-24: Meridian paused the pilot \"until SOC 2 Type II is in place\". Earliest realistic date: Q3 2027."
+        },
+        {
+          "path": "customers/pipeline-notes.md",
+          "quote": "2026-09-30: 3 groups still active, $12k potential MRR."
+        }
+      ]
+    },
+    {
+      "question_id": "s7",
+      "answer": "1. **Toast sync failures.** The full fix, a rebuild on Toast's Orders API v2 (6 to 8 engineer-weeks), has not started. Toast customers are 41% of the base, and cancellations are concentrated there.\n2. **Largest account at risk.** Harbor & Vine (34 locations, $9,200 MRR) gave notice effective 2026-11-21. Dana meets their CFO on 2026-10-06.\n3. **Burn and runway.** Burn was $214,000 in September, and Dana estimates about 12 months of runway at the current rate.\n4. **Bank channel blocked.** The Meridian pilot requires SOC 2 Type II, estimated at 9 to 12 months and about $60k.\n5. **Sales capacity.** The Head of Sales and one AE have left, and sales headcount is 1.\n6. **Customer satisfaction.** Q3 NPS fell to 22 from 47 in Q2.",
+      "sources": [
+        {
+          "path": "product/incidents.md",
+          "quote": "The full fix is a rebuild on Toast's Orders API v2. Estimate: 6 to 8 engineer-weeks. Not started."
+        },
+        {
+          "path": "customers/account-health.md",
+          "quote": "Toast customers are 41% of our base."
+        },
+        {
+          "path": "customers/account-health.md",
+          "quote": "Dana is meeting their CFO on 2026-10-06 to try to save it."
+        },
+        {
+          "path": "meetings/2026-09-15-leadership-sync.md",
+          "quote": "Meridian: SOC 2 Type II is a blocker. Priya estimates 9 to 12 months and about $60k."
+        },
+        {
+          "path": "company/team.md",
+          "quote": "| Sales | 3 | 1 |"
+        },
+        {
+          "path": "customers/account-health.md",
+          "quote": "NPS (Q3 survey, n=61): 22, down from 47 in Q2."
+        }
+      ]
+    },
+    {
+      "question_id": "s8",
+      "answer": "No formal Q3 ask list exists yet. The last stated asks, in the Q2 update, were SOC 2 vendor recommendations and a mid-market sales leader for our bench.\n\nOn 2026-09-15, the founders discussed a bridge of $750k to $1M on a SAFE from Northbeam and Ridgeline. Dana plans to raise it informally in October.",
+      "sources": [
+        {
+          "path": "investor-updates/2026-q2.md",
+          "quote": "Asks: SOC 2 vendor recommendations; a mid-market sales leader for our bench."
+        },
+        {
+          "path": "meetings/2026-09-15-leadership-sync.md",
+          "quote": "Bridge of $750k to $1M on a SAFE from Northbeam and Ridgeline. Dana to sound them out informally in October."
+        }
+      ]
+    },
+    {
+      "question_id": "t1",
+      "answer": "No, the pilot did not launch, so there are no bank-channel restaurants or MRR.\n\n- On 2026-08-18, Meridian's vendor risk team said it requires SOC 2 Type II before launch. We have neither Type I nor Type II.\n- On 2026-09-24, Meridian paused the pilot until SOC 2 Type II is in place. The earliest realistic date is Q3 2027.\n- Priya estimates SOC 2 Type II will take 9 to 12 months and cost about $60k.\n\nThe data room does not say whether the LOI itself remains in force beyond the pause.",
+      "sources": [
+        {
+          "path": "customers/pipeline-notes.md",
+          "quote": "2026-08-18: Meridian's vendor risk team requires SOC 2 Type II before launch. We have neither Type I nor Type II."
+        },
+        {
+          "path": "customers/pipeline-notes.md",
+          "quote": "2026-09-24: Meridian paused the pilot \"until SOC 2 Type II is in place\". Earliest realistic date: Q3 2027."
+        },
+        {
+          "path": "meetings/2026-09-15-leadership-sync.md",
+          "quote": "Priya estimates 9 to 12 months and about $60k."
+        }
+      ]
+    },
+    {
+      "question_id": "t2",
+      "answer": "As of 2026-09-30, 3 of the 9 groups are still active, with $12k potential MRR, down from $41k on 2026-07-01. The pipeline notes record no signed deals. They also do not say whether the other 6 groups dropped out or why, so there are no location counts or contracted MRR to report. Marcus Bell, who has since left, owned most of these deals.",
+      "sources": [
+        {
+          "path": "customers/pipeline-notes.md",
+          "quote": "2026-07-01: 9 groups in active pipeline, $41k potential MRR."
+        },
+        {
+          "path": "customers/pipeline-notes.md",
+          "quote": "2026-09-30: 3 groups still active, $12k potential MRR. Marcus (Head of Sales) owned most of these deals before he left."
+        }
+      ]
+    },
+    {
+      "question_id": "t3",
+      "answer": "None of the six roles is recorded as filled, and none has been formally deferred or cancelled. On 2026-09-15 we decided to keep all six open and revisit after the bridge conversations. Cutting the plan was discussed but not decided.\n\nThe data room does not track candidate stage for each role. Job descriptions were due to go live the week after 2026-07-14.\n\nPlanned target starts, not confirmed dates:\n- October 2026: the two senior engineers and one mid-market AE\n- November 2026: the second AE and the CS lead\n- December 2026: the Head of Finance",
+      "sources": [
+        {
+          "path": "strategy/decision-log.md",
+          "quote": "| 2026-09-15 | Keep the six H2 roles open for now. Revisit after the bridge conversations. | Dana |"
+        },
+        {
+          "path": "meetings/2026-09-15-leadership-sync.md",
+          "quote": "Cut the H2 hiring plan. Not decided. Revisit after the bridge conversations."
+        },
+        {
+          "path": "meetings/2026-07-14-leadership-sync.md",
+          "quote": "Hiring: job descriptions for the six H2 roles go live next week."
+        },
+        {
+          "path": "hiring/hiring-plan-h2.md",
+          "quote": "| Senior engineer (integrations) | 2026-10 | $19,500 |"
+        },
+        {
+          "path": "hiring/hiring-plan-h2.md",
+          "quote": "| Customer success lead | 2026-11 | $12,500 |"
+        },
+        {
+          "path": "hiring/hiring-plan-h2.md",
+          "quote": "| Head of Finance | 2026-12 | $17,000 |"
+        }
+      ]
+    }
+  ]
+}

@@ -35,6 +35,18 @@ Every call in the census, and every company record, has a "Request a check-in" l
 
 The trend only uses sources that keep their history, so last quarter can be compared fairly with the year before on the first run: Web Archive content changes, subdomains first seen in certificate-transparency logs, and Form D filings. Job postings, GitHub pushes and sitemap dates only show the present, so they count as proof of current activity, not as trend.
 
+## Host it on Render
+
+The repo has a [`render.yaml`](render.yaml) blueprint, so Render builds and starts Trace with no settings to type:
+
+1. On [render.com](https://render.com), choose **New > Blueprint** and pick this repository.
+2. Render asks for two values:
+   - `TRACE_PASSWORD`: one shared password for the whole site. Anyone opening it is asked for it (any username works). Without it, anyone with the URL could see the licensed data and run check-ins on your model key.
+   - `CENSUS_ANTHROPIC_API_KEY`: only needed for check-ins the committed reply cache doesn't cover. The Tallyline demo replays from the cache, so it can be left blank.
+3. Deploy. The site is at `https://<your-service>.onrender.com`: the front page at `/`, the census at `/census`, check-ins at `/checkins`.
+
+On the free plan the service sleeps when idle, so the first visit after a break takes about 50 seconds. Open it once before you present.
+
 ## Run it
 
 ```bash
