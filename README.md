@@ -1,6 +1,6 @@
 # Trace
 
-Portfolio census for high-volume venture funds.
+Portfolio census for high-volume venture funds. The business case is in [COMPANY.md](COMPANY.md).
 
 A monthly early-warning check on every company in a high-volume venture portfolio, built only from public records. Founders don't have to send anything.
 
@@ -30,7 +30,7 @@ python3 -m src.cli init           # pulls the fund's portfolio table into SQLite
 python3 -m src.cli sync           # domains -> website/TLS/sitemap -> GitHub -> job boards -> SEC
 python3 -m src.cli review-queue   # confirm or reject the matches it wasn't sure about
 python3 -m src.cli score          # buckets, printed as a table
-python3 -m src.cli export         # exports/census-<date>.{html,json,md}
+python3 -m src.cli export         # exports/census-<date>.{html,json,md,csv}; the CSV imports into a CRM
 python3 -m pytest tests
 ```
 

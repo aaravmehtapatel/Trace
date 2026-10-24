@@ -74405,6 +74405,146 @@
   "growing": 67,
   "shrinking": 28
  },
+ "changes": {
+  "days": 30,
+  "months": 3,
+  "raised": [
+   {
+    "id": 23,
+    "what": "Biotia Raises $9 Million To Expand Infectious Disease Diagnostics"
+   },
+   {
+    "id": 47,
+    "what": "Form D filed 2026-10-15, $8,380,000 sold"
+   },
+   {
+    "id": 154,
+    "what": "North Cloud Closes $60 Million Series B Funding Round"
+   },
+   {
+    "id": 167,
+    "what": "Orca Fraud Raises $2.35M Seed"
+   },
+   {
+    "id": 170,
+    "what": "Outmarket AI Raises $34.5 Million Series B, Bringing Total Funding To $56.5 Million"
+   },
+   {
+    "id": 224,
+    "what": "Form D filed 2026-10-02, $12,999,986 sold"
+   },
+   {
+    "id": 241,
+    "what": "Trebellar Raises $18 Million Series A To Bring AI To Corporate Real Estate Management"
+   }
+  ],
+  "raised_usd": 145229986,
+  "exits": [
+   {
+    "id": 127,
+    "what": "Acquired, per the news: Ascend Learning Acquires AI Scheduling Platform M7 Health (2026-09-21)"
+   },
+   {
+    "id": 7,
+    "what": "Website now redirects to flocksafety.com, often an acquisition or rebrand"
+   },
+   {
+    "id": 84,
+    "what": "Website now redirects to dev.to, often an acquisition or rebrand"
+   },
+   {
+    "id": 146,
+    "what": "Website now redirects to typeface.ai, often an acquisition or rebrand"
+   },
+   {
+    "id": 210,
+    "what": "Website now redirects to serenitysmart.com, often an acquisition or rebrand"
+   }
+  ],
+  "renamed": [
+   {
+    "id": 118,
+    "what": "Renamed: the site now redirects to dalinea.com, and the company has 10 people (Akta)"
+   },
+   {
+    "id": 143,
+    "what": "Renamed: the site now redirects to meandu.com, and the company has 212 people (+4% in 12 months, Akta)"
+   },
+   {
+    "id": 219,
+    "what": "Renamed: the site now redirects to zenpire.tech, and the company has 32 people (-16% in 12 months, Akta)"
+   }
+  ],
+  "gainers": [
+   {
+    "id": 154,
+    "then": 46,
+    "now": 60,
+    "pct": 30
+   },
+   {
+    "id": 179,
+    "then": 25,
+    "now": 32,
+    "pct": 28
+   },
+   {
+    "id": 170,
+    "then": 50,
+    "now": 63,
+    "pct": 26
+   },
+   {
+    "id": 39,
+    "then": 18,
+    "now": 22,
+    "pct": 22
+   },
+   {
+    "id": 265,
+    "then": 14,
+    "now": 17,
+    "pct": 21
+   }
+  ],
+  "losers": [
+   {
+    "id": 108,
+    "then": 15,
+    "now": 11,
+    "pct": -27
+   },
+   {
+    "id": 87,
+    "then": 9,
+    "now": 7,
+    "pct": -22
+   },
+   {
+    "id": 44,
+    "then": 25,
+    "now": 20,
+    "pct": -20
+   },
+   {
+    "id": 2,
+    "then": 46,
+    "now": 39,
+    "pct": -15
+   },
+   {
+    "id": 58,
+    "then": 16,
+    "now": 14,
+    "pct": -12
+   }
+  ],
+  "net_people": 229
+ },
+ "cost": {
+  "credits": 435.5,
+  "usd": 17.42
+ },
  "accuracy": {
   "n": 165,
   "judged": 108,

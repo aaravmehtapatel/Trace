@@ -79,6 +79,21 @@
   }
   .tip strong { display: block; font-weight: 600; }
 
+  /* This month */
+  section.month { padding: 40px 0 0; }
+  .month h2 { font-size: 22px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.005em; }
+  .month .claim { font-size: 20px; font-weight: 300; max-width: 60ch; margin: 6px 0 18px; line-height: 1.35; }
+  .month .claim b { font-weight: 600; }
+  .month-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .month-col { background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; padding: 16px 18px; }
+  .month-col h3 { font-size: 15px; font-weight: 600; margin: 0 0 10px; }
+  .month-col ul { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+  .month-col li { padding: 7px 0; border-top: 1px solid #E3E7EB; cursor: pointer; }
+  .month-col li:first-child { border-top: 0; padding-top: 0; }
+  .month-col li b { font-weight: 600; display: block; }
+  .month-col li span { color: var(--ink-2); }
+  .up { color: var(--raised); } .down { color: var(--fading); }
+
   /* Calls this week */
   section.calls { padding: 40px 0 0; }
   .calls h2 { font-size: 22px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.005em; }
@@ -210,6 +225,7 @@
     .mark { width: 14px; height: 14px; }
     th.hide-sm, td.hide-sm { display: none; }
     .call { grid-template-columns: 1fr; gap: 6px; }
+    .month-grid { grid-template-columns: 1fr; }
     .acc-grid { grid-template-columns: 1fr; }
     .acc-row { grid-template-columns: 110px 1fr 36px; }
     input[type=search] { min-width: 0; flex: 1; }
@@ -232,6 +248,18 @@
 </header>
 
 <div class="tip" id="tip" role="tooltip"></div>
+
+<section class="month">
+  <div class="wrap">
+    <h2>This month</h2>
+    <p class="claim" id="month-claim"></p>
+    <div class="month-grid">
+      <div class="month-col"><h3>Raised</h3><ul id="m-raised"></ul></div>
+      <div class="month-col"><h3>Exits and renames</h3><ul id="m-exits"></ul></div>
+      <div class="month-col"><h3>Headcount, last 3 months</h3><ul id="m-movers"></ul></div>
+    </div>
+  </div>
+</section>
 
 <section class="calls">
   <div class="wrap">
@@ -436,6 +464,25 @@ $("#rows").addEventListener("keydown", (e) => {
 });
 render();
 
+// This month
+(function () {
+  const ch = DATA.changes; if (!ch) return;
+  const usd = (n) => n >= 1e9 ? `$${(n / 1e9).toFixed(1)}B` : `$${Math.round(n / 1e6)}M`;
+  $("#month-claim").innerHTML = `In the last ${ch.days} days, <b>${ch.raised.length}</b> companies raised${ch.raised_usd ? ` about <b>${usd(ch.raised_usd)}</b>` : ""}, <b>${ch.exits.length}</b> look like exits, and the companies with headcount added a net <b>${ch.net_people >= 0 ? "+" : ""}${ch.net_people}</b> people over ${ch.months} months.`;
+  const li = (x, html) => `<li data-id="${x.id}" tabindex="0">${html}</li>`;
+  const nm = (x) => esc(byId.get(x.id).name);
+  $("#m-raised").innerHTML = ch.raised.map((x) => li(x, `<b>${nm(x)}</b><span>${esc(pretty(x.what))}</span>`)).join("") || "<li>No raises found this month.</li>";
+  const short = (t) => pretty(t).replace(/^Acquired, per the news: /, "Acquired: ").replace(/^Website now redirects to ([^,]+), often an acquisition or rebrand$/, "Now redirects to $1")
+    .replace(/^Renamed: the site now redirects to ([^,]+), and the company has (\d+) people.*$/, "Renamed: now $1, $2 people");
+  $("#m-exits").innerHTML = [...ch.exits, ...ch.renamed].map((x) => li(x, `<b>${nm(x)}</b><span>${esc(short(x.what))}</span>`)).join("")
+    || "<li>No exits or renames found.</li>";
+  $("#m-movers").innerHTML = [...ch.gainers.slice(0, 3), ...ch.losers.slice(0, 3)].map((x) =>
+    li(x, `<b>${nm(x)}</b><span class="${x.pct > 0 ? "up" : "down"}">${x.then} → ${x.now} people (${x.pct > 0 ? "+" : ""}${x.pct}%)</span>`)).join("");
+  document.querySelectorAll(".month-col ul").forEach((ul) => ul.addEventListener("click", (e) => {
+    const t = e.target.closest("li[data-id]"); if (t) openRecord(+t.dataset.id, t);
+  }));
+})();
+
 // Calls
 const KIND_COLOR = { gone: "var(--dark)", fading: "var(--fading)", rising: "var(--active)" };
 $("#calls").innerHTML = DATA.calls.map((k) => {
@@ -586,6 +633,7 @@ $("#rules").innerHTML = [
 ].map((r) => `<li>${r}</li>`).join("");
 $("#stats").innerHTML = `
   <p>${m.observations.toLocaleString()} observations across ${DATA.total} companies, generated ${fmtDate(DATA.generated)}. Licensed headcount covers ${DATA.people ? DATA.people.companies : 0} companies (Akta, sourced from LinkedIn, not scraped).</p>
+  ${DATA.cost ? `<p>Licensed data for this run cost ${DATA.cost.credits} Akta credits, about $${DATA.cost.usd.toFixed(0)}, or ${Math.round(100 * DATA.cost.usd / DATA.total)} cents a company. The public checks are free.</p>` : ""}
   <p>Matches link automatically at a score of ${m.auto_link} or higher and are dropped below ${m.reject}. ${m.pending_review} companies have a possible match waiting for a person to confirm.</p>
   <p>A website only counts once the live page names the company and describes what the fund says it does. Form D is a badge, not a status: most private companies never file one.</p>`;
 </script>

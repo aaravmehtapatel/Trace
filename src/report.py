@@ -4,6 +4,7 @@ Every company's bucket is written with the rule that fired, the dated signals be
 and their source links, so any line can be checked by hand.
 """
 import json
+import re
 from datetime import date
 from pathlib import Path
 
@@ -78,7 +79,8 @@ def collect(conn, cfg: Config) -> dict:
     return {
         "fund": cfg.fund_name, "score_date": score_date, "generated": date.today().isoformat(),
         "counts": counts, "total": len(companies), "companies": companies, "calls": calls(companies),
-        "form_d_year": form_d_year, "raised_news": raised_news, "people": people, "accuracy": calibrate.calibrate(conn, cfg),
+        "form_d_year": form_d_year, "raised_news": raised_news, "people": people,
+        "changes": changes(companies, score_date), "cost": cost(cfg.raw_dir), "accuracy": calibrate.calibrate(conn, cfg),
         "method": {"weights": cfg.weights, "auto_link": cfg.auto_link, "reject": cfg.reject,
                    "window_days": cfg.window_days, "active_days": score.ACTIVE_DAYS, "fading_ratio": score.FADING_RATIO,
                    "trend_months": [score.TREND_RECENT, score.TREND_PRIOR],
@@ -138,6 +140,58 @@ def calls(companies: list[dict], limit: int = 10) -> list[dict]:
     return out[:limit]
 
 
+def changes(companies: list[dict], score_date: str, days: int = 30, months: int = 3) -> dict:
+    """What landed recently: the part of the census that's new each month. Raises and exits from
+    the last `days`; headcount movers over the last `months` (Akta data is monthly)."""
+    today = date.fromisoformat(score_date)
+    recent = lambda d: d and 0 <= (today - date.fromisoformat(d[:10])).days <= days
+    raised, exits, renamed, movers = [], [], [], []
+    for c in companies:
+        f = c["filings"][0] if c["filings"] else None
+        news_raise = next((b for b in c["badges"] if b["label"].startswith("Raised, per news")), None)
+        story = next((n for n in c["news"] if news_raise and n.get("url") == news_raise.get("url")), None)
+        if f and recent(f["date"]):
+            raised.append({"id": c["id"], "what": f"Form {f['form']} filed {f['date']}" + (f", ${f['sold']:,.0f} sold" if f.get("sold") else "")})
+        elif story and recent(story["date"]):
+            raised.append({"id": c["id"], "what": story["title"]})
+        if c["bucket"] == "Unresolved":
+            pass
+        elif c["rule"].startswith("Renamed"):
+            renamed.append({"id": c["id"], "what": c["rule"]})
+        elif c["rule"].startswith("Acquired") or any(b["kind"] == "redirect" for b in c["badges"]):
+            exits.append({"id": c["id"], "what": c["rule"]})
+        hc = c.get("headcount") or {}
+        series = sorted((hc.get("monthly") or {}).items())
+        if len(series) > months and (hc.get("total") or 0) <= score.MAX_PLAUSIBLE_HEADCOUNT:
+            then, now = series[-1 - months][1], series[-1][1]
+            if then and now is not None and abs(now - then) >= 2:
+                movers.append({"id": c["id"], "then": then, "now": now, "pct": round(100 * (now - then) / then)})
+    movers.sort(key=lambda m: m["pct"])
+    exits.sort(key=lambda x: not x["what"].startswith("Acquired"))
+    money = 0.0
+    for r in raised:  # dollars from SEC amounts or the headline ("$60M", "$9 Million")
+        m = re.search(r"\$([\d.,]+)\s*(million|m\b|billion|b\b)?", r["what"], re.I)
+        if m:
+            v = float(m.group(1).replace(",", ""))
+            unit = (m.group(2) or "").lower()
+            money += v * (1e9 if unit.startswith("b") else 1e6 if unit.startswith("m") else 1)
+    return {"days": days, "months": months, "raised": raised, "raised_usd": round(money), "exits": exits[:6], "renamed": renamed,
+            "gainers": [m for m in reversed(movers) if m["pct"] > 0][:5], "losers": [m for m in movers if m["pct"] < 0][:5],
+            "net_people": sum(m["now"] - m["then"] for m in movers)}
+
+
+def cost(conn_raw_dir: Path) -> dict:
+    """Licensed-data spend for this run, from the credits Akta reported on each saved response."""
+    import gzip
+    credits = 0.0
+    for p in (conn_raw_dir / "akta").glob("*/*.json.gz"):
+        with gzip.open(p, "rt") as f:
+            body = (json.load(f).get("body") or {})
+        if isinstance(body, dict) and body.get("credits_consumed") is not None:
+            credits += float(body["credits_consumed"])
+    return {"credits": round(credits, 1), "usd": round(credits * 0.04, 2)}
+
+
 def _label(c: dict) -> str:
     if c["bucket"] == "No Public Activity":
         return f"No Public Activity Since {c['last_activity']}" if c["last_activity"] else "No Public Activity"
@@ -166,12 +220,33 @@ def markdown(data: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+def csv_rows(data: dict) -> list[dict]:
+    """One row per company, shaped for import into a fund CRM (Affinity, Attio, a spreadsheet)."""
+    asks = {k["id"]: k["ask"] for k in data["calls"]}
+    rows = []
+    for c in data["companies"]:
+        hc = c.get("headcount") or {}
+        rows.append({"company": c["name"], "website": c["domain"] or "", "city": c["city"] or "", "sector": c["sector"] or "",
+                     "status": _label(c), "why": c["rule"], "last_signal": c["last_activity"] or "",
+                     "headcount": hc.get("total") or "", "headcount_6mo_pct": hc.get("growth_6") if hc.get("growth_6") is not None else "",
+                     "headcount_12mo_pct": hc.get("growth_12") if hc.get("growth_12") is not None else "",
+                     "badges": "; ".join(b["label"] for b in c["badges"]),
+                     "call_this_week": asks.get(c["id"], ""), "ranking_score": c["composite"]})
+    return rows
+
+
 def write_all(data: dict, out_dir: Path) -> list[Path]:
+    import csv
     out_dir.mkdir(parents=True, exist_ok=True)
     stem = f"census-{data['score_date']}"
-    j, md, html = out_dir / f"{stem}.json", out_dir / f"{stem}.md", out_dir / f"{stem}.html"
+    j, md, html, sheet = (out_dir / f"{stem}.{ext}" for ext in ("json", "md", "html", "csv"))
     j.write_text(json.dumps(data, indent=1))
     md.write_text(markdown(data))
+    rows = csv_rows(data)
+    with sheet.open("w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0]))
+        w.writeheader()
+        w.writerows(rows)
     payload = json.dumps(data).replace("</", "<\\/")
     html.write_text(TEMPLATE.read_text().replace("/*__CENSUS_DATA__*/null", payload))
-    return [j, md, html]
+    return [j, md, html, sheet]
