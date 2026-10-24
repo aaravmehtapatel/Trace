@@ -1,4 +1,4 @@
-"""Portfolio census CLI: init, sync, review-queue, score, export."""
+"""Trace CLI: init, sync, review-queue, score, export."""
 import asyncio
 import json
 from datetime import date

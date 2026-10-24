@@ -1,4 +1,6 @@
-# Portfolio Census
+# Trace
+
+Portfolio census for high-volume venture funds.
 
 A monthly early-warning check on every company in a high-volume venture portfolio, built only from public records. Founders don't have to send anything.
 
