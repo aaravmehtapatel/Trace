@@ -1,6 +1,6 @@
 # Trace
 
-Portfolio census for high-volume venture funds. The business case is in [COMPANY.md](COMPANY.md).
+Portfolio census for high-volume venture funds. The business case is in [COMPANY.md](COMPANY.md); the plan is in [BUSINESS_PLAN.md](BUSINESS_PLAN.md).
 
 A monthly early-warning check on every company in a high-volume venture portfolio, built only from public records. Founders don't have to send anything.
 

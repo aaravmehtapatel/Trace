@@ -559,7 +559,7 @@ function functions(h) {
   $("#acc-misses").innerHTML = `<ul class="misses">${miss ? `<li>Looked quiet, actually growing: ${miss}</li>` : ""}${fool ? `<li>Looked active, actually shrinking: ${fool}</li>` : ""}</ul>`;
   const q = a.by_free_status["Quiet"];
   $("#acc-rule").textContent = q && q.n
-    ? `So the census runs free checks on every company every month and buys headcount where free data is weakest: of the companies it called quiet, ${Math.round(100 * q.growing / q.n)}% were growing and ${Math.round(100 * q.shrinking / q.n)}% shrinking.`
+    ? `So headcount matters most where free data looks weakest: of the companies it called quiet, ${Math.round(100 * q.growing / q.n)}% were growing and ${Math.round(100 * q.shrinking / q.n)}% shrinking.`
     : "";
 })();
 
