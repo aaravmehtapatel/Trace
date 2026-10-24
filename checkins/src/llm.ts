@@ -10,7 +10,8 @@ import OpenAI from "openai";
 import type { z } from "zod";
 import { type AgentName, traceLlm } from "./tracing.ts";
 
-const CLAUDE = "claude-opus-5-5";
+// CHECKINS_MODEL overrides the model for keys that can't reach the default.
+const CLAUDE = process.env.CHECKINS_MODEL ?? "claude-opus-5-5";
 const CACHE_DIR = join(process.cwd(), ".checkins", "cache");
 
 export type JsonCall<T> = {
@@ -50,7 +51,9 @@ function provider(): Model {
   if (process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || censusKey) {
     // The census's key (root .env) talks to the public API directly, as in src/ingest/domains.py,
     // so a shell's own ANTHROPIC_* settings for other tools don't interfere.
-    const client = !process.env.ANTHROPIC_API_KEY && censusKey
+    // The census key wins when set: a shell's own ANTHROPIC_API_KEY / BASE_URL (set for other
+    // tools) pointed check-ins at an endpoint that doesn't serve the model.
+    const client = censusKey
       ? new Anthropic({ apiKey: censusKey, authToken: null, baseURL: "https://api.anthropic.com" })
       : new Anthropic();
     return async (system, user) => {
